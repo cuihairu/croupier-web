@@ -23,6 +23,18 @@ export default [
     ],
   },
   {
+    path: '/gm',
+    name: 'GM',
+    icon: 'tool',
+    routes: [
+      {
+        path: '/gm/functions',
+        name: 'Functions',
+        component: './GmFunctions',
+      },
+    ],
+  },
+  {
     path: '/welcome',
     name: 'welcome',
     icon: 'smile',
