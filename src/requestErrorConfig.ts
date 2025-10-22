@@ -88,9 +88,12 @@ export const errorConfig: RequestConfig = {
   // 请求拦截器
   requestInterceptors: [
     (config: RequestOptions) => {
-      // 拦截请求配置，进行个性化处理。
-      const url = config?.url?.concat('?token = 123');
-      return { ...config, url };
+      // 为后端 API 附加开发态用户头，便于 RBAC 放行
+      const headers = {
+        ...(config.headers || {}),
+        'X-User': 'user:dev',
+      } as Record<string, any>;
+      return { ...config, headers };
     },
   ],
 
