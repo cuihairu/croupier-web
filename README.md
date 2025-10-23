@@ -1,57 +1,57 @@
-# Ant Design Pro
+# Croupier Web Console
 
-This project is initialized with [Ant Design Pro](https://pro.ant.design). Follow is the quick guide for how to use.
+Frontend (Umi Max + Ant Design Pro) for Croupier — a function routing, job orchestration, and audit platform for game operations.
 
-## Environment Prepare
+- Main Project: https://github.com/cuihairu/croupier
+- This repo: Admin UI (menus, function invocation, jobs, audit, registry overview)
 
-Install `node_modules`:
+## Quick Start
 
+Prerequisites
+- Node.js 18+ (recommended)
+- pnpm (or npm/yarn)
+
+Install
 ```bash
-npm install
+pnpm install   # or: npm install / yarn
 ```
 
-or
-
+Dev Server
 ```bash
-yarn
+pnpm dev
+# Serves at http://localhost:8000
+# Proxies /api/* to http://localhost:8080 (configured in config/proxy.ts)
 ```
 
-## Provided Scripts
-
-Ant Design Pro provides some useful script to help you quick start and build with web project, code style check and test.
-
-Scripts provided in `package.json`. It's safe to modify or add additional script:
-
-### Start project
-
+Build
 ```bash
-npm start
+pnpm build
+# Output: dist/
+# In production, Croupier Core can statically serve web/dist if present
 ```
 
-### Build project
-
+Lint & Test
 ```bash
-npm run build
+pnpm lint
+pnpm test
 ```
 
-### Check code style
+## Backend Expectations
+- Core API listens at 8080 by default; dev proxy sends /api/* to http://localhost:8080
+- Auth endpoints used by UI:
+  - POST /api/auth/login -> { token, user }
+  - GET  /api/auth/me    -> { username, roles }
+- Demo pages may call /api/rule (stubbed by Core for template compatibility)
 
-```bash
-npm run lint
-```
+Default Credentials (dev)
+- username: `admin`
+- password: `admin123`
 
-You can also use script to auto fix some lint error:
+## Notes
+- This console is scaffolded from Ant Design Pro and customized for Croupier
+- Branding and i18n strings are adjusted; further contributions welcome
+- For deployment and core-server configuration, see the main repo
 
-```bash
-npm run lint:fix
-```
+---
 
-### Test code
-
-```bash
-npm test
-```
-
-## More
-
-You can view full document on our [official website](https://pro.ant.design). And welcome any feedback in our [github](https://github.com/ant-design/ant-design-pro).
+MIT License © Croupier
