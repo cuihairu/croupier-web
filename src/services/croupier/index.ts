@@ -31,3 +31,16 @@ export async function listGames() {
 export async function addGame(game: GameEntry) {
   return request<void>('/api/games', { method: 'POST', data: game });
 }
+
+export type AuditEvent = {
+  time: string;
+  kind: string;
+  actor: string;
+  target: string;
+  meta: Record<string, string>;
+  hash: string;
+  prev: string;
+};
+export async function listAudit(params?: { game_id?: string; env?: string; actor?: string; kind?: string; limit?: number }) {
+  return request<{ events: AuditEvent[] }>('/api/audit', { params });
+}

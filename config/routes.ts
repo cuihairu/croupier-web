@@ -37,6 +37,11 @@ export default [
         name: 'Games',
         component: './GameManage',
       },
+      {
+        path: '/gm/audit',
+        name: 'Audit',
+        component: './Audit',
+      },
     ],
   },
   {
