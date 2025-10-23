@@ -32,6 +32,11 @@ export default [
         name: 'Functions',
         component: './GmFunctions',
       },
+      {
+        path: '/gm/games',
+        name: 'Games',
+        component: './GameManage',
+      },
     ],
   },
   {

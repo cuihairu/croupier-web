@@ -24,3 +24,10 @@ export async function cancelJob(job_id: string) {
   return request<void>('/api/cancel_job', { method: 'POST', data: { job_id } });
 }
 
+export type GameEntry = { game_id: string; env?: string };
+export async function listGames() {
+  return request<{ games: GameEntry[] }>('/api/games');
+}
+export async function addGame(game: GameEntry) {
+  return request<void>('/api/games', { method: 'POST', data: game });
+}

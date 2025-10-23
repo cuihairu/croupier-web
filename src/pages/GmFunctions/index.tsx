@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Card, Select, Form, Input, InputNumber, Switch, Button, Space, Typography, Divider, message } from 'antd';
+import GameSelector from '@/components/GameSelector';
 import { listDescriptors, invokeFunction, startJob, cancelJob, FunctionDescriptor } from '@/services/croupier';
 
 const { Text, Paragraph } = Typography;
@@ -114,6 +115,7 @@ export default function GmFunctionsPage() {
   return (
     <Card title="GM Functions" extra={<Text type="secondary">dev</Text>}>
       <Space direction="vertical" style={{ width: '100%' }} size="large">
+        <GameSelector />
         <Space>
           <span>Select Function:</span>
           <Select style={{ minWidth: 320 }} value={currentId} onChange={setCurrentId} options={descs.map((d) => ({ label: `${d.id} v${d.version || ''}`, value: d.id }))} />
@@ -143,4 +145,3 @@ export default function GmFunctionsPage() {
     </Card>
   );
 }
-

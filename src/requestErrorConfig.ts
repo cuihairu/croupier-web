@@ -88,11 +88,15 @@ export const errorConfig: RequestConfig = {
   // 请求拦截器
   requestInterceptors: [
     (config: RequestOptions) => {
-      // 为后端 API 附加开发态用户头，便于 RBAC 放行
+      // 附加开发态用户头与作用域头（game/env）
       const headers = {
         ...(config.headers || {}),
         'X-User': 'user:dev',
       } as Record<string, any>;
+      const gid = localStorage.getItem('game_id');
+      const env = localStorage.getItem('env');
+      if (gid) headers['X-Game-ID'] = gid;
+      if (env) headers['X-Env'] = env;
       return { ...config, headers };
     },
   ],
