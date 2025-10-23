@@ -52,3 +52,10 @@ export async function loginAuth(params: { username: string; password: string }) 
 export async function fetchMe() {
   return request<{ username: string; roles: string[] }>('/api/auth/me');
 }
+
+export async function listFunctionInstances(params: { game_id?: string; function_id: string }) {
+  return request<{ instances: { agent_id: string; service_id: string; addr: string; version: string }[] }>(
+    '/api/function_instances',
+    { params },
+  );
+}

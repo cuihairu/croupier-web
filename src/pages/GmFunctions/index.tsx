@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Card, Select, Form, Input, InputNumber, Switch, Button, Space, Typography, Divider, message } from 'antd';
 import GameSelector from '@/components/GameSelector';
-import { listDescriptors, invokeFunction, startJob, cancelJob, FunctionDescriptor } from '@/services/croupier';
+import { listDescriptors, listFunctionInstances, invokeFunction, startJob, cancelJob, FunctionDescriptor } from '@/services/croupier';
 
 const { Text, Paragraph } = Typography;
 
@@ -45,7 +45,9 @@ export default function GmFunctionsPage() {
   const [descs, setDescs] = useState<FunctionDescriptor[]>([]);
   const [currentId, setCurrentId] = useState<string>();
   const [invoking, setInvoking] = useState(false);
-  const [route, setRoute] = useState<'lb'|'broadcast'>('lb');
+  const [route, setRoute] = useState<'lb'|'broadcast'|'targeted'>('lb');
+  const [instances, setInstances] = useState<{agent_id:string;service_id:string;addr:string;version:string}[]>([]);
+  const [targetService, setTargetService] = useState<string | undefined>();
   const [jobId, setJobId] = useState<string | undefined>();
   const [events, setEvents] = useState<string[]>([]);
   const esRef = useRef<EventSource | null>(null);
@@ -71,13 +73,23 @@ export default function GmFunctionsPage() {
     const init: any = {};
     Object.keys(props).forEach((k) => (init[k] = undefined));
     form.setFieldsValue(init);
+    if (currentId) {
+      const gid = localStorage.getItem('game_id') || undefined;
+      listFunctionInstances({ function_id: currentId, game_id: gid }).then((res)=>{
+        setInstances(res.instances||[]);
+      });
+    } else {
+      setInstances([]);
+    }
   }, [currentDesc?.id]);
 
   const onInvoke = async () => {
     try {
       const values = await form.validateFields();
       setInvoking(true);
-      const res = await invokeFunction(currentId!, { ...values, route });
+      const payload: any = { ...values, route };
+      if (route === 'targeted' && targetService) payload.target_service_id = targetService;
+      const res = await invokeFunction(currentId!, payload);
       message.success('Invoke OK');
       setEvents([JSON.stringify(res)]);
     } catch (e: any) {
@@ -121,7 +133,15 @@ export default function GmFunctionsPage() {
           <span>Select Function:</span>
           <Select style={{ minWidth: 320 }} value={currentId} onChange={setCurrentId} options={descs.map((d) => ({ label: `${d.id} v${d.version || ''}`, value: d.id }))} />
           <span>Route:</span>
-          <Select style={{ width: 160 }} value={route} onChange={(v)=>setRoute(v)} options={[{label:'lb', value:'lb'},{label:'broadcast', value:'broadcast'}]} />
+          <Select style={{ width: 160 }} value={route} onChange={(v)=>setRoute(v)} options={[{label:'lb', value:'lb'},{label:'broadcast', value:'broadcast'},{label:'targeted', value:'targeted'}]} />
+          {route === 'targeted' && (
+            <>
+              <span>Target:</span>
+              <Select style={{ minWidth: 260 }} value={targetService} onChange={setTargetService}
+                placeholder="Select service instance"
+                options={instances.map(i=>({ label: `${i.service_id} @ ${i.agent_id} (${i.version})`, value: i.service_id }))} />
+            </>
+          )}
         </Space>
         <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
           {renderFormItems(currentDesc)}
