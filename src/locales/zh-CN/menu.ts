@@ -1,4 +1,8 @@
 export default {
+  'menu.GM': '运营',
+  'menu.GM.Functions': '函数列表',
+  'menu.GM.Games': '游戏管理',
+  'menu.GM.Audit': '审计',
   'menu.welcome': '欢迎',
   'menu.more-blocks': '更多区块',
   'menu.home': '首页',
