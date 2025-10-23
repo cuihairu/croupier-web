@@ -1,5 +1,5 @@
 import { Footer } from '@/components';
-import { login } from '@/services/ant-design-pro/api';
+import { login } from '@/services/croupier';
 import { getFakeCaptcha } from '@/services/ant-design-pro/login';
 import {
   AlipayCircleOutlined,
@@ -114,24 +114,16 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (values: API.LoginParams) => {
+  const handleSubmit = async (values: any) => {
     try {
       // 登录
-      const msg = await login({ ...values, type });
-      if (msg.status === 'ok') {
-        const defaultLoginSuccessMessage = intl.formatMessage({
-          id: 'pages.login.success',
-          defaultMessage: '登录成功！',
-        });
-        message.success(defaultLoginSuccessMessage);
-        await fetchUserInfo();
-        const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
-        return;
-      }
-      console.log(msg);
-      // 如果失败去设置用户错误信息
-      setUserLoginState(msg);
+      const res = await loginAuth({ username: values.username, password: values.password });
+      localStorage.setItem('token', res.token);
+      message.success(intl.formatMessage({ id: 'pages.login.success', defaultMessage: '登录成功！' }));
+      await fetchUserInfo();
+      const urlParams = new URL(window.location.href).searchParams;
+      history.push(urlParams.get('redirect') || '/');
+      return;
     } catch (error) {
       const defaultLoginFailureMessage = intl.formatMessage({
         id: 'pages.login.failure',

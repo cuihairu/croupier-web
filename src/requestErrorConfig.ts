@@ -88,11 +88,11 @@ export const errorConfig: RequestConfig = {
   // 请求拦截器
   requestInterceptors: [
     (config: RequestOptions) => {
-      // 附加开发态用户头与作用域头（game/env）
       const headers = {
         ...(config.headers || {}),
-        'X-User': 'user:dev',
       } as Record<string, any>;
+      const token = localStorage.getItem('token');
+      if (token) headers['Authorization'] = `Bearer ${token}`;
       const gid = localStorage.getItem('game_id');
       const env = localStorage.getItem('env');
       if (gid) headers['X-Game-ID'] = gid;

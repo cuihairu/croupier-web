@@ -44,3 +44,11 @@ export type AuditEvent = {
 export async function listAudit(params?: { game_id?: string; env?: string; actor?: string; kind?: string; limit?: number }) {
   return request<{ events: AuditEvent[] }>('/api/audit', { params });
 }
+
+// Auth
+export async function loginAuth(params: { username: string; password: string }) {
+  return request<{ token: string; user: { username: string; roles: string[] } }>('/api/auth/login', { method: 'POST', data: params });
+}
+export async function fetchMe() {
+  return request<{ username: string; roles: string[] }>('/api/auth/me');
+}
