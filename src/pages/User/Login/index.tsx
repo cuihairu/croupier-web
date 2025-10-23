@@ -1,5 +1,5 @@
 import { Footer } from '@/components';
-import { login } from '@/services/croupier';
+import { loginAuth } from '@/services/croupier';
 import { getFakeCaptcha } from '@/services/ant-design-pro/login';
 import {
   AlipayCircleOutlined,
