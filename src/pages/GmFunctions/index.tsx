@@ -45,6 +45,7 @@ export default function GmFunctionsPage() {
   const [descs, setDescs] = useState<FunctionDescriptor[]>([]);
   const [currentId, setCurrentId] = useState<string>();
   const [invoking, setInvoking] = useState(false);
+  const [route, setRoute] = useState<'lb'|'broadcast'>('lb');
   const [jobId, setJobId] = useState<string | undefined>();
   const [events, setEvents] = useState<string[]>([]);
   const esRef = useRef<EventSource | null>(null);
@@ -76,7 +77,7 @@ export default function GmFunctionsPage() {
     try {
       const values = await form.validateFields();
       setInvoking(true);
-      const res = await invokeFunction(currentId!, values);
+      const res = await invokeFunction(currentId!, { ...values, route });
       message.success('Invoke OK');
       setEvents([JSON.stringify(res)]);
     } catch (e: any) {
@@ -119,6 +120,8 @@ export default function GmFunctionsPage() {
         <Space>
           <span>Select Function:</span>
           <Select style={{ minWidth: 320 }} value={currentId} onChange={setCurrentId} options={descs.map((d) => ({ label: `${d.id} v${d.version || ''}`, value: d.id }))} />
+          <span>Route:</span>
+          <Select style={{ width: 160 }} value={route} onChange={(v)=>setRoute(v)} options={[{label:'lb', value:'lb'},{label:'broadcast', value:'broadcast'}]} />
         </Space>
         <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
           {renderFormItems(currentDesc)}
