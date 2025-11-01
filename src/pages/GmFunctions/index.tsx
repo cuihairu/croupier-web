@@ -45,9 +45,10 @@ export default function GmFunctionsPage() {
   const [descs, setDescs] = useState<FunctionDescriptor[]>([]);
   const [currentId, setCurrentId] = useState<string>();
   const [invoking, setInvoking] = useState(false);
-  const [route, setRoute] = useState<'lb'|'broadcast'|'targeted'>('lb');
+  const [route, setRoute] = useState<'lb'|'broadcast'|'targeted'|'hash'>('lb');
   const [instances, setInstances] = useState<{agent_id:string;service_id:string;addr:string;version:string}[]>([]);
   const [targetService, setTargetService] = useState<string | undefined>();
+  const [hashKey, setHashKey] = useState<string | undefined>();
   const [jobId, setJobId] = useState<string | undefined>();
   const [events, setEvents] = useState<string[]>([]);
   const esRef = useRef<EventSource | null>(null);
@@ -87,9 +88,12 @@ export default function GmFunctionsPage() {
     try {
       const values = await form.validateFields();
       setInvoking(true);
-      const payload: any = { ...values, route };
-      if (route === 'targeted' && targetService) payload.target_service_id = targetService;
-      const res = await invokeFunction(currentId!, payload);
+      const payload: any = { ...values };
+      const res = await invokeFunction(currentId!, payload, {
+        route,
+        target_service_id: route === 'targeted' ? targetService : undefined,
+        hash_key: route === 'hash' ? hashKey : undefined,
+      });
       message.success('Invoke OK');
       setEvents([JSON.stringify(res)]);
     } catch (e: any) {
@@ -103,7 +107,11 @@ export default function GmFunctionsPage() {
   const onStartJob = async () => {
     try {
       const values = await form.validateFields();
-      const res = await startJob(currentId!, values);
+      const res = await startJob(currentId!, values, {
+        route,
+        target_service_id: route === 'targeted' ? targetService : undefined,
+        hash_key: route === 'hash' ? hashKey : undefined,
+      });
       setJobId(res.job_id);
       setEvents([]);
       // open SSE
@@ -133,13 +141,30 @@ export default function GmFunctionsPage() {
           <span>Select Function:</span>
           <Select style={{ minWidth: 320 }} value={currentId} onChange={setCurrentId} options={descs.map((d) => ({ label: `${d.id} v${d.version || ''}`, value: d.id }))} />
           <span>Route:</span>
-          <Select style={{ width: 160 }} value={route} onChange={(v)=>setRoute(v)} options={[{label:'lb', value:'lb'},{label:'broadcast', value:'broadcast'},{label:'targeted', value:'targeted'}]} />
+          <Select
+            style={{ width: 180 }}
+            value={route}
+            onChange={(v)=>setRoute(v)}
+            options={[
+              {label:'lb', value:'lb'},
+              {label:'broadcast', value:'broadcast'},
+              {label:'targeted', value:'targeted'},
+              {label:'hash', value:'hash'},
+            ]}
+          />
           {route === 'targeted' && (
             <>
               <span>Target:</span>
               <Select style={{ minWidth: 260 }} value={targetService} onChange={setTargetService}
                 placeholder="Select service instance"
                 options={instances.map(i=>({ label: `${i.service_id} @ ${i.agent_id} (${i.version})`, value: i.service_id }))} />
+            </>
+          )}
+          {route === 'hash' && (
+            <>
+              <span>Hash Key:</span>
+              <Input style={{ width: 260 }} value={hashKey} placeholder="e.g. player_id"
+                onChange={(e)=>setHashKey(e.target.value)} />
             </>
           )}
         </Space>
