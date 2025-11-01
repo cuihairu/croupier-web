@@ -22,7 +22,6 @@ import {
 } from '@ant-design/icons';
 
 const { Title, Text, Paragraph } = Typography;
-const { Panel } = Collapse;
 const { Search } = Input;
 
 interface PermissionDomain {
@@ -336,19 +335,18 @@ export default function ConfigPage() {
                     />
                   </div>
 
-                  <Collapse>
-                    {filteredDomains.map(domain => (
-                      <Panel
-                        header={
-                          <Space>
-                            <span style={{ color: domain.color }}>{domain.icon}</span>
-                            <Text strong>{domain.domain}:*</Text>
-                            <Badge count={domain.permissions.length} style={{ backgroundColor: domain.color }} />
-                            <Text type="secondary">- {domain.description}</Text>
-                          </Space>
-                        }
-                        key={domain.domain}
-                      >
+                  <Collapse
+                    items={filteredDomains.map(domain => ({
+                      key: domain.domain,
+                      label: (
+                        <Space>
+                          <span style={{ color: domain.color }}>{domain.icon}</span>
+                          <Text strong>{domain.domain}:*</Text>
+                          <Badge count={domain.permissions.length} style={{ backgroundColor: domain.color }} />
+                          <Text type="secondary">- {domain.description}</Text>
+                        </Space>
+                      ),
+                      children: (
                         <div style={{ padding: '16px', background: '#fafafa', borderRadius: '6px' }}>
                           <Title level={5}>权限列表</Title>
                           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
@@ -365,9 +363,9 @@ export default function ConfigPage() {
                             用于控制 {domain.domain} 相关的操作权限。
                           </Paragraph>
                         </div>
-                      </Panel>
-                    ))}
-                  </Collapse>
+                      )
+                    }))}
+                  />
                 </>
               )
             },

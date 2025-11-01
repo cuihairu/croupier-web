@@ -18,14 +18,14 @@ import {
   TeamOutlined,
   CrownOutlined,
   CodeOutlined,
-  TestTubeOutlined,
+  ExperimentOutlined,
   SettingOutlined,
   BarChartOutlined,
   CustomerServiceOutlined,
   SafetyOutlined,
-  RobotOutlined,
+  AndroidOutlined,
   DesktopOutlined,
-  MarketingOutlined,
+  ShoppingOutlined,
   EditOutlined,
   EyeOutlined
 } from '@ant-design/icons';
@@ -33,7 +33,26 @@ import type { ColumnsType } from 'antd/es/table';
 
 const { Title, Text } = Typography;
 const { Search } = Input;
-const { Option } = Select;
+
+// 图标渲染函数
+const renderIcon = (iconType: string) => {
+  switch (iconType) {
+    case 'CrownOutlined': return <CrownOutlined />;
+    case 'SettingOutlined': return <SettingOutlined />;
+    case 'TeamOutlined': return <TeamOutlined />;
+    case 'CodeOutlined': return <CodeOutlined />;
+    case 'TestTubeOutlined': return <ExperimentOutlined />;
+    case 'BarChartOutlined': return <BarChartOutlined />;
+    case 'CustomerServiceOutlined': return <CustomerServiceOutlined />;
+    case 'SafetyOutlined': return <SafetyOutlined />;
+    case 'RobotOutlined': return <AndroidOutlined />;
+    case 'DesktopOutlined': return <DesktopOutlined />;
+    case 'MarketingOutlined': return <ShoppingOutlined />;
+    case 'EditOutlined': return <EditOutlined />;
+    case 'EyeOutlined': return <EyeOutlined />;
+    default: return <SettingOutlined />;
+  }
+};
 
 interface GameRole {
   key: string;
@@ -43,7 +62,7 @@ interface GameRole {
   category: string;
   permissions: string[];
   userCount: number;
-  icon: React.ReactNode;
+  iconType: string;
   color: string;
 }
 
@@ -58,7 +77,7 @@ const gameRoles: GameRole[] = [
     category: '管理层',
     permissions: ['*'],
     userCount: 1,
-    icon: <CrownOutlined />,
+    iconType: 'CrownOutlined',
     color: '#ff4d4f'
   },
   {
@@ -69,7 +88,7 @@ const gameRoles: GameRole[] = [
     category: '管理层',
     permissions: ['system:config', 'system:restart', 'user:*', 'game:*', 'function:*'],
     userCount: 2,
-    icon: <SettingOutlined />,
+    iconType: 'SettingOutlined',
     color: '#fa541c'
   },
   {
@@ -80,7 +99,7 @@ const gameRoles: GameRole[] = [
     category: '管理层',
     permissions: ['game:config:read', 'player:query', 'data:report', 'monitor:view'],
     userCount: 3,
-    icon: <TeamOutlined />,
+    iconType: 'TeamOutlined',
     color: '#fa8c16'
   },
   {
@@ -91,7 +110,7 @@ const gameRoles: GameRole[] = [
     category: '管理层',
     permissions: ['data:*', 'design:view', 'content:view', 'marketing:view'],
     userCount: 2,
-    icon: <CrownOutlined />,
+    iconType: 'CrownOutlined',
     color: '#faad14'
   },
   // 技术团队
@@ -103,7 +122,7 @@ const gameRoles: GameRole[] = [
     category: '技术团队',
     permissions: ['function:*', 'job:*', 'system:monitor', 'monitor:*'],
     userCount: 3,
-    icon: <CodeOutlined />,
+    iconType: 'CodeOutlined',
     color: '#1890ff'
   },
   {
@@ -114,7 +133,7 @@ const gameRoles: GameRole[] = [
     category: '技术团队',
     permissions: ['function:*', 'job:*', 'game:config:update', 'monitor:view'],
     userCount: 8,
-    icon: <CodeOutlined />,
+    iconType: 'CodeOutlined',
     color: '#13c2c2'
   },
   {
@@ -125,7 +144,7 @@ const gameRoles: GameRole[] = [
     category: '技术团队',
     permissions: ['function:register', 'function:update', 'job:create', 'player:query'],
     userCount: 15,
-    icon: <CodeOutlined />,
+    iconType: 'CodeOutlined',
     color: '#52c41a'
   },
   {
@@ -136,7 +155,7 @@ const gameRoles: GameRole[] = [
     category: '技术团队',
     permissions: ['function:test', 'job:create', 'player:create:test', 'design:view'],
     userCount: 6,
-    icon: <TestTubeOutlined />,
+    iconType: 'TestTubeOutlined',
     color: '#722ed1'
   },
   {
@@ -147,7 +166,7 @@ const gameRoles: GameRole[] = [
     category: '技术团队',
     permissions: ['system:monitor', 'monitor:*', 'function:deploy', 'security:monitor'],
     userCount: 4,
-    icon: <SettingOutlined />,
+    iconType: 'SettingOutlined',
     color: '#eb2f96'
   },
   // 设计团队
@@ -159,7 +178,7 @@ const gameRoles: GameRole[] = [
     category: '设计团队',
     permissions: ['design:*', 'level:*', 'content:create', 'event:design'],
     userCount: 12,
-    icon: <DesktopOutlined />,
+    iconType: 'DesktopOutlined',
     color: '#f759ab'
   },
   {
@@ -170,7 +189,7 @@ const gameRoles: GameRole[] = [
     category: '设计团队',
     permissions: ['numerical:*', 'economy:*', 'data:economy', 'reward:config'],
     userCount: 5,
-    icon: <BarChartOutlined />,
+    iconType: 'BarChartOutlined',
     color: '#ff85c0'
   },
   {
@@ -181,7 +200,7 @@ const gameRoles: GameRole[] = [
     category: '设计团队',
     permissions: ['level:*', 'design:level', 'content:level', 'data:level'],
     userCount: 8,
-    icon: <DesktopOutlined />,
+    iconType: 'DesktopOutlined',
     color: '#b37feb'
   },
   {
@@ -192,7 +211,7 @@ const gameRoles: GameRole[] = [
     category: '设计团队',
     permissions: ['design:system', 'content:system', 'function:view'],
     userCount: 6,
-    icon: <DesktopOutlined />,
+    iconType: 'DesktopOutlined',
     color: '#9254de'
   },
   {
@@ -203,7 +222,7 @@ const gameRoles: GameRole[] = [
     category: '设计团队',
     permissions: ['design:ui', 'content:ui', 'player:query'],
     userCount: 4,
-    icon: <DesktopOutlined />,
+    iconType: 'DesktopOutlined',
     color: '#73d13d'
   },
   // 运营团队
@@ -215,7 +234,7 @@ const gameRoles: GameRole[] = [
     category: '运营团队',
     permissions: ['event:*', 'announcement:*', 'mail:system', 'reward:send'],
     userCount: 10,
-    icon: <MarketingOutlined />,
+    iconType: 'MarketingOutlined',
     color: '#95de64'
   },
   {
@@ -226,7 +245,7 @@ const gameRoles: GameRole[] = [
     category: '运营团队',
     permissions: ['marketing:*', 'data:marketing', 'player:segment'],
     userCount: 5,
-    icon: <MarketingOutlined />,
+    iconType: 'MarketingOutlined',
     color: '#5cdbd3'
   },
   {
@@ -237,7 +256,7 @@ const gameRoles: GameRole[] = [
     category: '运营团队',
     permissions: ['community:*', 'player:communicate', 'content:community'],
     userCount: 7,
-    icon: <TeamOutlined />,
+    iconType: 'TeamOutlined',
     color: '#69c0ff'
   },
   {
@@ -248,7 +267,7 @@ const gameRoles: GameRole[] = [
     category: '运营团队',
     permissions: ['content:*', 'announcement:*', 'audit:content'],
     userCount: 4,
-    icon: <EditOutlined />,
+    iconType: 'EditOutlined',
     color: '#85a5ff'
   },
   // 数据分析团队
@@ -260,7 +279,7 @@ const gameRoles: GameRole[] = [
     category: '数据分析团队',
     permissions: ['data:*', 'player:export', 'economy:analyze'],
     userCount: 6,
-    icon: <BarChartOutlined />,
+    iconType: 'BarChartOutlined',
     color: '#ffc069'
   },
   {
@@ -271,7 +290,7 @@ const gameRoles: GameRole[] = [
     category: '数据分析团队',
     permissions: ['data:*', 'economy:report', 'marketing:analytics'],
     userCount: 3,
-    icon: <BarChartOutlined />,
+    iconType: 'BarChartOutlined',
     color: '#ffd666'
   },
   {
@@ -282,7 +301,7 @@ const gameRoles: GameRole[] = [
     category: '数据分析团队',
     permissions: ['data:user', 'player:behavior', 'design:research'],
     userCount: 2,
-    icon: <EyeOutlined />,
+    iconType: 'EyeOutlined',
     color: '#fff566'
   },
   // 客服团队
@@ -294,7 +313,7 @@ const gameRoles: GameRole[] = [
     category: '客服团队',
     permissions: ['support:*', 'player:*', 'ban:*', 'reward:compensation'],
     userCount: 2,
-    icon: <CustomerServiceOutlined />,
+    iconType: 'CustomerServiceOutlined',
     color: '#d3adf7'
   },
   {
@@ -305,7 +324,7 @@ const gameRoles: GameRole[] = [
     category: '客服团队',
     permissions: ['support:*', 'player:update', 'ban:temporary', 'reward:compensation:basic'],
     userCount: 5,
-    icon: <CustomerServiceOutlined />,
+    iconType: 'CustomerServiceOutlined',
     color: '#efdbff'
   },
   {
@@ -316,7 +335,7 @@ const gameRoles: GameRole[] = [
     category: '客服团队',
     permissions: ['player:query', 'support:ticket', 'mail:support:template'],
     userCount: 12,
-    icon: <CustomerServiceOutlined />,
+    iconType: 'CustomerServiceOutlined',
     color: '#f9f0ff'
   },
   // 特殊角色
@@ -328,7 +347,7 @@ const gameRoles: GameRole[] = [
     category: '特殊角色',
     permissions: ['gm:*', 'player:*', 'ban:*', 'reward:*'],
     userCount: 8,
-    icon: <SafetyOutlined />,
+    iconType: 'SafetyOutlined',
     color: '#ff7875'
   },
   {
@@ -339,7 +358,7 @@ const gameRoles: GameRole[] = [
     category: '特殊角色',
     permissions: ['bot:*', 'player:bot', 'monitor:bot'],
     userCount: 3,
-    icon: <RobotOutlined />,
+    iconType: 'RobotOutlined',
     color: '#ffa39e'
   },
   {
@@ -350,7 +369,7 @@ const gameRoles: GameRole[] = [
     category: '特殊角色',
     permissions: ['security:*', 'ban:*', 'audit:*', 'monitor:security'],
     userCount: 2,
-    icon: <SafetyOutlined />,
+    iconType: 'SafetyOutlined',
     color: '#ffbb96'
   },
   {
@@ -361,7 +380,7 @@ const gameRoles: GameRole[] = [
     category: '特殊角色',
     permissions: ['audit:*', 'data:audit', 'system:audit'],
     userCount: 2,
-    icon: <EyeOutlined />,
+    iconType: 'EyeOutlined',
     color: '#ffd591'
   }
 ];
@@ -406,7 +425,7 @@ export default function RolesPage() {
       key: 'displayName',
       render: (text: string, record: GameRole) => (
         <Space>
-          <span style={{ color: record.color }}>{record.icon}</span>
+          <span style={{ color: record.color }}>{renderIcon(record.iconType)}</span>
           <div>
             <div><strong>{text}</strong></div>
             <Text type="secondary" style={{ fontSize: '12px' }}>{record.name}</Text>
@@ -497,11 +516,11 @@ export default function RolesPage() {
             onChange={setSelectedCategory}
             allowClear
             style={{ width: 200 }}
-          >
-            {categories.map(category => (
-              <Option key={category} value={category}>{category}</Option>
-            ))}
-          </Select>
+            options={categories.map(category => ({
+              label: category,
+              value: category
+            }))}
+          />
           <div style={{ marginLeft: 'auto' }}>
             <Text type="secondary">
               总计 {filteredRoles.length} 个角色，{roles.reduce((sum, role) => sum + role.userCount, 0)} 个用户
@@ -534,7 +553,7 @@ export default function RolesPage() {
             <Descriptions column={1} bordered>
               <Descriptions.Item label="角色标识">
                 <Space>
-                  <span style={{ color: selectedRole.color }}>{selectedRole.icon}</span>
+                  <span style={{ color: selectedRole.color }}>{renderIcon(selectedRole.iconType)}</span>
                   <Text code>{selectedRole.name}</Text>
                 </Space>
               </Descriptions.Item>
