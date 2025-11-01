@@ -45,11 +45,13 @@ export default [
       {
         path: '/gm/assignments',
         name: 'Assignments',
+        access: 'canAssignmentsRead',
         component: './Assignments',
       },
       {
         path: '/gm/audit',
         name: 'Audit',
+        access: 'canAuditRead',
         component: './Audit',
       },
       {
@@ -60,6 +62,7 @@ export default [
       {
         path: '/gm/registry',
         name: 'Registry',
+        access: 'canRegistryRead',
         component: './Registry',
       },
     ],

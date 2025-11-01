@@ -61,8 +61,8 @@ export type AuditEvent = {
   hash: string;
   prev: string;
 };
-export async function listAudit(params?: { game_id?: string; env?: string; actor?: string; kind?: string; limit?: number }) {
-  return request<{ events: AuditEvent[] }>('/api/audit', { params });
+export async function listAudit(params?: { game_id?: string; env?: string; actor?: string; kind?: string; limit?: number; offset?: number; page?: number; size?: number; start?: string; end?: string }) {
+  return request<{ events: AuditEvent[]; total?: number }>('/api/audit', { params });
 }
 
 // Auth
@@ -95,7 +95,7 @@ export async function fetchRegistry() {
 }
 
 export async function listPacks() {
-  return request<{ manifest: any; counts: { descriptors: number; ui_schema: number } }>('/api/packs/list');
+  return request<{ manifest: any; counts: { descriptors: number; ui_schema: number }; etag?: string; export_auth_required?: boolean }>('/api/packs/list');
 }
 
 export async function reloadPacks() {

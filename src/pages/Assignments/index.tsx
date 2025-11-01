@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Card, Space, Select, Button, Typography, message, Alert } from 'antd';
+import { useModel } from '@umijs/max';
 import GameSelector from '@/components/GameSelector';
 import { listDescriptors, fetchAssignments, setAssignments, FunctionDescriptor } from '@/services/croupier';
 
@@ -9,6 +10,12 @@ export default function AssignmentsPage() {
   const [env, setEnv] = useState<string | undefined>(localStorage.getItem('env') || undefined);
   const [selected, setSelected] = useState<string[]>([]);
   const options = useMemo(() => (descs || []).map((d) => ({ label: `${d.id} v${d.version || ''}`, value: d.id })), [descs]);
+  const { initialState } = useModel('@@initialState');
+  const roles = useMemo(() => {
+    const acc = (initialState as any)?.currentUser?.access as string | undefined;
+    return (acc ? acc.split(',') : []).filter(Boolean);
+  }, [initialState]);
+  const canWrite = roles.includes('*') || roles.includes('assignments:write');
 
   async function load() {
     const d = await listDescriptors();
@@ -70,7 +77,7 @@ export default function AssignmentsPage() {
           </div>
         </div>
         <Space>
-          <Button type="primary" onClick={onSave} disabled={!gameId}>Save</Button>
+          <Button type="primary" onClick={onSave} disabled={!gameId || !canWrite} title={!canWrite ? 'no permission' : undefined}>Save</Button>
           <Button onClick={load}>Reload</Button>
         </Space>
       </Space>
