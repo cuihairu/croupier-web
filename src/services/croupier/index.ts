@@ -79,3 +79,25 @@ export async function listFunctionInstances(params: { game_id?: string; function
     { params },
   );
 }
+
+export async function fetchAssignments(params?: { game_id?: string; env?: string }) {
+  return request<{ assignments: Record<string, string[]> }>('/api/assignments', { params });
+}
+
+// Server responds with { ok: true, unknown: string[] } on POST
+export async function setAssignments(params: { game_id: string; env?: string; functions: string[] }) {
+  return request<{ ok: boolean; unknown?: string[] }>('/api/assignments', { method: 'POST', data: params });
+}
+
+// Registry and Packs
+export async function fetchRegistry() {
+  return request<{ agents: any[]; functions: any[]; assignments?: Record<string, string[]>; coverage?: any[] }>('/api/registry');
+}
+
+export async function listPacks() {
+  return request<{ manifest: any; counts: { descriptors: number; ui_schema: number } }>('/api/packs/list');
+}
+
+export async function reloadPacks() {
+  return request<{ ok: boolean }>('/api/packs/reload', { method: 'POST' });
+}

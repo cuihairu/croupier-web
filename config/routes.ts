@@ -28,6 +28,11 @@ export default [
     icon: 'tool',
     routes: [
       {
+        path: '/gm/approvals',
+        name: 'Approvals',
+        component: './Approvals',
+      },
+      {
         path: '/gm/functions',
         name: 'Functions',
         component: './GmFunctions',
@@ -38,9 +43,24 @@ export default [
         component: './GameManage',
       },
       {
+        path: '/gm/assignments',
+        name: 'Assignments',
+        component: './Assignments',
+      },
+      {
         path: '/gm/audit',
         name: 'Audit',
         component: './Audit',
+      },
+      {
+        path: '/gm/packs',
+        name: 'Packs',
+        component: './Packs',
+      },
+      {
+        path: '/gm/registry',
+        name: 'Registry',
+        component: './Registry',
       },
     ],
   },
