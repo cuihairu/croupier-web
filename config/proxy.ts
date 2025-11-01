@@ -10,7 +10,7 @@
  * @doc https://umijs.org/docs/guides/proxy
  */
 export default {
-  // 本地开发代理到 Core 后端 API
+  // 本地开发代理到 Server 后端 API
   dev: {
     '/api/': {
       target: 'http://localhost:8080',

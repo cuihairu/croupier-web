@@ -27,7 +27,7 @@ Build
 ```bash
 pnpm build
 # Output: dist/
-# In production, Croupier Core can statically serve web/dist if present
+# In production, Croupier Server can statically serve web/dist if present
 ```
 
 Lint & Test
@@ -37,11 +37,11 @@ pnpm test
 ```
 
 ## Backend Expectations
-- Core API listens at 8080 by default; dev proxy sends /api/* to http://localhost:8080
+- Server API listens at 8080 by default; dev proxy sends /api/* to http://localhost:8080
 - Auth endpoints used by UI:
   - POST /api/auth/login -> { token, user }
   - GET  /api/auth/me    -> { username, roles }
-- Demo pages may call /api/rule (stubbed by Core for template compatibility)
+- Demo pages may call /api/rule (stubbed by Server for template compatibility)
 
 Default Credentials (dev)
 - username: `admin`
