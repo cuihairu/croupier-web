@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Card, Space, Select, Button, Typography, message, Alert } from 'antd';
+import { Card, Space, Select, Button, Typography, Alert, App } from 'antd';
 import { useModel } from '@umijs/max';
 import GameSelector from '@/components/GameSelector';
 import { listDescriptors, fetchAssignments, setAssignments, FunctionDescriptor } from '@/services/croupier';
 
 export default function AssignmentsPage() {
+  const { message } = App.useApp();
   const [descs, setDescs] = useState<FunctionDescriptor[]>([]);
   const [gameId, setGameId] = useState<string | undefined>(localStorage.getItem('game_id') || undefined);
   const [env, setEnv] = useState<string | undefined>(localStorage.getItem('env') || undefined);

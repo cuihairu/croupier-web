@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, Modal, Space, Table, message, Typography, Popconfirm, Avatar, Upload } from 'antd';
+import { Button, Form, Input, Modal, Space, Table, Typography, Popconfirm, Avatar, Upload, App } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { deleteGame, listGamesMeta, upsertGame, type Game as GameMeta, uploadAsset } from '@/services/croupier';
@@ -7,6 +7,7 @@ import { useAccess } from '@umijs/max';
 
 const GamesMetaPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
+  const { message } = App.useApp();
   const access: any = useAccess?.() || {};
   const canManage = !!access.canGamesManage;
   const canRead = !!access.canGamesRead;

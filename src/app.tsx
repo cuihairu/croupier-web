@@ -9,6 +9,7 @@ import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 import { fetchMe } from '@/services/croupier';
 import React from 'react';
+import { App as AntdApp } from 'antd';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -103,7 +104,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     childrenRender: (children) => {
       // if (initialState?.loading) return <PageLoading />;
       return (
-        <>
+        <AntdApp>
           {children}
           {isDev && (
             <SettingDrawer
@@ -118,7 +119,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
               }}
             />
           )}
-        </>
+        </AntdApp>
       );
     },
     ...initialState?.settings,
