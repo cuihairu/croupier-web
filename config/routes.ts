@@ -23,6 +23,16 @@ export default [
     ],
   },
   {
+    path: '/account',
+    name: 'Account',
+    icon: 'user',
+    routes: [
+      { path: '/account/center', name: 'Center', component: './Account/Center' },
+      { path: '/account/settings', name: 'Settings', component: './Account/Settings' },
+      { path: '/account/messages', name: 'Messages', component: './Account/Messages' },
+    ],
+  },
+  {
     path: '/game-mgmt',
     name: 'GameMgmt',
     icon: 'setting',
@@ -101,13 +111,13 @@ export default [
         path: '/permissions/roles',
         name: 'Roles',
         access: 'canRoleManage',
-        component: './Permissions/Roles',
+        component: './Permissions/RolesV2',
       },
       {
         path: '/permissions/users',
         name: 'Users',
         access: 'canUserManage',
-        component: './Permissions/Users',
+        component: './Permissions/UsersV2',
       },
       {
         path: '/permissions/config',

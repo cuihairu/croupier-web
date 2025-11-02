@@ -1,4 +1,5 @@
 import { Footer, Question, SelectLang, AvatarDropdown, AvatarName } from '@/components';
+import MessagesBell from '@/components/MessagesBell';
 import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
@@ -58,12 +59,12 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     return null;
   };
   return {
-    actionsRender: () => [<GameSelector key="scope" />, <Question key="doc" />, <SelectLang key="SelectLang" />],
+    actionsRender: () => [<GameSelector key="scope" />, <MessagesBell key="msgs" />, <Question key="doc" />, <SelectLang key="SelectLang" />],
     avatarProps: {
       src: initialState?.currentUser?.avatar,
       title: <AvatarName />,
       render: (_, avatarChildren) => {
-        return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
+        return <AvatarDropdown menu>{avatarChildren}</AvatarDropdown>;
       },
     },
     waterMarkProps: {

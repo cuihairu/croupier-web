@@ -7,5 +7,9 @@ export * from './registry';
 export * from './packs';
 export * from './audit';
 export * from './storage';
+export * from './me';
+export * from './users';
+export * from './roles';
+export * from './messages';
 // Types are colocated with each API module (functions/games/gamesMeta/audit).
 // No separate shared types barrel to avoid duplicate exports.

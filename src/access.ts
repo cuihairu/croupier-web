@@ -10,16 +10,16 @@ export default function access(initialState: { currentUser?: API.CurrentUser } |
     // Game meta management
     canGamesManage: has('games:manage') || has('admin'),
     canGamesRead: has('games:read') || has('games:manage') || has('admin'),
-    canRegistryRead: has('registry:read'),
-    canAssignmentsRead: has('assignments:read'),
-    canAssignmentsWrite: has('assignments:write'),
-    canPacksReload: has('packs:reload'),
-    canPacksExport: has('packs:export'),
-    canAuditRead: has('audit:read'),
-    // 权限管理相关权限
-    canPermissionManage: has('user:*') || has('admin'),
-    canRoleManage: has('user:view') || has('user:*') || has('admin'),
-    canUserManage: has('user:*') || has('admin'),
+    canRegistryRead: has('registry:read') || has('admin'),
+    canAssignmentsRead: has('assignments:read') || has('admin'),
+    canAssignmentsWrite: has('assignments:write') || has('admin'),
+    canPacksReload: has('packs:reload') || has('admin'),
+    canPacksExport: has('packs:export') || has('admin'),
+    canAuditRead: has('audit:read') || has('admin'),
+    // 权限管理相关权限（与后端的 RBAC key 对齐）
+    canPermissionManage: has('roles:read') || has('roles:manage') || has('users:read') || has('users:manage') || has('admin'),
+    canRoleManage: has('roles:read') || has('roles:manage') || has('admin'),
+    canUserManage: has('users:read') || has('users:manage') || has('admin'),
     canPermissionConfig: has('system:config') || has('admin'),
   };
 }
