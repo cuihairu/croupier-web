@@ -71,6 +71,16 @@ export async function deleteGameMeta(id: string) {
   return request<void>('/api/games_meta', { method: 'DELETE', params: { id } });
 }
 
+// Upload asset (multipart) → { Key, URL }
+export async function uploadAsset(file: File) {
+  const form = new FormData();
+  form.append('file', file);
+  return request<{ Key: string; URL: string }>('/api/upload', {
+    method: 'POST',
+    data: form,
+  });
+}
+
 export type AuditEvent = {
   time: string;
   kind: string;

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, Modal, Space, Table, message, Typography, Popconfirm, Avatar } from 'antd';
+import { Button, Form, Input, Modal, Space, Table, message, Typography, Popconfirm, Avatar, Upload } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { deleteGameMeta, listGameMeta, upsertGameMeta, type GameMeta } from '@/services/croupier';
 
@@ -85,8 +86,35 @@ const GamesMetaPage: React.FC = () => {
           <Form.Item name="name" label="Name" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="icon" label="Icon URL">
-            <Input placeholder="https://..." />
+          <Form.Item name="icon" label="Icon">
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <Input placeholder="https://..." />
+              <Upload
+                multiple={false}
+                showUploadList={false}
+                beforeUpload={(file) => {
+                  const max = 120 * 1024 * 1024; // 120MB
+                  if (file.size > max) {
+                    message.error('File is too large (max 120MB)');
+                    return Upload.LIST_IGNORE;
+                  }
+                  return true;
+                }}
+                customRequest={async (opts: any) => {
+                  try {
+                    const res = await uploadAsset(opts.file as File);
+                    form.setFieldsValue({ icon: res?.URL || '' });
+                    message.success('Uploaded');
+                    opts.onSuccess && opts.onSuccess(res, opts.file);
+                  } catch (e: any) {
+                    message.error(e?.message || 'Upload failed');
+                    opts.onError && opts.onError(e);
+                  }
+                }}
+              >
+                <Button icon={<UploadOutlined />}>Upload Icon</Button>
+              </Upload>
+            </Space>
           </Form.Item>
           <Form.Item name="description" label="Description">
             <Input.TextArea rows={4} />
@@ -98,4 +126,3 @@ const GamesMetaPage: React.FC = () => {
 };
 
 export default GamesMetaPage;
-
