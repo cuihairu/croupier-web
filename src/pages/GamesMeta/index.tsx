@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, Modal, Space, Table, message, Typography, Popconfirm, Avatar, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
-import { deleteGameMeta, listGameMeta, upsertGameMeta, type GameMeta, uploadAsset } from '@/services/croupier';
+import { deleteGame, listGamesMeta, upsertGame, type Game as GameMeta, uploadAsset } from '@/services/croupier';
 import { useAccess } from '@umijs/max';
 
 const GamesMetaPage: React.FC = () => {
@@ -18,7 +18,7 @@ const GamesMetaPage: React.FC = () => {
   const load = async () => {
     setLoading(true);
     try {
-      const res = await listGameMeta();
+      const res = await listGamesMeta();
       setData(res?.games || []);
     } catch (e: any) {
       message.error(e?.message || 'Load failed');
@@ -31,7 +31,7 @@ const GamesMetaPage: React.FC = () => {
 
   const columns: ColumnsType<GameMeta> = [
     { title: 'Icon', dataIndex: 'icon', width: 64, render: (v) => v ? <Avatar shape="square" src={v} /> : null },
-    { title: 'Game ID', dataIndex: 'game_id' },
+    { title: 'ID', dataIndex: 'id', width: 80 },
     { title: 'Name', dataIndex: 'name' },
     { title: 'Description', dataIndex: 'description', ellipsis: true },
     { title: 'Updated At', dataIndex: 'updated_at', width: 200 },
@@ -41,7 +41,7 @@ const GamesMetaPage: React.FC = () => {
         canManage ? (
           <Space>
             <Button size="small" onClick={() => { setEditing(true); form.setFieldsValue(rec); setOpen(true); }}>Edit</Button>
-            <Popconfirm title="Delete this game?" onConfirm={async ()=>{ await deleteGameMeta(rec.game_id); message.success('Deleted'); load(); }}>
+            <Popconfirm title="Delete this game?" onConfirm={async ()=>{ await deleteGame(rec.id!); message.success('Deleted'); load(); }}>
               <Button size="small" danger>Delete</Button>
             </Popconfirm>
           </Space>
@@ -59,7 +59,7 @@ const GamesMetaPage: React.FC = () => {
   const onSubmit = async () => {
     try {
       const v = await form.validateFields();
-      await upsertGameMeta(v);
+      await upsertGame(v as any);
       message.success(editing ? 'Updated' : 'Created');
       setOpen(false);
       load();
@@ -73,7 +73,7 @@ const GamesMetaPage: React.FC = () => {
         <Typography.Text type="secondary">Manage game id/name/icon/description (DB-backed)</Typography.Text>
       </Space>
       <Table<GameMeta>
-        rowKey={(r)=>r.game_id}
+        rowKey={(r)=>String(r.id)}
         loading={loading}
         columns={columns}
         dataSource={data}
@@ -86,9 +86,7 @@ const GamesMetaPage: React.FC = () => {
         destroyOnHidden
       >
         <Form form={form} layout="vertical" preserve={false}>
-          <Form.Item name="game_id" label="Game ID" rules={[{ required: true }]}>
-            <Input placeholder="unique game identifier" disabled={editing} />
-          </Form.Item>
+          {/* id is auto-generated; not editable */}
           <Form.Item name="name" label="Name" rules={[{ required: true }]}>
             <Input />
           </Form.Item>

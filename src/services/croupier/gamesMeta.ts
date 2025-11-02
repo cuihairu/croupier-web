@@ -1,22 +1,24 @@
 import { request } from '@umijs/max';
 
-export type GameMeta = {
-  game_id: string;
+export type Game = {
+  id?: number;
   name?: string;
   icon?: string;         // URL
   description?: string;
+  enabled?: boolean;
   created_at?: string;
   updated_at?: string;
 };
 
-export async function listGameMeta() {
-  return request<{ games: GameMeta[] }>('/api/games_meta');
+export async function listGamesMeta() {
+  return request<{ games: Game[] }>('/api/games');
 }
 
-export async function upsertGameMeta(g: GameMeta) {
-  return request<void>('/api/games_meta', { method: 'POST', data: g });
+export async function upsertGame(g: Game) {
+  // POST /api/games: id==0/undefined -> create; else update
+  return request<{ id: number } | void>('/api/games', { method: 'POST', data: g });
 }
 
-export async function deleteGameMeta(id: string) {
-  return request<void>('/api/games_meta', { method: 'DELETE', params: { id } });
+export async function deleteGame(id: number) {
+  return request<void>(`/api/games/${id}`, { method: 'DELETE' });
 }
