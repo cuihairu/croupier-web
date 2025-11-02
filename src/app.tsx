@@ -8,8 +8,9 @@ import GameSelector from '@/components/GameSelector';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 import { fetchMe } from '@/services/croupier';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { App as AntdApp } from 'antd';
+import { setAppApi } from './utils/antdApp';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -49,6 +50,13 @@ export async function getInitialState(): Promise<{
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
+  const AppApiRegistrar: React.FC = () => {
+    const inst = AntdApp.useApp();
+    useEffect(() => {
+      setAppApi({ message: inst.message, notification: inst.notification });
+    }, [inst]);
+    return null;
+  };
   return {
     actionsRender: () => [<GameSelector key="scope" />, <Question key="doc" />, <SelectLang key="SelectLang" />],
     avatarProps: {
@@ -105,6 +113,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       // if (initialState?.loading) return <PageLoading />;
       return (
         <AntdApp>
+          <AppApiRegistrar />
           {children}
           {isDev && (
             <SettingDrawer
