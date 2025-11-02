@@ -26,11 +26,12 @@ export default [
     path: '/game-mgmt',
     name: 'GameMgmt',
     icon: 'setting',
+    access: 'canGamesRead',
     routes: [
       {
         path: '/game-mgmt/games-meta',
         name: 'Games Meta',
-        access: 'canGamesManage',
+        access: 'canGamesRead',
         component: './GamesMeta',
       },
     ],

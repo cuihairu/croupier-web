@@ -9,6 +9,7 @@ export default function access(initialState: { currentUser?: API.CurrentUser } |
     canAdmin: has('admin'),
     // Game meta management
     canGamesManage: has('games:manage') || has('admin'),
+    canGamesRead: has('games:read') || has('games:manage') || has('admin'),
     canRegistryRead: has('registry:read'),
     canAssignmentsRead: has('assignments:read'),
     canAssignmentsWrite: has('assignments:write'),

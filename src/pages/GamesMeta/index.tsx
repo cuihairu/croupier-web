@@ -2,10 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, Modal, Space, Table, message, Typography, Popconfirm, Avatar, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
-import { deleteGameMeta, listGameMeta, upsertGameMeta, type GameMeta } from '@/services/croupier';
+import { deleteGameMeta, listGameMeta, upsertGameMeta, type GameMeta, uploadAsset } from '@/services/croupier';
+import { useAccess } from '@umijs/max';
 
 const GamesMetaPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
+  const access: any = useAccess?.() || {};
+  const canManage = !!access.canGamesManage;
+  const canRead = !!access.canGamesRead;
   const [data, setData] = useState<GameMeta[]>([]);
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm<GameMeta>();
@@ -34,12 +38,14 @@ const GamesMetaPage: React.FC = () => {
     {
       title: 'Actions', width: 200,
       render: (_, rec) => (
-        <Space>
-          <Button size="small" onClick={() => { setEditing(true); form.setFieldsValue(rec); setOpen(true); }}>Edit</Button>
-          <Popconfirm title="Delete this game?" onConfirm={async ()=>{ await deleteGameMeta(rec.game_id); message.success('Deleted'); load(); }}>
-            <Button size="small" danger>Delete</Button>
-          </Popconfirm>
-        </Space>
+        canManage ? (
+          <Space>
+            <Button size="small" onClick={() => { setEditing(true); form.setFieldsValue(rec); setOpen(true); }}>Edit</Button>
+            <Popconfirm title="Delete this game?" onConfirm={async ()=>{ await deleteGameMeta(rec.game_id); message.success('Deleted'); load(); }}>
+              <Button size="small" danger>Delete</Button>
+            </Popconfirm>
+          </Space>
+        ) : null
       )
     },
   ];
@@ -63,7 +69,7 @@ const GamesMetaPage: React.FC = () => {
   return (
     <div>
       <Space style={{ marginBottom: 16 }}>
-        <Button type="primary" onClick={onAdd}>Add Game</Button>
+        {canManage ? (<Button type="primary" onClick={onAdd}>Add Game</Button>) : null}
         <Typography.Text type="secondary">Manage game id/name/icon/description (DB-backed)</Typography.Text>
       </Space>
       <Table<GameMeta>
