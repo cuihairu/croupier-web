@@ -9,6 +9,8 @@ export default {
   'menu.GM.Registry': '注册表',
   'menu.GameMgmt': '游戏管理',
   'menu.GameMgmt.Games Meta': '游戏元数据',
+  // Backward-compat for older route keys that may still reference GM.Games Meta
+  'menu.GM.Games Meta': '游戏元数据',
   'menu.Permissions': '权限管理',
   'menu.Permissions.Roles': '角色管理',
   'menu.Permissions.Users': '用户管理',

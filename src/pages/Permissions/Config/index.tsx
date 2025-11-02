@@ -401,12 +401,12 @@ export default function ConfigPage() {
                         </Paragraph>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
                           {domain.permissions.slice(0, 5).map(permission => (
-                            <Tag key={permission} size="small" color={domain.color}>
+                            <Tag key={permission} color={domain.color} style={{ fontSize: 12, lineHeight: '20px', padding: '0 7px' }}>
                               {permission}
                             </Tag>
                           ))}
                           {domain.permissions.length > 5 && (
-                            <Tag size="small">+{domain.permissions.length - 5}</Tag>
+                            <Tag style={{ fontSize: 12, lineHeight: '20px', padding: '0 7px' }}>+{domain.permissions.length - 5}</Tag>
                           )}
                         </div>
                       </Card>

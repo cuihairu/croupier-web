@@ -44,7 +44,7 @@ export default function AssignmentsPage() {
   }, []);
 
   const onSave = async () => {
-    if (!gameId) { message.warn('Select game/env first'); return; }
+    if (!gameId) { message.warning('Select game/env first'); return; }
     const res = await setAssignments({ game_id: gameId, env, functions: selected });
     const unknown = res?.unknown || [];
     if (unknown.length > 0) {

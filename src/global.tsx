@@ -2,6 +2,23 @@ import { useIntl } from '@umijs/max';
 import { Button, message, notification } from 'antd';
 import defaultSettings from '../config/defaultSettings';
 
+// Dev-only: suppress noisy React StrictMode findDOMNode warnings from rc-* deps
+if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
+  // eslint-disable-next-line no-console
+  const origError = console.error?.bind(console);
+  // eslint-disable-next-line no-console
+  console.error = (...args: any[]) => {
+    try {
+      const msg = args?.[0];
+      if (typeof msg === 'string' && msg.includes('findDOMNode is deprecated')) {
+        return; // drop
+      }
+    } catch {}
+    // eslint-disable-next-line no-console
+    return origError?.(...args);
+  };
+}
+
 const { pwa } = defaultSettings;
 const isHttps = document.location.protocol === 'https:';
 

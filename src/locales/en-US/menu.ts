@@ -9,6 +9,8 @@ export default {
   'menu.GM.Registry': 'Registry',
   'menu.GameMgmt': 'Game Management',
   'menu.GameMgmt.Games Meta': 'Games Meta',
+  // Backward-compat for older route keys that may still reference GM.Games Meta
+  'menu.GM.Games Meta': 'Games Meta',
   'menu.Permissions': 'Permission Management',
   'menu.Permissions.Roles': 'Role Management',
   'menu.Permissions.Users': 'User Management',

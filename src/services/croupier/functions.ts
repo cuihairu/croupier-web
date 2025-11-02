@@ -1,5 +1,14 @@
 import { request } from '@umijs/max';
-import type { FunctionDescriptor } from './types';
+
+export type FunctionDescriptor = {
+  id: string;
+  version?: string;
+  category?: string;
+  params?: any;
+  auth?: Record<string, any>;
+  // Optional outputs schema for UI rendering (views/layout); present in generated descriptors
+  outputs?: any;
+};
 
 export async function listDescriptors() {
   return request<FunctionDescriptor[]>('/api/descriptors');
@@ -43,4 +52,3 @@ export async function listFunctionInstances(params: { game_id?: string; function
     { params },
   );
 }
-
