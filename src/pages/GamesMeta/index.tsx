@@ -83,7 +83,7 @@ const GamesMetaPage: React.FC = () => {
         open={open}
         onCancel={()=>setOpen(false)}
         onOk={onSubmit}
-        destroyOnClose
+        destroyOnHidden
       >
         <Form form={form} layout="vertical" preserve={false}>
           <Form.Item name="game_id" label="Game ID" rules={[{ required: true }]}>
