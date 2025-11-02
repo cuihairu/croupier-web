@@ -7,6 +7,7 @@ export default {
   'menu.GM.Audit': '审计',
   'menu.GM.Packs': '包管理',
   'menu.GM.Registry': '注册表',
+  'menu.GM.Games Meta': '游戏元数据',
   'menu.Permissions': '权限管理',
   'menu.Permissions.Roles': '角色管理',
   'menu.Permissions.Users': '用户管理',

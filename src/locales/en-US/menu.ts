@@ -7,6 +7,7 @@ export default {
   'menu.GM.Audit': 'Audit',
   'menu.GM.Packs': 'Packs',
   'menu.GM.Registry': 'Registry',
+  'menu.GM.Games Meta': 'Games Meta',
   'menu.Permissions': 'Permission Management',
   'menu.Permissions.Roles': 'Role Management',
   'menu.Permissions.Users': 'User Management',
