@@ -7,6 +7,8 @@ export default function access(initialState: { currentUser?: API.CurrentUser } |
   const has = (p: string) => perms.has('*') || perms.has(p);
   return {
     canAdmin: has('admin'),
+    // Game meta management
+    canGamesManage: has('games:manage') || has('admin'),
     canRegistryRead: has('registry:read'),
     canAssignmentsRead: has('assignments:read'),
     canAssignmentsWrite: has('assignments:write'),

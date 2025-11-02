@@ -23,6 +23,19 @@ export default [
     ],
   },
   {
+    path: '/game-mgmt',
+    name: 'GameMgmt',
+    icon: 'setting',
+    routes: [
+      {
+        path: '/game-mgmt/games-meta',
+        name: 'Games Meta',
+        access: 'canGamesManage',
+        component: './GamesMeta',
+      },
+    ],
+  },
+  {
     path: '/gm',
     name: 'GM',
     icon: 'tool',
@@ -43,9 +56,10 @@ export default [
         component: './GameManage',
       },
       {
-        path: '/gm/games-meta',
-        name: 'Games Meta',
-        component: './GamesMeta',
+        // moved Games Meta to a dedicated top-level menu 'Game Management'
+        // path: '/gm/games-meta',
+        // name: 'Games Meta',
+        // component: './GamesMeta',
       },
       {
         path: '/gm/assignments',
