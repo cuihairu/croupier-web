@@ -43,6 +43,11 @@ export default [
         component: './GameManage',
       },
       {
+        path: '/gm/games-meta',
+        name: 'Games Meta',
+        component: './GamesMeta',
+      },
+      {
         path: '/gm/assignments',
         name: 'Assignments',
         access: 'canAssignmentsRead',
