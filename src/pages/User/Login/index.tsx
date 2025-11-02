@@ -16,7 +16,8 @@ import {
   ProFormText,
 } from '@ant-design/pro-components';
 import { FormattedMessage, history, SelectLang, useIntl, useModel, Helmet } from '@umijs/max';
-import { Alert, message, Tabs } from 'antd';
+import { Alert, Tabs } from 'antd';
+import { getMessage } from '@/utils/antdApp';
 import Settings from '../../../../config/defaultSettings';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
@@ -119,7 +120,7 @@ const Login: React.FC = () => {
       // 登录
       const res = await loginAuth({ username: values.username, password: values.password });
       localStorage.setItem('token', res.token);
-      message.success(intl.formatMessage({ id: 'pages.login.success', defaultMessage: '登录成功！' }));
+      getMessage()?.success(intl.formatMessage({ id: 'pages.login.success', defaultMessage: '登录成功！' }));
       await fetchUserInfo();
       const urlParams = new URL(window.location.href).searchParams;
       history.push(urlParams.get('redirect') || '/');
@@ -130,7 +131,7 @@ const Login: React.FC = () => {
         defaultMessage: '登录失败，请重试！',
       });
       console.log(error);
-      message.error(defaultLoginFailureMessage);
+      getMessage()?.error(defaultLoginFailureMessage);
     }
   };
   const { status, type: loginType } = userLoginState;
@@ -332,7 +333,7 @@ const Login: React.FC = () => {
                   if (!result) {
                     return;
                   }
-                  message.success('获取验证码成功！验证码为：1234');
+                  getMessage()?.success('获取验证码成功！验证码为：1234');
                 }}
               />
             </>

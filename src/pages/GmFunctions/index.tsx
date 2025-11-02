@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Card, Select, Form, Input, InputNumber, Switch, Button, Space, Typography, Divider, message, Row, Col, Tabs, DatePicker, TimePicker } from 'antd';
+import { Card, Select, Form, Input, InputNumber, Switch, Button, Space, Typography, Divider, Row, Col, Tabs, DatePicker, TimePicker } from 'antd';
+import { getMessage } from '@/utils/antdApp';
 import GameSelector from '@/components/GameSelector';
 import { listDescriptors, listFunctionInstances, invokeFunction, startJob, cancelJob, FunctionDescriptor, fetchAssignments } from '@/services/croupier';
 import { getRenderer, registerBuiltins, loadPackPlugins } from '@/plugin/registry';
@@ -332,12 +333,12 @@ export default function GmFunctionsPage() {
         target_service_id: route === 'targeted' ? targetService : undefined,
         hash_key: route === 'hash' ? hashKey : undefined,
       });
-      message.success('Invoke OK');
+      getMessage()?.success('Invoke OK');
       setEvents([JSON.stringify(res)]);
       setLastOutput(res);
     } catch (e: any) {
       if (e?.errorFields) return; // form error
-      message.error(e?.message || 'Invoke failed');
+      getMessage()?.error(e?.message || 'Invoke failed');
     } finally {
       setInvoking(false);
     }
@@ -364,14 +365,14 @@ export default function GmFunctionsPage() {
       esRef.current = es;
     } catch (e: any) {
       if (e?.errorFields) return;
-      message.error(e?.message || 'Start job failed');
+      getMessage()?.error(e?.message || 'Start job failed');
     }
   };
 
   const onCancel = async () => {
     if (!jobId) return;
     await cancelJob(jobId);
-    message.info('Cancel sent');
+    getMessage()?.info('Cancel sent');
   };
 
   // Normalize form values to match JSON Schema (convert __entries arrays into map objects recursively)

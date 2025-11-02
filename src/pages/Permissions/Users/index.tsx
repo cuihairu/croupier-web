@@ -9,13 +9,13 @@ import {
   Form,
   Input,
   Select,
-  message,
   Tooltip,
   Typography,
   Avatar,
   Switch,
   Popconfirm
 } from 'antd';
+import { getMessage } from '@/utils/antdApp';
 import {
   UserOutlined,
   EditOutlined,
@@ -276,7 +276,7 @@ export default function UsersPage() {
             : user
         );
         setUsers(updatedUsers);
-        message.success('用户信息更新成功');
+        getMessage()?.success('用户信息更新成功');
       } else {
         // 添加新用户
         const newUser: User = {
@@ -289,7 +289,7 @@ export default function UsersPage() {
           createTime: new Date().toLocaleString()
         };
         setUsers([...users, newUser]);
-        message.success('用户创建成功');
+        getMessage()?.success('用户创建成功');
       }
 
       setModalVisible(false);
@@ -301,7 +301,7 @@ export default function UsersPage() {
   const handleDelete = (userKey: string) => {
     const updatedUsers = users.filter(user => user.key !== userKey);
     setUsers(updatedUsers);
-    message.success('用户删除成功');
+    getMessage()?.success('用户删除成功');
   };
 
   const handleStatusChange = (userKey: string, status: 'active' | 'inactive') => {
@@ -309,7 +309,7 @@ export default function UsersPage() {
       user.key === userKey ? { ...user, status } : user
     );
     setUsers(updatedUsers);
-    message.success(`用户状态已${status === 'active' ? '启用' : '禁用'}`);
+    getMessage()?.success(`用户状态已${status === 'active' ? '启用' : '禁用'}`);
   };
 
   const columns: ColumnsType<User> = [

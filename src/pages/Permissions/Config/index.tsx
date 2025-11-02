@@ -11,8 +11,9 @@ import {
   Tooltip,
   Input,
   Button,
-  message
+  
 } from 'antd';
+import { getMessage } from '@/utils/antdApp';
 import {
   SettingOutlined,
   SecurityScanOutlined,
@@ -258,7 +259,7 @@ export default function ConfigPage() {
   ];
 
   const handleSaveConfig = () => {
-    message.success('权限配置保存成功');
+    getMessage()?.success('权限配置保存成功');
   };
 
   return (

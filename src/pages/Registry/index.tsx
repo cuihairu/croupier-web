@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Card, Table, Space, Typography, Button, message, Tag, Switch, Select } from 'antd';
+import { Card, Table, Space, Typography, Button, Tag, Switch, Select } from 'antd';
+import { getMessage } from '@/utils/antdApp';
 import { useModel } from '@umijs/max';
 import GameSelector from '@/components/GameSelector';
 import { fetchRegistry } from '@/services/croupier';
@@ -32,7 +33,7 @@ export default function RegistryPage() {
       setAssigns((res as any).assignments || {});
       setCoverage((res as any).coverage || []);
     } catch (e: any) {
-      message.error(e?.message || 'Load failed');
+      getMessage()?.error(e?.message || 'Load failed');
     } finally { setLoading(false); }
   };
 

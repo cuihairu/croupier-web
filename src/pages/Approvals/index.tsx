@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Card, Table, Tag, Space, Button, Drawer, Descriptions, Select, Input, message, Modal } from 'antd';
+import { Card, Table, Tag, Space, Button, Drawer, Descriptions, Select, Input, Modal } from 'antd';
+import { getMessage } from '@/utils/antdApp';
 import { request } from '@umijs/max';
 
 type Approval = {
@@ -46,7 +47,7 @@ export default function ApprovalsPage() {
     let json: any;
     try {
       json = await request('/api/approvals', { params: Object.fromEntries(qs as any) });
-    } catch (e: any) { message.error(e?.message || 'List failed'); setLoading(false); return; }
+    } catch (e: any) { getMessage()?.error(e?.message || 'List failed'); setLoading(false); return; }
     setData(json.approvals || []);
     setTotal(json.total || 0);
     setLoading(false);
@@ -54,7 +55,7 @@ export default function ApprovalsPage() {
 
   async function view(id: string) {
     let json: any;
-    try { json = await request('/api/approvals/get', { params: { id } }); } catch (e: any) { message.error(e?.message || 'Get failed'); return; }
+    try { json = await request('/api/approvals/get', { params: { id } }); } catch (e: any) { getMessage()?.error(e?.message || 'Get failed'); return; }
     setCurrent(json);
     setPreview(json.payload_preview || '');
     setOpen(true);
@@ -68,19 +69,19 @@ export default function ApprovalsPage() {
     if (needConfirm) {
       // Require typing the function id as a simple safeguard
       const text = window.prompt(`High risk function. Type the function id to confirm: ${a?.FunctionID || ''}`) || '';
-      if ((a?.FunctionID || '') && text.trim() !== a?.FunctionID) { message.warning('Confirmation text mismatch'); return; }
+      if ((a?.FunctionID || '') && text.trim() !== a?.FunctionID) { getMessage()?.warning('Confirmation text mismatch'); return; }
     }
     const otp = window.prompt('OTP code (if required, leave empty if not set)') || '';
-    try { await request('/api/approvals/approve', { method: 'POST', data: { id, otp } }); } catch (e: any) { message.error(e?.message || 'Approve failed'); return; }
-    message.success('Approved');
+    try { await request('/api/approvals/approve', { method: 'POST', data: { id, otp } }); } catch (e: any) { getMessage()?.error(e?.message || 'Approve failed'); return; }
+    getMessage()?.success('Approved');
     await list();
     await view(id);
   }
 
   async function reject(id: string) {
     const reason = window.prompt('Reject reason?') || '';
-    try { await request('/api/approvals/reject', { method: 'POST', data: { id, reason } }); } catch (e: any) { message.error(e?.message || 'Reject failed'); return; }
-    message.success('Rejected');
+    try { await request('/api/approvals/reject', { method: 'POST', data: { id, reason } }); } catch (e: any) { getMessage()?.error(e?.message || 'Reject failed'); return; }
+    getMessage()?.success('Rejected');
     await list();
     await view(id);
   }

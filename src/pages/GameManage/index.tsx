@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Table, Form, Input, Select, Button, Space, message } from 'antd';
+import { Card, Table, Form, Input, Select, Button, Space } from 'antd';
+import { getMessage } from '@/utils/antdApp';
 import { addGame, listGames, GameEntry } from '@/services/croupier';
 import GameSelector from '@/components/GameSelector';
 
@@ -26,7 +27,7 @@ export default function GameManagePage() {
     try {
       const v = await form.validateFields();
       await addGame(v);
-      message.success('Added');
+      getMessage()?.success('Added');
       form.resetFields();
       reload();
     } catch (e) {}
@@ -52,4 +53,3 @@ export default function GameManagePage() {
     </Card>
   );
 }
-

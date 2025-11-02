@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Card, Table, Space, Input, Select, Button, Typography, message, Switch, Tag, DatePicker } from 'antd';
+import { Card, Table, Space, Input, Select, Button, Typography, Switch, Tag, DatePicker } from 'antd';
+import { getMessage } from '@/utils/antdApp';
 import { useModel } from '@umijs/max';
 import { listAudit, AuditEvent } from '@/services/croupier';
 import GameSelector from '@/components/GameSelector';
@@ -32,7 +33,7 @@ export default function AuditPage(){
       const res = await listAudit(params);
       setData(res.events || []);
       setTotal(res.total || (res.events||[]).length);
-    } catch (e:any) { message.error(e?.message || 'Load failed'); }
+    } catch (e:any) { getMessage()?.error(e?.message || 'Load failed'); }
     setLoading(false);
   };
 

@@ -1,5 +1,6 @@
 import { useIntl } from '@umijs/max';
-import { Button, message, notification } from 'antd';
+import { Button } from 'antd';
+import { getMessage, getNotification } from '@/utils/antdApp';
 import defaultSettings from '../config/defaultSettings';
 
 // Dev-only: suppress noisy React StrictMode findDOMNode warnings from rc-* deps
@@ -40,7 +41,7 @@ const clearCache = () => {
 if (pwa) {
   // Notify user if offline now
   window.addEventListener('sw.offline', () => {
-    message.warning(useIntl().formatMessage({ id: 'app.pwa.offline' }));
+    getMessage()?.warning(useIntl().formatMessage({ id: 'app.pwa.offline' }));
   });
 
   // Pop up a prompt on the page asking the user if they want to use the latest version
@@ -75,14 +76,14 @@ if (pwa) {
       <Button
         type="primary"
         onClick={() => {
-          notification.destroy(key);
+          getNotification()?.destroy(key);
           reloadSW();
         }}
       >
         {useIntl().formatMessage({ id: 'app.pwa.serviceworker.updated.ok' })}
       </Button>
     );
-    notification.open({
+    getNotification()?.open({
       message: useIntl().formatMessage({ id: 'app.pwa.serviceworker.updated' }),
       description: useIntl().formatMessage({ id: 'app.pwa.serviceworker.updated.hint' }),
       btn,

@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Card, Space, Typography, Button, message, Tooltip } from 'antd';
+import { Card, Space, Typography, Button, Tooltip } from 'antd';
+import { getMessage } from '@/utils/antdApp';
 import GameSelector from '@/components/GameSelector';
 import { listPacks, reloadPacks } from '@/services/croupier';
 import { useModel } from '@umijs/max';
@@ -26,12 +27,12 @@ export default function PacksPage() {
       setCounts(res.counts || {descriptors:0, ui_schema:0});
       setEtag((res as any).etag || undefined);
       setExportAuthRequired(!!(res as any).export_auth_required);
-    } catch (e: any) { message.error(e?.message || 'Load failed'); }
+    } catch (e: any) { getMessage()?.error(e?.message || 'Load failed'); }
     finally { setLoading(false); }
   }
   useEffect(()=>{ load().catch(()=>{}); }, []);
 
-  const onReload = async () => { setLoading(true); try { await reloadPacks(); message.success('Reloaded'); await load(); } catch (e:any){ message.error(e?.message || 'Reload failed'); } finally { setLoading(false); } };
+  const onReload = async () => { setLoading(true); try { await reloadPacks(); getMessage()?.success('Reloaded'); await load(); } catch (e:any){ getMessage()?.error(e?.message || 'Reload failed'); } finally { setLoading(false); } };
 
   return (
     <Card title="Packs" extra={<GameSelector />}> 

@@ -11,7 +11,8 @@ import {
   ProTable,
 } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Button, Drawer, Input, message } from 'antd';
+import { Button, Drawer, Input } from 'antd';
+import { getMessage } from '@/utils/antdApp';
 import React, { useRef, useState } from 'react';
 import type { FormValueType } from './components/UpdateForm';
 import UpdateForm from './components/UpdateForm';
@@ -22,15 +23,15 @@ import UpdateForm from './components/UpdateForm';
  * @param fields
  */
 const handleAdd = async (fields: API.RuleListItem) => {
-  const hide = message.loading('正在添加');
+  const hide = (getMessage()?.loading('正在添加') as unknown as (()=>void)) || (()=>{});
   try {
     await addRule({ ...fields });
     hide();
-    message.success('Added successfully');
+    getMessage()?.success('Added successfully');
     return true;
   } catch (error) {
     hide();
-    message.error('Adding failed, please try again!');
+    getMessage()?.error('Adding failed, please try again!');
     return false;
   }
 };
@@ -42,7 +43,7 @@ const handleAdd = async (fields: API.RuleListItem) => {
  * @param fields
  */
 const handleUpdate = async (fields: FormValueType) => {
-  const hide = message.loading('Configuring');
+  const hide = (getMessage()?.loading('Configuring') as unknown as (()=>void)) || (()=>{});
   try {
     await updateRule({
       name: fields.name,
@@ -51,11 +52,11 @@ const handleUpdate = async (fields: FormValueType) => {
     });
     hide();
 
-    message.success('Configuration is successful');
+    getMessage()?.success('Configuration is successful');
     return true;
   } catch (error) {
     hide();
-    message.error('Configuration failed, please try again!');
+    getMessage()?.error('Configuration failed, please try again!');
     return false;
   }
 };
@@ -67,18 +68,18 @@ const handleUpdate = async (fields: FormValueType) => {
  * @param selectedRows
  */
 const handleRemove = async (selectedRows: API.RuleListItem[]) => {
-  const hide = message.loading('正在删除');
+  const hide = (getMessage()?.loading('正在删除') as unknown as (()=>void)) || (()=>{});
   if (!selectedRows) return true;
   try {
     await removeRule({
       key: selectedRows.map((row) => row.key),
     });
     hide();
-    message.success('Deleted successfully and will refresh soon');
+    getMessage()?.success('Deleted successfully and will refresh soon');
     return true;
   } catch (error) {
     hide();
-    message.error('Delete failed, please try again');
+    getMessage()?.error('Delete failed, please try again');
     return false;
   }
 };
