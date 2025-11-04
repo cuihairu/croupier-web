@@ -3,6 +3,7 @@ import { Card, Select, Form, Input, InputNumber, Switch, Button, Space, Typograp
 import FormRender from 'form-render';
 import { getMessage } from '@/utils/antdApp';
 import GameSelector from '@/components/GameSelector';
+import { renderXUIField, XUISchemaField } from '@/components/XUISchema';
 import { listDescriptors, listFunctionInstances, invokeFunction, startJob, cancelJob, FunctionDescriptor, fetchAssignments } from '@/services/croupier';
 import { getRenderer, registerBuiltins, loadPackPlugins } from '@/plugin/registry';
 import { applyTransform } from '@/plugin/transform';
@@ -16,7 +17,69 @@ type UISchema = {
   'ui:groups'?: Array<{ title?: string; fields: string[] }>;
 };
 
-// Render form items from JSON Schema subset + UI schema hints (label/widget/placeholder)
+// Enhanced render function using XUISchema
+function renderXFormItems(desc: FunctionDescriptor | undefined, ui: UISchema | undefined, form: any) {
+  const items: any[] = [];
+  const props = (desc?.params && desc.params.properties) || {};
+  const required: string[] = (desc?.params && desc.params.required) || [];
+  const values = Form.useWatch([], form);
+
+  const uiFields = ui?.fields || {};
+
+  // Enhanced group rendering with XUISchema
+  const groups: Array<{ title?: string; fields: string[] }> = (ui && (ui as any)['ui:groups']) || [];
+  const layoutType: string = (ui && (ui as any)['ui:layout'] && (ui as any)['ui:layout'].type) || 'grid';
+  const cols = Math.max(1, Math.min(4, (ui && (ui as any)['ui:layout'] && (ui as any)['ui:layout'].cols) || 1));
+  const span = Math.floor(24 / cols);
+
+  if (groups.length > 0) {
+    if (layoutType === 'tabs') {
+      items.push(
+        <Tabs key="tabs" items={groups.map((g, gi) => ({
+          key: String(gi),
+          label: g.title || `Group ${gi+1}`,
+          children: (
+            <Row gutter={12}>
+              {g.fields.map((key) => {
+                const schema = props[key] || {};
+                const uiField = uiFields[key] as XUISchemaField || {};
+                return (
+                  <Col key={key} span={span}>
+                    {renderXUIField(key, schema, uiField, values, form, [key], required.includes(key))}
+                  </Col>
+                );
+              })}
+            </Row>
+          )
+        }))} />
+      );
+    } else {
+      groups.forEach((g, gi) => {
+        items.push(<Divider key={`g-div-${gi}`}>{g.title || ''}</Divider>);
+        items.push(
+          <Row key={`g-${gi}`} gutter={12}>
+            {g.fields.map((key) => {
+              const schema = props[key] || {};
+              const uiField = uiFields[key] as XUISchemaField || {};
+              return (
+                <Col key={key} span={span}>
+                  {renderXUIField(key, schema, uiField, values, form, [key], required.includes(key))}
+                </Col>
+              );
+            })}
+          </Row>
+        );
+      });
+    }
+  } else {
+    for (const key of Object.keys(props)) {
+      const schema = props[key] || {};
+      const uiField = uiFields[key] as XUISchemaField || {};
+      items.push(renderXUIField(key, schema, uiField, values, form, [key], required.includes(key)));
+    }
+  }
+  return items;
+}
 function renderFormItems(desc: FunctionDescriptor | undefined, ui: UISchema | undefined, form: any) {
   const items: any[] = [];
   const props = (desc?.params && desc.params.properties) || {};
@@ -259,7 +322,7 @@ export default function GmFunctionsPage() {
 
   // Form-render state
   const [formData, setFormData] = useState<any>({});
-  const [useFormRender, setUseFormRender] = useState(true);
+  const [renderMode, setRenderMode] = useState<'form-render' | 'enhanced' | 'legacy'>('enhanced');
 
   const currentDesc = useMemo(() => descs.find((d) => d.id === currentId), [descs, currentId]);
 
@@ -331,13 +394,15 @@ export default function GmFunctionsPage() {
   const onInvoke = async () => {
     try {
       let values: any;
-      if (useFormRender && currentDesc?.params) {
+      if (renderMode === 'form-render' && currentDesc?.params) {
         // Use form-render data directly - it's already in the correct format
         values = formData;
       } else {
-        // Use traditional form validation and normalization
+        // Use traditional form validation and normalization for enhanced/legacy modes
         values = await form.validateFields();
-        values = normalizeBySchema(values, currentDesc?.params || {});
+        if (renderMode === 'legacy') {
+          values = normalizeBySchema(values, currentDesc?.params || {});
+        }
       }
 
       setInvoking(true);
@@ -361,13 +426,15 @@ export default function GmFunctionsPage() {
   const onStartJob = async () => {
     try {
       let values: any;
-      if (useFormRender && currentDesc?.params) {
+      if (renderMode === 'form-render' && currentDesc?.params) {
         // Use form-render data directly
         values = formData;
       } else {
-        // Use traditional form validation and normalization
+        // Use traditional form validation and normalization for enhanced/legacy modes
         values = await form.validateFields();
-        values = normalizeBySchema(values, currentDesc?.params || {});
+        if (renderMode === 'legacy') {
+          values = normalizeBySchema(values, currentDesc?.params || {});
+        }
       }
 
       const res = await startJob(currentId!, values, {
@@ -440,9 +507,10 @@ export default function GmFunctionsPage() {
           <span>Form Renderer:</span>
           <Select
             style={{ width: 140 }}
-            value={useFormRender ? 'form-render' : 'legacy'}
-            onChange={(v) => setUseFormRender(v === 'form-render')}
+            value={renderMode}
+            onChange={(v) => setRenderMode(v)}
             options={[
+              { label: 'Enhanced UI', value: 'enhanced' },
               { label: 'Form-Render', value: 'form-render' },
               { label: 'Legacy', value: 'legacy' },
             ]}
@@ -477,20 +545,33 @@ export default function GmFunctionsPage() {
         </Space>
 
         {/* Form Rendering Section */}
-        {useFormRender && currentDesc?.params ? (
-          <FormRender
-            schema={currentDesc.params}
-            uiSchema={uiSchema?.fields || {}}
-            formData={formData}
-            onChange={setFormData}
-            displayType="row"
-            labelWidth={120}
-          />
-        ) : (
-          <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-            {renderFormItems(currentDesc, uiSchema, form)}
-          </Form>
-        )}
+        {(() => {
+          if (renderMode === 'form-render' && currentDesc?.params) {
+            return (
+              <FormRender
+                schema={currentDesc.params}
+                uiSchema={uiSchema?.fields || {}}
+                formData={formData}
+                onChange={setFormData}
+                displayType="row"
+                labelWidth={120}
+              />
+            );
+          } else if (renderMode === 'enhanced') {
+            return (
+              <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
+                {renderXFormItems(currentDesc, uiSchema, form)}
+              </Form>
+            );
+          } else {
+            // Legacy mode
+            return (
+              <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
+                {renderFormItems(currentDesc, uiSchema, form)}
+              </Form>
+            );
+          }
+        })()}
         <Space>
           <Button type="primary" onClick={onInvoke} loading={invoking} disabled={!currentId}>
             Invoke
