@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Card, Select, Form, Input, InputNumber, Switch, Button, Space, Typography, Divider, Row, Col, Tabs, DatePicker, TimePicker } from 'antd';
+import FormRender from 'form-render';
 import { getMessage } from '@/utils/antdApp';
 import GameSelector from '@/components/GameSelector';
 import { listDescriptors, listFunctionInstances, invokeFunction, startJob, cancelJob, FunctionDescriptor, fetchAssignments } from '@/services/croupier';
@@ -256,6 +257,10 @@ export default function GmFunctionsPage() {
   const [uiSchema, setUiSchema] = useState<UISchema | undefined>();
   const [lastOutput, setLastOutput] = useState<any>(undefined);
 
+  // Form-render state
+  const [formData, setFormData] = useState<any>({});
+  const [useFormRender, setUseFormRender] = useState(true);
+
   const currentDesc = useMemo(() => descs.find((d) => d.id === currentId), [descs, currentId]);
 
   useEffect(() => {
@@ -291,6 +296,7 @@ export default function GmFunctionsPage() {
     const init: any = {};
     Object.keys(props).forEach((k) => (init[k] = undefined));
     form.setFieldsValue(init);
+    setFormData({}); // Reset form-render data
     setUiSchema(undefined);
     setLastOutput(undefined);
     if (currentId) {
@@ -324,10 +330,18 @@ export default function GmFunctionsPage() {
 
   const onInvoke = async () => {
     try {
-      const values = await form.validateFields();
-      const norm = normalizeBySchema(values, currentDesc?.params || {});
+      let values: any;
+      if (useFormRender && currentDesc?.params) {
+        // Use form-render data directly - it's already in the correct format
+        values = formData;
+      } else {
+        // Use traditional form validation and normalization
+        values = await form.validateFields();
+        values = normalizeBySchema(values, currentDesc?.params || {});
+      }
+
       setInvoking(true);
-      const payload: any = { ...norm };
+      const payload: any = { ...values };
       const res = await invokeFunction(currentId!, payload, {
         route,
         target_service_id: route === 'targeted' ? targetService : undefined,
@@ -346,9 +360,17 @@ export default function GmFunctionsPage() {
 
   const onStartJob = async () => {
     try {
-      const values = await form.validateFields();
-      const norm = normalizeBySchema(values, currentDesc?.params || {});
-      const res = await startJob(currentId!, norm, {
+      let values: any;
+      if (useFormRender && currentDesc?.params) {
+        // Use form-render data directly
+        values = formData;
+      } else {
+        // Use traditional form validation and normalization
+        values = await form.validateFields();
+        values = normalizeBySchema(values, currentDesc?.params || {});
+      }
+
+      const res = await startJob(currentId!, values, {
         route,
         target_service_id: route === 'targeted' ? targetService : undefined,
         hash_key: route === 'hash' ? hashKey : undefined,
@@ -415,6 +437,16 @@ export default function GmFunctionsPage() {
         <Space>
           <span>Select Function:</span>
           <Select style={{ minWidth: 320 }} value={currentId} onChange={setCurrentId} options={filteredDescs.map((d) => ({ label: `${d.id} v${d.version || ''}`, value: d.id }))} />
+          <span>Form Renderer:</span>
+          <Select
+            style={{ width: 140 }}
+            value={useFormRender ? 'form-render' : 'legacy'}
+            onChange={(v) => setUseFormRender(v === 'form-render')}
+            options={[
+              { label: 'Form-Render', value: 'form-render' },
+              { label: 'Legacy', value: 'legacy' },
+            ]}
+          />
           <span>Route:</span>
           <Select
             style={{ width: 180 }}
@@ -443,9 +475,22 @@ export default function GmFunctionsPage() {
             </>
           )}
         </Space>
-        <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-          {renderFormItems(currentDesc, uiSchema, form)}
-        </Form>
+
+        {/* Form Rendering Section */}
+        {useFormRender && currentDesc?.params ? (
+          <FormRender
+            schema={currentDesc.params}
+            uiSchema={uiSchema?.fields || {}}
+            formData={formData}
+            onChange={setFormData}
+            displayType="row"
+            labelWidth={120}
+          />
+        ) : (
+          <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
+            {renderFormItems(currentDesc, uiSchema, form)}
+          </Form>
+        )}
         <Space>
           <Button type="primary" onClick={onInvoke} loading={invoking} disabled={!currentId}>
             Invoke
