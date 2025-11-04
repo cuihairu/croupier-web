@@ -1,4 +1,13 @@
 export default {
+  'menu.AdminUsers': '后台用户',
+  'menu.AdminUsers.UserAccount': '用户账号',
+  'menu.AdminUsers.UserAccount.Center': '个人中心',
+  'menu.AdminUsers.UserAccount.Settings': '个人设置',
+  'menu.AdminUsers.UserAccount.Messages': '消息通知',
+  'menu.AdminUsers.Permissions': '权限管理',
+  'menu.AdminUsers.Permissions.Roles': '角色管理',
+  'menu.AdminUsers.Permissions.Users': '用户管理',
+  'menu.AdminUsers.Permissions.Config': '权限配置',
   'menu.GM': '运营',
   'menu.GM.Approvals': '审批',
   'menu.GM.Functions': '函数列表',
@@ -9,8 +18,14 @@ export default {
   'menu.GM.Registry': '注册表',
   'menu.GameMgmt': '游戏管理',
   'menu.GameMgmt.Games Meta': '游戏元数据',
+  'menu.GameMgmt.Entities': '实体管理',
   // Backward-compat for older route keys that may still reference GM.Games Meta
   'menu.GM.Games Meta': '游戏元数据',
+  // Legacy menu items for backward compatibility
+  'menu.Account': '账号',
+  'menu.Account.Center': '个人中心',
+  'menu.Account.Settings': '个人设置',
+  'menu.Account.Messages': '消息通知',
   'menu.Permissions': '权限管理',
   'menu.Permissions.Roles': '角色管理',
   'menu.Permissions.Users': '用户管理',

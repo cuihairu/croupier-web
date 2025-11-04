@@ -23,13 +23,50 @@ export default [
     ],
   },
   {
-    path: '/account',
-    name: 'Account',
-    icon: 'user',
+    path: '/admin',
+    name: 'AdminUsers',
+    icon: 'team',
     routes: [
-      { path: '/account/center', name: 'Center', component: './Account/Center' },
-      { path: '/account/settings', name: 'Settings', component: './Account/Settings' },
-      { path: '/account/messages', name: 'Messages', component: './Account/Messages' },
+      {
+        path: '/admin/account',
+        name: 'UserAccount',
+        icon: 'user',
+        routes: [
+          { path: '/admin/account/center', name: 'Center', component: './Account/Center' },
+          { path: '/admin/account/settings', name: 'Settings', component: './Account/Settings' },
+          { path: '/admin/account/messages', name: 'Messages', component: './Account/Messages' },
+        ],
+      },
+      {
+        path: '/admin/permissions',
+        name: 'Permissions',
+        icon: 'safety',
+        access: 'canPermissionManage',
+        routes: [
+          {
+            path: '/admin/permissions',
+            redirect: '/admin/permissions/roles',
+          },
+          {
+            path: '/admin/permissions/roles',
+            name: 'Roles',
+            access: 'canRoleManage',
+            component: './Permissions/RolesV2',
+          },
+          {
+            path: '/admin/permissions/users',
+            name: 'Users',
+            access: 'canUserManage',
+            component: './Permissions/UsersV2',
+          },
+          {
+            path: '/admin/permissions/config',
+            name: 'Config',
+            access: 'canPermissionConfig',
+            component: './Permissions/Config',
+          },
+        ],
+      },
     ],
   },
   {
@@ -43,6 +80,11 @@ export default [
         name: 'Games Meta',
         access: 'canGamesRead',
         component: './GamesMeta',
+      },
+      {
+        path: '/game-mgmt/entities',
+        name: 'Entities',
+        component: './Entities',
       },
     ],
   },
@@ -65,12 +107,6 @@ export default [
         path: '/gm/games',
         name: 'Games',
         component: './GameManage',
-      },
-      {
-        // moved Games Meta to a dedicated top-level menu 'Game Management'
-        // path: '/gm/games-meta',
-        // name: 'Games Meta',
-        // component: './GamesMeta',
       },
       {
         path: '/gm/assignments',
@@ -98,36 +134,6 @@ export default [
     ],
   },
   {
-    path: '/permissions',
-    name: 'Permissions',
-    icon: 'safety',
-    access: 'canPermissionManage',
-    routes: [
-      {
-        path: '/permissions',
-        redirect: '/permissions/roles',
-      },
-      {
-        path: '/permissions/roles',
-        name: 'Roles',
-        access: 'canRoleManage',
-        component: './Permissions/RolesV2',
-      },
-      {
-        path: '/permissions/users',
-        name: 'Users',
-        access: 'canUserManage',
-        component: './Permissions/UsersV2',
-      },
-      {
-        path: '/permissions/config',
-        name: 'Config',
-        access: 'canPermissionConfig',
-        component: './Permissions/Config',
-      },
-    ],
-  },
-  {
     path: '/welcome',
     name: 'welcome',
     icon: 'smile',
@@ -136,6 +142,15 @@ export default [
   {
     path: '/',
     redirect: '/welcome',
+  },
+  // Legacy redirects
+  {
+    path: '/account',
+    redirect: '/admin/account/center',
+  },
+  {
+    path: '/permissions',
+    redirect: '/admin/permissions/roles',
   },
   {
     path: '*',

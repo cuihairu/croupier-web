@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, Modal, Space, Table, Typography, Popconfirm, Avatar, Upload, App } from 'antd';
+import { Avatar, Upload, App, Space, Button, Popconfirm } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import type { ColumnsType } from 'antd/es/table';
 import { deleteGame, listGamesMeta, upsertGame, type Game as GameMeta, uploadAsset } from '@/services/croupier';
 import { useAccess } from '@umijs/max';
+import XResourceTable from '@/components/XResourceTable';
+import XEntityForm from '@/components/XEntityForm';
+import type { ProColumns } from '@ant-design/pro-components';
 
 const GamesMetaPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -12,9 +14,8 @@ const GamesMetaPage: React.FC = () => {
   const canManage = !!access.canGamesManage;
   const canRead = !!access.canGamesRead;
   const [data, setData] = useState<GameMeta[]>([]);
-  const [open, setOpen] = useState(false);
-  const [form] = Form.useForm<GameMeta>();
-  const [editing, setEditing] = useState<boolean>(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [currentGame, setCurrentGame] = useState<GameMeta | null>(null);
 
   const load = async () => {
     setLoading(true);
@@ -30,102 +31,112 @@ const GamesMetaPage: React.FC = () => {
 
   useEffect(() => { load(); }, []);
 
-  const columns: ColumnsType<GameMeta> = [
-    { title: 'Icon', dataIndex: 'icon', width: 64, render: (v) => v ? <Avatar shape="square" src={v} /> : null },
+  const columns: ProColumns<GameMeta>[] = [
+    {
+      title: 'Icon',
+      dataIndex: 'icon',
+      width: 64,
+      render: (v) => v ? <Avatar shape="square" src={v} /> : null
+    },
     { title: 'ID', dataIndex: 'id', width: 80 },
     { title: 'Name', dataIndex: 'name' },
     { title: 'Description', dataIndex: 'description', ellipsis: true },
     { title: 'Updated At', dataIndex: 'updated_at', width: 200 },
-    {
-      title: 'Actions', width: 200,
-      render: (_, rec) => (
-        canManage ? (
-          <Space>
-            <Button size="small" onClick={() => { setEditing(true); form.setFieldsValue(rec); setOpen(true); }}>Edit</Button>
-            <Popconfirm title="Delete this game?" onConfirm={async ()=>{ await deleteGame(rec.id!); message.success('Deleted'); load(); }}>
-              <Button size="small" danger>Delete</Button>
-            </Popconfirm>
-          </Space>
-        ) : null
-      )
-    },
   ];
 
-  const onAdd = () => {
-    setEditing(false);
-    form.resetFields();
-    setOpen(true);
+  const handleAdd = () => {
+    setCurrentGame(null);
+    setModalVisible(true);
   };
 
-  const onSubmit = async () => {
-    try {
-      const v = await form.validateFields();
-      await upsertGame(v as any);
-      message.success(editing ? 'Updated' : 'Created');
-      setOpen(false);
-      load();
-    } catch {}
+  const handleEdit = (record: GameMeta) => {
+    setCurrentGame(record);
+    setModalVisible(true);
   };
+
+  const handleDelete = async (record: GameMeta) => {
+    await deleteGame(record.id!);
+    message.success('Deleted');
+    load();
+  };
+
+  const handleSubmit = async (data: any) => {
+    await upsertGame(data as any);
+    load();
+  };
+
+  const basicFields = [
+    { name: 'name', label: 'Name', required: true },
+    { name: 'description', label: 'Description', type: 'textarea' as const },
+  ];
+
+  const getInitialValues = (game: GameMeta) => ({
+    name: game.name,
+    description: game.description,
+    icon: game.icon,
+  });
+
+  const renderIconUpload = () => (
+    <Space direction="vertical" style={{ width: '100%' }}>
+      <Upload
+        multiple={false}
+        showUploadList={false}
+        beforeUpload={(file) => {
+          const max = 120 * 1024 * 1024; // 120MB
+          if (file.size > max) {
+            message.error('File is too large (max 120MB)');
+            return Upload.LIST_IGNORE;
+          }
+          return true;
+        }}
+        customRequest={async (opts: any) => {
+          try {
+            const res = await uploadAsset(opts.file as File);
+            message.success('Uploaded');
+            opts.onSuccess && opts.onSuccess(res, opts.file);
+          } catch (e: any) {
+            message.error(e?.message || 'Upload failed');
+            opts.onError && opts.onError(e);
+          }
+        }}
+      >
+        <Button icon={<UploadOutlined />}>Upload Icon</Button>
+      </Upload>
+    </Space>
+  );
 
   return (
     <div>
-      <Space style={{ marginBottom: 16 }}>
-        {canManage ? (<Button type="primary" onClick={onAdd}>Add Game</Button>) : null}
-        <Typography.Text type="secondary">Manage game id/name/icon/description (DB-backed)</Typography.Text>
-      </Space>
-      <Table<GameMeta>
-        rowKey={(r)=>String(r.id)}
-        loading={loading}
-        columns={columns}
+      <XResourceTable<GameMeta>
         dataSource={data}
+        loading={loading}
+        rowKey="id"
+        columns={columns}
+        onAdd={canManage ? handleAdd : undefined}
+        onEdit={canManage ? handleEdit : undefined}
+        onDelete={canManage ? handleDelete : undefined}
+        title="Game Metadata Management"
+        addButtonText="Add Game"
+        deleteConfirmTitle="Delete Game"
+        getDeleteConfirmContent={(record) => `Are you sure you want to delete game "${record.name}"?`}
+        canAdd={canManage}
+        canEdit={canManage}
+        canDelete={canManage}
       />
-      <Modal
-        title={editing ? 'Edit Game' : 'Add Game'}
-        open={open}
-        onCancel={()=>setOpen(false)}
-        onOk={onSubmit}
-        destroyOnHidden
-      >
-        <Form form={form} layout="vertical" preserve={false}>
-          {/* id is auto-generated; not editable */}
-          <Form.Item name="name" label="Name" rules={[{ required: true }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="icon" label="Icon">
-            <Space direction="vertical" style={{ width: '100%' }}>
-              <Input placeholder="https://..." />
-              <Upload
-                multiple={false}
-                showUploadList={false}
-                beforeUpload={(file) => {
-                  const max = 120 * 1024 * 1024; // 120MB
-                  if (file.size > max) {
-                    message.error('File is too large (max 120MB)');
-                    return Upload.LIST_IGNORE;
-                  }
-                  return true;
-                }}
-                customRequest={async (opts: any) => {
-                  try {
-                    const res = await uploadAsset(opts.file as File);
-                    form.setFieldsValue({ icon: res?.URL || '' });
-                    message.success('Uploaded');
-                    opts.onSuccess && opts.onSuccess(res, opts.file);
-                  } catch (e: any) {
-                    message.error(e?.message || 'Upload failed');
-                    opts.onError && opts.onError(e);
-                  }
-                }}
-              >
-                <Button icon={<UploadOutlined />}>Upload Icon</Button>
-              </Upload>
-            </Space>
-          </Form.Item>
-          <Form.Item name="description" label="Description">
-            <Input.TextArea rows={4} />
-          </Form.Item>
-        </Form>
-      </Modal>
+
+      <XEntityForm<GameMeta>
+        visible={modalVisible}
+        onCancel={() => setModalVisible(false)}
+        title={currentGame ? 'Edit Game' : 'Add Game'}
+        entity={currentGame}
+        onSubmit={handleSubmit}
+        basicFields={[
+          ...basicFields,
+          { name: 'icon', label: 'Icon URL', placeholder: 'https://...' }
+        ]}
+        getInitialValues={getInitialValues}
+        extraFooterButtons={[renderIconUpload()]}
+      />
     </div>
   );
 };
