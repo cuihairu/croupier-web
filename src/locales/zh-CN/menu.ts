@@ -8,6 +8,24 @@ export default {
   'menu.AdminUsers.Permissions.Roles': '角色管理',
   'menu.AdminUsers.Permissions.Users': '用户管理',
   'menu.AdminUsers.Permissions.Config': '权限配置',
+
+  // 新的游戏管理结构
+  'menu.GameManagement': '游戏管理',
+  'menu.GameManagement.GameMeta': '游戏列表',
+  'menu.GameManagement.GameEnvironments': '游戏环境',
+  'menu.GameManagement.GameEntities': '实体管理',
+  'menu.GameManagement.GameFunctions': '功能管理',
+  'menu.GameManagement.GameAssignments': '功能分配',
+  'menu.GameManagement.GamePacks': '功能包管理',
+
+  // 运营管理
+  'menu.Operations': '运营管理',
+  'menu.Operations.Approvals': '审批管理',
+  'menu.Operations.Audit': '审计日志',
+  'menu.Operations.Registry': '服务注册表',
+  'menu.Operations.Servers': '服务列表',
+
+  // Legacy menu items (保持向后兼容)
   'menu.GM': '运营',
   'menu.GM.Approvals': '审批',
   'menu.GM.Functions': '函数列表',
@@ -17,10 +35,10 @@ export default {
   'menu.GM.Packs': '包管理',
   'menu.GM.Registry': '注册表',
   'menu.GameMgmt': '游戏管理',
-  'menu.GameMgmt.Games Meta': '游戏元数据',
+  'menu.GameMgmt.Games Meta': '游戏列表',
   'menu.GameMgmt.Entities': '实体管理',
   // Backward-compat for older route keys that may still reference GM.Games Meta
-  'menu.GM.Games Meta': '游戏元数据',
+  'menu.GM.Games Meta': '游戏列表',
   // Legacy menu items for backward compatibility
   'menu.Account': '账号',
   'menu.Account.Center': '个人中心',

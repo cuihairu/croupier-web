@@ -1,4 +1,31 @@
 export default {
+  'menu.AdminUsers': 'Admin Users',
+  'menu.AdminUsers.UserAccount': 'User Account',
+  'menu.AdminUsers.UserAccount.Center': 'Account Center',
+  'menu.AdminUsers.UserAccount.Settings': 'Account Settings',
+  'menu.AdminUsers.UserAccount.Messages': 'Messages',
+  'menu.AdminUsers.Permissions': 'Permission Management',
+  'menu.AdminUsers.Permissions.Roles': 'Role Management',
+  'menu.AdminUsers.Permissions.Users': 'User Management',
+  'menu.AdminUsers.Permissions.Config': 'Permission Config',
+
+  // New game management structure
+  'menu.GameManagement': 'Game Management',
+  'menu.GameManagement.GameMeta': 'Game List',
+  'menu.GameManagement.GameEnvironments': 'Game Environments',
+  'menu.GameManagement.GameEntities': 'Entity Management',
+  'menu.GameManagement.GameFunctions': 'Function Management',
+  'menu.GameManagement.GameAssignments': 'Function Assignments',
+  'menu.GameManagement.GamePacks': 'Pack Management',
+
+  // Operations management
+  'menu.Operations': 'Operations',
+  'menu.Operations.Approvals': 'Approval Management',
+  'menu.Operations.Audit': 'Audit Logs',
+  'menu.Operations.Registry': 'Service Registry',
+  'menu.Operations.Servers': 'Servers',
+
+  // Legacy menu items (for backward compatibility)
   'menu.GM': 'Game Management',
   'menu.GM.Approvals': 'Approvals',
   'menu.GM.Functions': 'Functions',
@@ -9,6 +36,7 @@ export default {
   'menu.GM.Registry': 'Registry',
   'menu.GameMgmt': 'Game Management',
   'menu.GameMgmt.Games Meta': 'Games Meta',
+  'menu.GameMgmt.Entities': 'Entity Management',
   // Backward-compat for older route keys that may still reference GM.Games Meta
   'menu.GM.Games Meta': 'Games Meta',
   'menu.Permissions': 'Permission Management',

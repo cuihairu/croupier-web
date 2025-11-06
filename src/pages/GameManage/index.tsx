@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Table, Form, Input, Select, Button, Space } from 'antd';
+import { Card, Table, Form, Input, Select, Button, Space, AutoComplete } from 'antd';
 import { getMessage } from '@/utils/antdApp';
 import { addGame, listGames, GameEntry } from '@/services/croupier';
 import GameSelector from '@/components/GameSelector';
@@ -37,8 +37,14 @@ export default function GameManagePage() {
     <Card title="Game Management" extra={<GameSelector />}> 
       <Space direction="vertical" style={{ width: '100%' }}>
         <Form form={form} layout="inline">
-          <Form.Item name="game_id" label="game_id" rules={[{ required: true }]}>
-            <Input placeholder="e.g. game_kr" style={{ width: 200 }} />
+          <Form.Item name="game_id" label="game_id" rules={[{ required: true }]}> 
+            {/* Dropdown suggestions + free input */}
+            <AutoComplete
+              style={{ width: 240 }}
+              placeholder="e.g. default | mygame"
+              options={[...new Set((data||[]).map((d)=>d.game_id).filter(Boolean))].map((g)=>({ value: g! }))}
+              filterOption={(inputValue, option) => (option?.value || '').toLowerCase().includes(inputValue.toLowerCase())}
+            />
           </Form.Item>
           <Form.Item name="env" label="env">
             <Select style={{ width: 160 }} allowClear options={["prod","stage","test","dev"].map(e=>({label:e,value:e}))} />

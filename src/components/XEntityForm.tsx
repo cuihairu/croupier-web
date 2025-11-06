@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Input, Divider, Button, Space, Typography, message } from 'antd';
+import type { FormInstance } from 'antd/es/form';
 import FormRender from 'form-render';
 import { CheckCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 
@@ -45,6 +46,11 @@ export interface XEntityFormProps<T = any> {
   validateButtonText?: string;
   extraFooterButtons?: React.ReactNode[];
 
+  // Optional custom content area rendered after basic fields.
+  // Provides access to inner antd Form instance for advanced use cases
+  // such as file upload components that set form values.
+  customContent?: (form: FormInstance) => React.ReactNode;
+
   // Initial values transformer
   getInitialValues?: (entity: T) => any;
   getSchemaData?: (entity: T) => any;
@@ -67,6 +73,7 @@ export default function XEntityForm<T = any>({
   submitButtonText,
   validateButtonText = 'Validate',
   extraFooterButtons = [],
+  customContent,
   getInitialValues,
   getSchemaData,
   getUiSchemaData,
@@ -205,6 +212,8 @@ export default function XEntityForm<T = any>({
             </Form.Item>
           );
         })}
+        {/* Custom content hook (e.g., uploaders, previews). Placed inside Form so Form.Item can register fields. */}
+        {typeof customContent === 'function' ? customContent(form) : null}
       </Form>
 
       {/* Schema Editing Section */}

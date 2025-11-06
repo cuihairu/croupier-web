@@ -70,66 +70,88 @@ export default [
     ],
   },
   {
-    path: '/game-mgmt',
-    name: 'GameMgmt',
-    icon: 'setting',
+    path: '/game',
+    name: 'GameManagement',
+    icon: 'control',
     access: 'canGamesRead',
     routes: [
       {
-        path: '/game-mgmt/games-meta',
-        name: 'Games Meta',
+        path: '/game',
+        redirect: '/game/meta',
+      },
+      // 游戏基础配置
+      {
+        path: '/game/meta',
+        name: 'GameMeta',
         access: 'canGamesRead',
         component: './GamesMeta',
       },
       {
-        path: '/game-mgmt/entities',
-        name: 'Entities',
+        path: '/game/environments',
+        name: 'GameEnvironments',
+        access: 'canGamesRead',
+        component: './GamesEnvs',
+      },
+      // 游戏内容管理
+      {
+        path: '/game/entities',
+        name: 'GameEntities',
+        access: 'canEntitiesRead',
         component: './Entities',
       },
-    ],
-  },
-  {
-    path: '/gm',
-    name: 'GM',
-    icon: 'tool',
-    routes: [
       {
-        path: '/gm/approvals',
-        name: 'Approvals',
-        component: './Approvals',
-      },
-      {
-        path: '/gm/functions',
-        name: 'Functions',
+        path: '/game/functions',
+        name: 'GameFunctions',
+        access: 'canFunctionsRead',
         component: './GmFunctions',
       },
+      // 游戏运营管理
       {
-        path: '/gm/games',
-        name: 'Games',
-        component: './GameManage',
-      },
-      {
-        path: '/gm/assignments',
-        name: 'Assignments',
+        path: '/game/assignments',
+        name: 'GameAssignments',
         access: 'canAssignmentsRead',
         component: './Assignments',
       },
       {
-        path: '/gm/audit',
+        path: '/game/packs',
+        name: 'GamePacks',
+        access: 'canPacksRead',
+        component: './Packs',
+      },
+    ],
+  },
+  {
+    path: '/operations',
+    name: 'Operations',
+    icon: 'dashboard',
+    routes: [
+      {
+        path: '/operations',
+        redirect: '/operations/approvals',
+      },
+      {
+        path: '/operations/approvals',
+        name: 'Approvals',
+        access: 'canApprovalsRead',
+        component: './Approvals',
+      },
+      {
+        path: '/operations/audit',
         name: 'Audit',
         access: 'canAuditRead',
         component: './Audit',
       },
       {
-        path: '/gm/packs',
-        name: 'Packs',
-        component: './Packs',
-      },
-      {
-        path: '/gm/registry',
+        path: '/operations/registry',
         name: 'Registry',
         access: 'canRegistryRead',
         component: './Registry',
+      },
+      {
+        path: '/operations/servers',
+        name: 'Servers',
+        access: 'canRegistryRead',
+        component: './Servers',
       },
     ],
   },
@@ -143,7 +165,7 @@ export default [
     path: '/',
     redirect: '/welcome',
   },
-  // Legacy redirects
+  // Legacy redirects for backward compatibility
   {
     path: '/account',
     redirect: '/admin/account/center',
@@ -151,6 +173,51 @@ export default [
   {
     path: '/permissions',
     redirect: '/admin/permissions/roles',
+  },
+  // Game management legacy redirects
+  {
+    path: '/game-mgmt/games-meta',
+    redirect: '/game/meta',
+  },
+  {
+    path: '/game-mgmt/entities',
+    redirect: '/game/entities',
+  },
+  {
+    path: '/game-mgmt',
+    redirect: '/game/meta',
+  },
+  {
+    path: '/gm/games',
+    redirect: '/game/environments',
+  },
+  {
+    path: '/gm/functions',
+    redirect: '/game/functions',
+  },
+  {
+    path: '/gm/assignments',
+    redirect: '/game/assignments',
+  },
+  {
+    path: '/gm/packs',
+    redirect: '/game/packs',
+  },
+  {
+    path: '/gm/approvals',
+    redirect: '/operations/approvals',
+  },
+  {
+    path: '/gm/audit',
+    redirect: '/operations/audit',
+  },
+  {
+    path: '/gm/registry',
+    redirect: '/operations/registry',
+  },
+  {
+    path: '/gm',
+    redirect: '/game/meta',
   },
   {
     path: '*',

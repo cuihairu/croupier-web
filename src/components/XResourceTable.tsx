@@ -97,6 +97,7 @@ export default function XResourceTable<T = any>({
         <Space size="small">
           {canPreview && onPreview && (
             <Button
+              key="preview"
               icon={<EyeOutlined />}
               size="small"
               onClick={() => onPreview(record)}
@@ -105,6 +106,7 @@ export default function XResourceTable<T = any>({
           )}
           {canEdit && onEdit && (
             <Button
+              key="edit"
               icon={<EditOutlined />}
               size="small"
               onClick={() => onEdit(record)}
@@ -113,6 +115,7 @@ export default function XResourceTable<T = any>({
           )}
           {canDelete && onDelete && (
             <Button
+              key="delete"
               icon={<DeleteOutlined />}
               size="small"
               danger

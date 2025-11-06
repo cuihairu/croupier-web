@@ -2,6 +2,13 @@ import { useIntl } from '@umijs/max';
 import { Button } from 'antd';
 import { getMessage, getNotification } from '@/utils/antdApp';
 import defaultSettings from '../config/defaultSettings';
+// Set default server origin for asset URLs if not provided
+if (typeof window !== 'undefined' && !(window as any).CROUPIER_SERVER_ORIGIN) {
+  const envOrigin = (process as any)?.env?.CROUPIER_SERVER_ORIGIN as string | undefined;
+  if (envOrigin) (window as any).CROUPIER_SERVER_ORIGIN = envOrigin;
+  else if (process.env.NODE_ENV === 'development') (window as any).CROUPIER_SERVER_ORIGIN = 'http://localhost:8080';
+  else (window as any).CROUPIER_SERVER_ORIGIN = window.location.origin;
+}
 
 // Dev-only: suppress noisy React StrictMode findDOMNode warnings from rc-* deps
 if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
