@@ -24,6 +24,8 @@ export default [
       { path: '/analytics/behavior', name: 'Behavior', access: 'canAnalyticsRead', component: './Analytics/Behavior' },
       { path: '/analytics/payments', name: 'Payments', access: 'canAnalyticsRead', component: './Analytics/Payments' },
       { path: '/analytics/levels', name: 'Levels', access: 'canAnalyticsRead', component: './Analytics/Levels' },
+      { path: '/analytics/attribution', name: 'Attribution', access: 'canAnalyticsRead', component: './Analytics/Attribution' },
+      { path: '/analytics/segments', name: 'Segments', access: 'canAnalyticsRead', component: './Analytics/Segments' },
     ],
   },
   {
@@ -261,14 +263,8 @@ export default [
     ],
   },
   {
-    path: '/welcome',
-    name: 'welcome',
-    icon: 'smile',
-    component: './Welcome',
-  },
-  {
     path: '/',
-    redirect: '/welcome',
+    redirect: '/analytics/realtime',
   },
   // Legacy redirects for backward compatibility
   {

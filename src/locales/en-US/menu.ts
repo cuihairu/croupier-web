@@ -59,6 +59,8 @@ export default {
   'menu.Analytics.Behavior': 'Behavior',
   'menu.Analytics.Payments': 'Payments',
   'menu.Analytics.Levels': 'Levels',
+  'menu.Analytics.Attribution': 'Attribution',
+  'menu.Analytics.Segments': 'Segments',
 
   // Legacy menu items (for backward compatibility)
   'menu.GM': 'Game Management',

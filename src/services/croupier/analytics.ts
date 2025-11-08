@@ -36,3 +36,10 @@ export async function fetchAnalyticsLevels(params?: any) {
   try { return await request('/api/analytics/levels', { params }); } catch { return { funnel: [], per_level: [] }; }
 }
 
+// Attribution & Segments
+export async function fetchAnalyticsAttribution(params?: any) {
+  try { return await request('/api/analytics/attribution', { params }); } catch { return { summary: {}, by_channel: [], by_campaign: [] }; }
+}
+export async function fetchAnalyticsSegments(params?: any) {
+  try { return await request('/api/analytics/segments', { params }); } catch { return { segments: [] }; }
+}

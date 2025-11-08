@@ -59,6 +59,8 @@ export default {
   'menu.Analytics.Behavior': '行为分析',
   'menu.Analytics.Payments': '支付分析',
   'menu.Analytics.Levels': '关卡分析',
+  'menu.Analytics.Attribution': '渠道投放',
+  'menu.Analytics.Segments': '分层与人群',
 
   // Legacy menu items (保持向后兼容)
   'menu.GM': '运营',
