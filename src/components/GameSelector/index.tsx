@@ -13,6 +13,7 @@ export default function GameSelector() {
   const [games, setGames] = useState<GameMeta[]>([]);
   const [envOptions, setEnvOptions] = useState<string[]>(ENVS);
 
+  // Persist an ASCII-safe game_id (backend expects ASCII header). UI 可展示 alias_name（中文）
   const [game, setGame] = useState<string | undefined>(localStorage.getItem('game_id') || undefined);
   const [selectedGameId, setSelectedGameId] = useState<number | undefined>(undefined);
   const [env, setEnv] = useState<string | undefined>(localStorage.getItem('env') || 'dev');

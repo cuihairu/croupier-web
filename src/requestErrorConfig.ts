@@ -129,12 +129,14 @@ export const errorConfig: RequestConfig = {
       const headers = {
         ...(config.headers || {}),
       } as Record<string, any>;
+      const isASCII = (s?: string | null) => !!s && /^[\x00-\x7F]*$/.test(s);
       const token = localStorage.getItem('token');
       if (token) headers['Authorization'] = `Bearer ${token}`;
       const gid = localStorage.getItem('game_id');
       const env = localStorage.getItem('env');
-      if (gid) headers['X-Game-ID'] = gid;
-      if (env) headers['X-Env'] = env;
+      // HTTP header values must be ASCII per XHR spec; skip if contains non-ASCII to avoid runtime error
+      if (isASCII(gid)) headers['X-Game-ID'] = gid as string;
+      if (isASCII(env)) headers['X-Env'] = env as string;
       return { ...config, headers };
     },
   ],
