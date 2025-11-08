@@ -29,6 +29,17 @@ export default function OpsMQPage() {
                   {Object.entries(info.lengths).map(([k,v]:any)=> <span key={k}><Tag>{k}</Tag> {String(v)}&nbsp;&nbsp;</span>)}
                 </Descriptions.Item>
               )}
+              {Array.isArray(info?.groups) && info.groups.length>0 && (
+                <Descriptions.Item label="消费者组">
+                  <div>
+                    {info.groups.map((g:any, idx:number)=> (
+                      <div key={idx} style={{ marginBottom: 6 }}>
+                        <Tag color="blue">{g.stream}</Tag> 组：<Tag>{g.name}</Tag> 消费者：{g.consumers} 待处理：{g.pending} Lag：{g.lag ?? '-'}
+                      </div>
+                    ))}
+                  </div>
+                </Descriptions.Item>
+              )}
             </>
           )}
           {typ==='kafka' && (
@@ -45,4 +56,3 @@ export default function OpsMQPage() {
     </div>
   );
 }
-
