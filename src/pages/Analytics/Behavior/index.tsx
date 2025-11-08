@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Space, DatePicker, Input, Button, Table, Select } from 'antd';
+import { exportToXLSX } from '@/utils/export';
 import { fetchAnalyticsEvents, fetchAnalyticsFunnel } from '@/services/croupier/analytics';
 
 export default function AnalyticsBehaviorPage() {
@@ -41,6 +42,12 @@ export default function AnalyticsBehaviorPage() {
         </Space>}>
           <Table size="small" loading={loading} rowKey={(r)=> r.id || `${r.event||''}-${r.time||''}`}
             dataSource={rows} columns={[{title:'时间',dataIndex:'time'},{title:'事件',dataIndex:'event'},{title:'用户',dataIndex:'user_id'}]} />
+          <div style={{ marginTop: 8 }}>
+            <Button onClick={async ()=>{
+              const rowsOut = [['time','event','user_id']].concat((rows||[]).map((r:any)=>[r.time,r.event,r.user_id]));
+              await exportToXLSX('events.xlsx', [{ sheet:'events', rows: rowsOut }]);
+            }}>导出 Excel</Button>
+          </div>
         </Card>
 
         <Card title="漏斗（占位）" extra={<Space>
@@ -50,9 +57,14 @@ export default function AnalyticsBehaviorPage() {
           <Table size="small" pagination={false} dataSource={(funnel||[]).map((s:any,i:number)=>({key:i, step:s.step, users:s.users, rate:s.rate }))}
             columns={[{title:'步骤',dataIndex:'step'},{title:'人数',dataIndex:'users'},{title:'转化率',dataIndex:'rate', render:(v)=> v!=null? `${v}%`:'-'}]}
           />
+          <div style={{ marginTop: 8 }}>
+            <Button onClick={async ()=>{
+              const rowsOut = [['step','users','rate']].concat((funnel||[]).map((s:any)=>[s.step,s.users,s.rate]));
+              await exportToXLSX('funnel.xlsx', [{ sheet:'funnel', rows: rowsOut }]);
+            }}>导出 Excel</Button>
+          </div>
         </Card>
       </Space>
     </div>
   );
 }
-

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Space, DatePicker, Select, Button, Table, Tag } from 'antd';
+import { exportToXLSX } from '@/utils/export';
 import { fetchAnalyticsPaymentsSummary, fetchAnalyticsTransactions } from '@/services/croupier/analytics';
 
 export default function AnalyticsPaymentsPage() {
@@ -45,8 +46,13 @@ export default function AnalyticsPaymentsPage() {
           columns={[{title:'时间',dataIndex:'time'},{title:'订单',dataIndex:'order_id'},{title:'用户',dataIndex:'user_id'},{title:'金额(分)',dataIndex:'amount_cents'},{title:'状态',dataIndex:'status'},{title:'渠道',dataIndex:'channel'},{title:'原因',dataIndex:'reason'}]}
           pagination={{ current: page, pageSize: size, total: tx?.total||0, showSizeChanger: true, onChange:(p,ps)=>{ setPage(p); setSize(ps||20);} }}
         />
+        <div style={{ marginTop: 8 }}>
+          <Button onClick={async ()=>{
+            const rows = [['time','order_id','user_id','amount_cents','status','channel','reason']].concat((tx?.transactions||[]).map((r:any)=>[r.time,r.order_id,r.user_id,r.amount_cents,r.status,r.channel,r.reason]));
+            await exportToXLSX('payments.xlsx', [{ sheet:'transactions', rows }]);
+          }}>导出 Excel</Button>
+        </div>
       </Card>
     </div>
   );
 }
-

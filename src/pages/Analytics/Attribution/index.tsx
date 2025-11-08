@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Space, DatePicker, Input, Select, Button, Table, Tag } from 'antd';
+import { exportToXLSX } from '@/utils/export';
 import { fetchAnalyticsAttribution } from '@/services/croupier/analytics';
 
 export default function AnalyticsAttributionPage() {
@@ -45,8 +46,13 @@ export default function AnalyticsAttributionPage() {
           columns={[{title:'渠道',dataIndex:'channel'},{title:'安装',dataIndex:'installs'},{title:'注册',dataIndex:'signups'},{title:'首日付费额(分)',dataIndex:'rev_d0_cents'},{title:'CPI(分)',dataIndex:'cpi_cents'},{title:'ROAS D1/D7/D30',render:(_:any,r:any)=> `${r.roas_d1||0}/${r.roas_d7||0}/${r.roas_d30||0}`}]}
           pagination={{ pageSize: 10 }}
         />
+        <div style={{ marginTop: 8 }}>
+          <Button onClick={async ()=>{
+            const rows = [['channel','installs','signups','rev_d0_cents','cpi_cents','roas_d1','roas_d7','roas_d30']].concat((data?.by_channel||[]).map((r:any)=>[r.channel,r.installs,r.signups,r.rev_d0_cents,r.cpi_cents,r.roas_d1,r.roas_d7,r.roas_d30]));
+            await exportToXLSX('attribution.xlsx', [{ sheet:'by_channel', rows }]);
+          }}>导出 Excel</Button>
+        </div>
       </Card>
     </div>
   );
 }
-

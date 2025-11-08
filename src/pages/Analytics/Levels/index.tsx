@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Space, DatePicker, Input, Button, Table, Tag } from 'antd';
+import { exportToXLSX } from '@/utils/export';
 import { fetchAnalyticsLevels } from '@/services/croupier/analytics';
 
 export default function AnalyticsLevelsPage() {
@@ -44,6 +45,12 @@ export default function AnalyticsLevelsPage() {
             columns={[{title:'步骤',dataIndex:'step'},{title:'玩家数',dataIndex:'users'},{title:'转化率',dataIndex:'rate', render:(v:any)=> v!=null? `${v}%`:'-'}]}
             pagination={false}
           />
+          <div style={{ marginTop: 8 }}>
+            <Button onClick={async ()=>{
+              const rows = [['step','users','rate']].concat((data?.funnel||[]).map((x:any)=>[x.step,x.users,x.rate]));
+              await exportToXLSX('levels_funnel.xlsx', [{ sheet:'funnel', rows }]);
+            }}>导出 Excel</Button>
+          </div>
         </Card>
         <Card title="分关卡统计（胜率/难度/时长/复试）">
           <Table size="small" loading={loading} rowKey={(r:any)=> r.level}
@@ -61,9 +68,14 @@ export default function AnalyticsLevelsPage() {
               }},
             ]}
           />
+          <div style={{ marginTop: 8 }}>
+            <Button onClick={async ()=>{
+              const rows = [['level','players','win_rate','avg_duration_sec','avg_retries','difficulty']].concat((data?.per_level||[]).map((x:any)=>[x.level,x.players,x.win_rate,x.avg_duration_sec,x.avg_retries,x.difficulty]));
+              await exportToXLSX('levels_stats.xlsx', [{ sheet:'per_level', rows }]);
+            }}>导出 Excel</Button>
+          </div>
         </Card>
       </Space>
     </div>
   );
 }
-
