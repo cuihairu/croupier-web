@@ -15,6 +15,7 @@ export default {
   // Support
   'menu.Support': 'Support',
   'menu.Support.Tickets': 'Tickets',
+  'menu.Support.TicketDetail': 'Ticket Detail',
   'menu.Support.FAQ': 'FAQ',
   'menu.Support.Feedback': 'Player Feedback',
   'menu.Support.Bugs': 'Bugs',

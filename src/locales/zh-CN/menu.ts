@@ -15,6 +15,7 @@ export default {
   // 客服系统
   'menu.Support': '客服系统',
   'menu.Support.Tickets': '工单系统',
+  'menu.Support.TicketDetail': '工单详情',
   'menu.Support.FAQ': '常见问题',
   'menu.Support.Feedback': '玩家反馈',
   'menu.Support.Bugs': '缺陷列表',
