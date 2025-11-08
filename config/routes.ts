@@ -12,6 +12,21 @@
  */
 export default [
   {
+    path: '/analytics',
+    name: 'Analytics',
+    icon: 'areaChart',
+    access: 'canAnalyticsRead',
+    routes: [
+      { path: '/analytics', redirect: '/analytics/overview' },
+      { path: '/analytics/overview', name: 'Overview', access: 'canAnalyticsRead', component: './Analytics/Overview' },
+      { path: '/analytics/retention', name: 'Retention', access: 'canAnalyticsRead', component: './Analytics/Retention' },
+      { path: '/analytics/realtime', name: 'Realtime', access: 'canAnalyticsRead', component: './Analytics/Realtime' },
+      { path: '/analytics/behavior', name: 'Behavior', access: 'canAnalyticsRead', component: './Analytics/Behavior' },
+      { path: '/analytics/payments', name: 'Payments', access: 'canAnalyticsRead', component: './Analytics/Payments' },
+      { path: '/analytics/levels', name: 'Levels', access: 'canAnalyticsRead', component: './Analytics/Levels' },
+    ],
+  },
+  {
     path: '/user',
     layout: false,
     routes: [

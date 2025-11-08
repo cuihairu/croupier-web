@@ -51,6 +51,15 @@ export default {
   'menu.Ops.Alerts': 'Alerts',
   'menu.Ops.RateLimits': 'Rate Limits',
 
+  // Analytics
+  'menu.Analytics': 'Analytics',
+  'menu.Analytics.Overview': 'Overview',
+  'menu.Analytics.Retention': 'Retention',
+  'menu.Analytics.Realtime': 'Realtime',
+  'menu.Analytics.Behavior': 'Behavior',
+  'menu.Analytics.Payments': 'Payments',
+  'menu.Analytics.Levels': 'Levels',
+
   // Legacy menu items (for backward compatibility)
   'menu.GM': 'Game Management',
   'menu.GM.Approvals': 'Approvals',

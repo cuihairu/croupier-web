@@ -22,6 +22,10 @@ export default function access(initialState: { currentUser?: API.CurrentUser } |
     // Support (客服系统)
     canSupportRead: has('support:read') || has('admin'),
     canSupportManage: has('support:manage') || has('admin'),
+    // 数据分析
+    canAnalyticsRead: has('analytics:read') || has('admin'),
+    canAnalyticsManage: has('analytics:manage') || has('admin'),
+    canAnalyticsExport: has('analytics:export') || has('admin'),
     // 权限管理相关权限（与后端的 RBAC key 对齐）
     canPermissionManage: has('roles:read') || has('roles:manage') || has('users:read') || has('users:manage') || has('admin'),
     canRoleManage: has('roles:read') || has('roles:manage') || has('admin'),

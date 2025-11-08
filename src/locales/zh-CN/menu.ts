@@ -51,6 +51,15 @@ export default {
   'menu.Ops.Alerts': '告警中心',
   'menu.Ops.RateLimits': '限速管理',
 
+  // 数据分析
+  'menu.Analytics': '数据分析',
+  'menu.Analytics.Overview': '概览 KPI',
+  'menu.Analytics.Retention': '留存分析',
+  'menu.Analytics.Realtime': '实时大屏',
+  'menu.Analytics.Behavior': '行为分析',
+  'menu.Analytics.Payments': '支付分析',
+  'menu.Analytics.Levels': '关卡分析',
+
   // Legacy menu items (保持向后兼容)
   'menu.GM': '运营',
   'menu.GM.Approvals': '审批',
