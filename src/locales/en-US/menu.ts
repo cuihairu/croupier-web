@@ -50,6 +50,7 @@ export default {
   'menu.Ops.Jobs': 'Jobs',
   'menu.Ops.Alerts': 'Alerts',
   'menu.Ops.RateLimits': 'Rate Limits',
+  'menu.Ops.MQ': 'Message Queue',
 
   // Analytics
   'menu.Analytics': 'Analytics',

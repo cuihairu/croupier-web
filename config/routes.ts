@@ -191,6 +191,7 @@ export default [
       { path: '/ops/jobs', name: 'Jobs', access: 'canOpsRead', component: './Ops/Jobs' },
       { path: '/ops/alerts', name: 'Alerts', access: 'canOpsRead', component: './Ops/Alerts' },
       { path: '/ops/rate-limits', name: 'RateLimits', access: 'canOpsManage', component: './Ops/RateLimits' },
+      { path: '/ops/mq', name: 'MQ', access: 'canOpsRead', component: './Ops/MQ' },
     ],
   },
   {

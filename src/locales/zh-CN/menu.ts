@@ -50,6 +50,7 @@ export default {
   'menu.Ops.Jobs': '任务监控',
   'menu.Ops.Alerts': '告警中心',
   'menu.Ops.RateLimits': '限速管理',
+  'menu.Ops.MQ': '消息队列',
 
   // 数据分析
   'menu.Analytics': '数据分析',
