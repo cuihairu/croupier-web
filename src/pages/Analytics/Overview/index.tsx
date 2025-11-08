@@ -55,8 +55,13 @@ export default function AnalyticsOverviewPage() {
           <Col span={4}><Card loading={loading}><Statistic title="WAU" value={data?.wau||0} /></Card></Col>
           <Col span={4}><Card loading={loading}><Statistic title="MAU" value={data?.mau||0} /></Card></Col>
           <Col span={4}><Card loading={loading}><Statistic title="新增" value={data?.new_users||0} /></Card></Col>
-          <Col span={4}><Card loading={loading}><Statistic title="付费率" suffix="%" value={data?.pay_rate||0} /></Card></Col>
+          <Col span={4}><Card loading={loading}><Statistic title="注册用户总数" value={data?.registered_total||0} /></Card></Col>
           <Col span={4}><Card loading={loading}><Statistic title="收入(分)" value={data?.revenue_cents||0} /></Card></Col>
+        </Row>
+        <Row gutter={[16,16]} style={{ marginTop: 12 }}>
+          <Col span={8}><Card loading={loading}><Statistic title="付费率" suffix="%" value={data?.pay_rate||0} /></Card></Col>
+          <Col span={8}><Card loading={loading}><Statistic title="ARPU" value={data?.arpu||0} /></Card></Col>
+          <Col span={8}><Card loading={loading}><Statistic title="ARPPU" value={data?.arppu||0} /></Card></Col>
         </Row>
         <Divider />
         <Row gutter={[16,16]}>
@@ -74,4 +79,3 @@ export default function AnalyticsOverviewPage() {
     </div>
   );
 }
-
