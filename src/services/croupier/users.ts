@@ -29,3 +29,11 @@ export async function deleteUser(id: number) {
 export async function setUserPassword(id: number, password: string) {
   return request<void>(`/api/users/${id}/password`, { method: 'POST', data: { password } });
 }
+
+export async function listUserGames(id: number) {
+  return request<{ game_ids: number[] }>(`/api/users/${id}/games`);
+}
+
+export async function setUserGames(id: number, game_ids: number[]) {
+  return request<void>(`/api/users/${id}/games`, { method: 'PUT', data: { game_ids } });
+}

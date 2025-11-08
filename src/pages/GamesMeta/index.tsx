@@ -24,7 +24,7 @@ const GamesMetaPage: React.FC = () => {
       const res = await listGamesMeta();
       setData(res?.games || []);
     } catch (e: any) {
-      message.error(e?.message || 'Load failed');
+      message.error(e?.message || '加载失败');
     } finally {
       setLoading(false);
     }
@@ -36,7 +36,7 @@ const GamesMetaPage: React.FC = () => {
   const looksLikeUrl = (v?: string) => !!v;
   const columns: ProColumns<GameMeta>[] = [
     {
-      title: 'Icon',
+      title: '图标',
       dataIndex: 'icon',
       width: 80,
       render: (v) => looksLikeUrl(v) ? (
@@ -49,15 +49,18 @@ const GamesMetaPage: React.FC = () => {
       ) : null,
     },
     { title: 'ID', dataIndex: 'id', width: 80 },
-    { title: 'Name', dataIndex: 'name', width: 180, ellipsis: true },
-    { title: 'Alias', dataIndex: 'alias_name', width: 140, ellipsis: true },
-    { title: 'Homepage', dataIndex: 'homepage', width: 220, render: (v: any) => v ? <a href={assetURL(v)} target="_blank" rel="noreferrer">{v}</a> : null },
-    { title: 'Status', dataIndex: 'status', width: 120, render: (v: any) => {
-      const color = v === 'online' ? 'green' : v === 'running' ? 'blue' : 'default';
-      return v ? <Tag color={color}>{v}</Tag> : null;
+    { title: '名称', dataIndex: 'name', width: 180, ellipsis: true },
+    { title: '别名', dataIndex: 'alias_name', width: 140, ellipsis: true },
+    { title: '主页', dataIndex: 'homepage', width: 220, render: (v: any) => v ? <a href={assetURL(v)} target="_blank" rel="noreferrer">{v}</a> : null },
+    { title: '状态', dataIndex: 'status', width: 120, render: (v: any) => {
+      const colorMap: any = { online: 'green', running: 'blue', dev: 'orange', test: 'purple', maintenance: 'gold', offline: 'default' };
+      const textMap: any = { online: '在线', running: '运行中', dev: '开发', test: '测试', maintenance: '维护', offline: '下线' };
+      const color = colorMap[v] || 'default';
+      const text = textMap[v] || v;
+      return v ? <Tag color={color}>{text}</Tag> : null;
     }},
-    { title: 'Description', dataIndex: 'description', ellipsis: true },
-    { title: 'Updated At', dataIndex: 'updated_at', width: 200 },
+    { title: '描述', dataIndex: 'description', ellipsis: true },
+    { title: '更新时间', dataIndex: 'updated_at', width: 200 },
   ];
 
   const handleAdd = () => {
@@ -72,7 +75,7 @@ const GamesMetaPage: React.FC = () => {
 
   const handleDelete = async (record: GameMeta) => {
     await deleteGame(record.id!);
-    message.success('Deleted');
+    message.success('已删除');
     load();
   };
 
@@ -84,10 +87,10 @@ const GamesMetaPage: React.FC = () => {
   };
 
   const basicFields = [
-    { name: 'name', label: 'Name', required: true },
-    { name: 'alias_name', label: 'Alias Name' },
-    { name: 'homepage', label: 'Homepage' },
-    { name: 'description', label: 'Description', type: 'textarea' as const },
+    { name: 'name', label: '名称', required: true, rules: [{ required: true, message: '请输入名称' }] },
+    { name: 'alias_name', label: '别名' },
+    { name: 'homepage', label: '主页' },
+    { name: 'description', label: '描述', type: 'textarea' as const },
   ];
 
   const getInitialValues = (game: GameMeta) => ({
@@ -100,52 +103,62 @@ const GamesMetaPage: React.FC = () => {
     icon: game.icon,
   });
 
-  const renderIconSection = (form: any) => {
-    const url: string | undefined = form?.getFieldValue?.('icon');
-    const fileList = url ? [{ uid: '-1', name: 'icon', status: 'done' as const, url: assetURL(url), thumbUrl: assetURL(url) }] : [];
+  const renderIconSection = (outerForm: any) => {
+    // Use a shouldUpdate block so we interact with form only after it is mounted/connected
     return (
       <>
-        <Form.Item name="status" label="Status" initialValue={(currentGame as any)?.status || 'online'}>
+        <Form.Item name="status" label="状态" initialValue={(currentGame as any)?.status || 'dev'}>
           <Select
             style={{ maxWidth: 240 }}
             options={[
-              { label: 'online',  value: 'online' },
-              { label: 'offline', value: 'offline' },
-              { label: 'running', value: 'running' },
+              { label: '开发', value: 'dev' },
+              { label: '测试', value: 'test' },
+              { label: '运行中', value: 'running' },
+              { label: '在线',  value: 'online' },
+              { label: '维护', value: 'maintenance' },
+              { label: '下线', value: 'offline' },
             ]}
           />
         </Form.Item>
-        <Form.Item label="Icon">
-          <Upload
-            listType="picture-card"
-            accept="image/*"
-            fileList={fileList as any}
-            maxCount={1}
-            onRemove={() => { form.setFieldsValue({ icon: '' }); return true; }}
-            onPreview={(file) => { const u = (file.url || file.thumbUrl) as string; if (u) window.open(u, '_blank'); }}
-            customRequest={async (opts: any) => {
-              try {
-                const res = await uploadAsset(opts.file as File);
-                const next = (res?.URL || res?.url || '').toString();
-                if (!next) throw new Error('No URL returned');
-                form.setFieldsValue({ icon: next });
-                message.success('Icon uploaded');
-                opts.onSuccess && opts.onSuccess(res, opts.file);
-              } catch (e: any) {
-                message.error(e?.message || 'Upload failed');
-                opts.onError && opts.onError(e);
-              }
+        <Form.Item label="图标">
+          <Form.Item noStyle shouldUpdate>
+            {(innerForm: any) => {
+              const url: string | undefined = innerForm?.getFieldValue?.('icon');
+              const fileList = url ? [{ uid: '-1', name: 'icon', status: 'done' as const, url: assetURL(url), thumbUrl: assetURL(url) }] : [];
+              return (
+                <Upload
+                  listType="picture-card"
+                  accept="image/*"
+                  fileList={fileList as any}
+                  maxCount={1}
+                  onRemove={() => { innerForm.setFieldsValue({ icon: '' }); return true; }}
+                  onPreview={(file) => { const u = (file.url || file.thumbUrl) as string; if (u) window.open(u, '_blank'); }}
+                  customRequest={async (opts: any) => {
+                    try {
+                      const res = await uploadAsset(opts.file as File);
+                      const next = (res?.URL || res?.url || '').toString();
+                      if (!next) throw new Error('未返回URL');
+                      innerForm.setFieldsValue({ icon: next });
+                      message.success('图标已上传');
+                      opts.onSuccess && opts.onSuccess(res, opts.file);
+                    } catch (e: any) {
+                      message.error(e?.message || '上传失败');
+                      opts.onError && opts.onError(e);
+                    }
+                  }}
+                >
+                  {fileList.length >= 1 ? null : (
+                    <div>
+                      <div style={{ fontSize: 24, color: '#999' }}>+</div>
+                      <div style={{ marginTop: 8 }}>上传</div>
+                    </div>
+                  )}
+                </Upload>
+              );
             }}
-          >
-            {fileList.length >= 1 ? null : (
-              <div>
-                <div style={{ fontSize: 24, color: '#999' }}>+</div>
-                <div style={{ marginTop: 8 }}>Upload</div>
-              </div>
-            )}
-          </Upload>
+          </Form.Item>
           <Form.Item name="icon" noStyle>
-            <Input placeholder="https://... or /uploads/..." allowClear style={{ marginTop: 8, maxWidth: 420 }} />
+            <Input placeholder="https://... 或 /uploads/..." allowClear style={{ marginTop: 8, maxWidth: 420 }} />
           </Form.Item>
         </Form.Item>
       </>
@@ -163,9 +176,9 @@ const GamesMetaPage: React.FC = () => {
         onEdit={canManage ? handleEdit : undefined}
         onDelete={canManage ? handleDelete : undefined}
         title="游戏列表"
-        addButtonText="Add Game"
-        deleteConfirmTitle="Delete Game"
-        getDeleteConfirmContent={(record) => `Are you sure you want to delete game "${record.name}"?`}
+        addButtonText="新增游戏"
+        deleteConfirmTitle="删除游戏"
+        getDeleteConfirmContent={(record) => `确认删除游戏 "${record.name}" 吗？`}
         canAdd={canManage}
         canEdit={canManage}
         canDelete={canManage}
@@ -174,12 +187,16 @@ const GamesMetaPage: React.FC = () => {
       <XEntityForm<GameMeta>
         visible={modalVisible}
         onCancel={() => setModalVisible(false)}
-        title={currentGame ? 'Edit Game' : 'Add Game'}
+        title={currentGame ? '编辑游戏' : '新增游戏'}
         entity={currentGame}
         onSubmit={handleSubmit}
         basicFields={[...basicFields]}
         getInitialValues={getInitialValues}
         customContent={renderIconSection}
+        submitButtonText="保存"
+        cancelButtonText="取消"
+        successMessage="保存成功"
+        failureMessage="保存失败"
       />
     </div>
   );

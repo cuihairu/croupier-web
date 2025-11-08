@@ -5,6 +5,9 @@ export async function loginAuth(params: { username: string; password: string }) 
 }
 
 export async function fetchMe() {
-  return request<{ username: string; roles: string[] }>('/api/auth/me');
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : '';
+  // Pass Authorization explicitly to avoid any interceptor timing issues
+  return request<{ username: string; roles: string[] }>('/api/auth/me', {
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+  });
 }
-

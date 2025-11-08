@@ -53,11 +53,14 @@ export default function GameSelector() {
   }, [env]);
 
   const gameOptions = useMemo(() => {
-    if (!canListGames) return (game ? [game] : []).map((g) => ({ label: g, value: g }));
+    if (!canListGames) {
+      return (game ? [game] : []).map((g) => ({ label: g, value: -1, gameName: g }));
+    }
     return (games || []).map((g) => ({
       label: `${g.id}:${g.name}` + ((g as any).alias_name ? ` (${(g as any).alias_name})` : ''),
-      value: g.name, // keep header semantics (string game_id)
+      value: g.id, // use numeric id as unique value to avoid duplicate keys
       gameId: g.id,
+      gameName: g.name,
     }));
   }, [games, canListGames, game]);
 
@@ -69,8 +72,12 @@ export default function GameSelector() {
         style={{ minWidth: 200 }}
         showSearch
         allowClear
-        value={game}
-        onChange={(val, opt: any) => { setGame(val); setSelectedGameId(opt?.gameId); }}
+        value={selectedGameId}
+        onChange={(val, opt: any) => {
+          const id = typeof val === 'number' ? val : (val ? Number(val) : undefined);
+          setSelectedGameId(id as any);
+          setGame(opt?.gameName || undefined);
+        }}
         options={gameOptions}
         filterOption={(input, option) => (option?.label as string).toLowerCase().includes(input.toLowerCase())}
       />

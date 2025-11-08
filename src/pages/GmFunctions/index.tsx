@@ -354,11 +354,13 @@ export default function GmFunctionsPage() {
   }, []);
 
   useEffect(() => {
-    // reset form when function changes
+    // reset form when function changes; only touch antd Form when it is mounted
     const props = (currentDesc?.params && currentDesc.params.properties) || {};
     const init: any = {};
     Object.keys(props).forEach((k) => (init[k] = undefined));
-    form.setFieldsValue(init);
+    if (renderMode !== 'form-render') {
+      form.setFieldsValue(init);
+    }
     setFormData({}); // Reset form-render data
     setUiSchema(undefined);
     setLastOutput(undefined);
@@ -389,7 +391,7 @@ export default function GmFunctionsPage() {
     } else {
       setInstances([]);
     }
-  }, [currentDesc?.id]);
+  }, [currentDesc?.id, renderMode]);
 
   const onInvoke = async () => {
     try {

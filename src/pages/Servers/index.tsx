@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Card, Table, Space, Tag, Select, Input, App } from 'antd';
+import { Card, Table, Space, Tag, Select, Input, Button, App } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import GameSelector from '@/components/GameSelector';
 import { fetchRegistry, type ServerAgent } from '@/services/croupier/registry';
@@ -9,6 +9,7 @@ export default function ServersPage() {
   const [loading, setLoading] = useState(false);
   const [rows, setRows] = useState<ServerAgent[]>([]);
   const [filter, setFilter] = useState<{ game?: string; env?: string; healthy?: string; q?: string }>({});
+  const [qValue, setQValue] = useState<string>('');
 
   const load = async () => {
     setLoading(true);
@@ -77,7 +78,17 @@ export default function ServersPage() {
             onChange={(v)=>setFilter((f)=>({ ...f, healthy: v }))}
             options={[{label:'healthy', value:'healthy'}, {label:'unhealthy', value:'unhealthy'}]}
           />
-          <Input.Search allowClear placeholder="按 id/ip/type/version 搜索" style={{ width: 280 }} onSearch={(q)=>setFilter((f)=>({ ...f, q: q||undefined }))} />
+          {/* Avoid deprecated Input addonAfter; use Space.Compact with Input + Button */}
+          <Space.Compact style={{ width: 360 }}>
+            <Input
+              allowClear
+              placeholder="按 id/ip/type/version 搜索"
+              value={qValue}
+              onChange={(e)=> setQValue(e.target.value)}
+              onPressEnter={()=> setFilter((f)=> ({ ...f, q: (qValue||'').trim() || undefined }))}
+            />
+            <Button type="primary" onClick={()=> setFilter((f)=> ({ ...f, q: (qValue||'').trim() || undefined }))}>搜索</Button>
+          </Space.Compact>
         </Space>
       }>
         <Table<ServerAgent>

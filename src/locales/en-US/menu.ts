@@ -8,6 +8,23 @@ export default {
   'menu.AdminUsers.Permissions.Roles': 'Role Management',
   'menu.AdminUsers.Permissions.Users': 'User Management',
   'menu.AdminUsers.Permissions.Config': 'Permission Config',
+  'menu.AdminUsers.Audit': 'Audit Logs',
+  'menu.AdminUsers.LoginLogs': 'Login Logs',
+  'menu.AdminUsers.OperationLogs': 'Operation Logs',
+
+  // Support
+  'menu.Support': 'Support',
+  'menu.Support.Tickets': 'Tickets',
+  'menu.Support.FAQ': 'FAQ',
+  'menu.Support.Feedback': 'Player Feedback',
+  'menu.Support.Bugs': 'Bugs',
+
+
+  // Security settings
+  'menu.Security': 'Security',
+  'menu.Security.Roles': 'Role Management',
+  'menu.Security.Users': 'User Management',
+  'menu.Security.Config': 'Permission Config',
 
   // New game management structure
   'menu.GameManagement': 'Game Management',
@@ -22,8 +39,16 @@ export default {
   'menu.Operations': 'Operations',
   'menu.Operations.Approvals': 'Approval Management',
   'menu.Operations.Audit': 'Audit Logs',
+  'menu.Operations.OperationLogs': 'Operation Logs',
   'menu.Operations.Registry': 'Service Registry',
   'menu.Operations.Servers': 'Servers',
+
+  // Ops
+  'menu.Ops': 'Operations',
+  'menu.Ops.Services': 'Services',
+  'menu.Ops.Jobs': 'Jobs',
+  'menu.Ops.Alerts': 'Alerts',
+  'menu.Ops.RateLimits': 'Rate Limits',
 
   // Legacy menu items (for backward compatibility)
   'menu.GM': 'Game Management',

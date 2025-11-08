@@ -1,18 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Card,
-  Table,
-  Tag,
-  Space,
-  Typography,
-  Tabs,
-  Collapse,
-  Badge,
-  Tooltip,
-  Input,
-  Button,
-  
-} from 'antd';
+import { Card, Table, Tag, Space, Typography, Tabs, Collapse, Badge, Tooltip, Input, Button } from 'antd';
 import { getMessage } from '@/utils/antdApp';
 import {
   SettingOutlined,
@@ -23,7 +10,7 @@ import {
 } from '@ant-design/icons';
 
 const { Title, Text, Paragraph } = Typography;
-const { Search } = Input;
+// Avoid deprecated Input.Search (uses addonAfter). Use Space.Compact instead.
 
 interface PermissionDomain {
   domain: string;
@@ -285,13 +272,15 @@ export default function ConfigPage() {
               children: (
                 <>
                   <div style={{ marginBottom: '16px', display: 'flex', gap: '16px', alignItems: 'center' }}>
-                    <Search
-                      placeholder="搜索权限域或权限"
-                      value={searchText}
-                      onChange={(e) => setSearchText(e.target.value)}
-                      style={{ width: 400 }}
-                      prefix={<SearchOutlined />}
-                    />
+                    <Space.Compact style={{ width: 420 }}>
+                      <Input
+                        placeholder="搜索权限域或权限"
+                        value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)}
+                        prefix={<SearchOutlined />}
+                      />
+                      <Button type="primary" icon={<SearchOutlined />} onClick={() => { /* filter happens on change */ }} />
+                    </Space.Compact>
                     <Button
                       type="primary"
                       icon={<SaveOutlined />}
@@ -327,13 +316,15 @@ export default function ConfigPage() {
               children: (
                 <>
                   <div style={{ marginBottom: '16px' }}>
-                    <Search
-                      placeholder="搜索权限域或权限"
-                      value={searchText}
-                      onChange={(e) => setSearchText(e.target.value)}
-                      style={{ width: 400 }}
-                      prefix={<SearchOutlined />}
-                    />
+                    <Space.Compact style={{ width: 420 }}>
+                      <Input
+                        placeholder="搜索权限域或权限"
+                        value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)}
+                        prefix={<SearchOutlined />}
+                      />
+                      <Button type="primary" icon={<SearchOutlined />} onClick={() => {}} />
+                    </Space.Compact>
                   </div>
 
                   <Collapse

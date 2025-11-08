@@ -8,6 +8,23 @@ export default {
   'menu.AdminUsers.Permissions.Roles': '角色管理',
   'menu.AdminUsers.Permissions.Users': '用户管理',
   'menu.AdminUsers.Permissions.Config': '权限配置',
+  'menu.AdminUsers.Audit': '审计日志',
+  'menu.AdminUsers.LoginLogs': '登录日志',
+  'menu.AdminUsers.OperationLogs': '操作日志',
+
+  // 客服系统
+  'menu.Support': '客服系统',
+  'menu.Support.Tickets': '工单系统',
+  'menu.Support.FAQ': '常见问题',
+  'menu.Support.Feedback': '玩家反馈',
+  'menu.Support.Bugs': '缺陷列表',
+
+
+  // 安全设置
+  'menu.Security': '安全管理',
+  'menu.Security.Roles': '角色管理',
+  'menu.Security.Users': '用户管理',
+  'menu.Security.Config': '权限配置',
 
   // 新的游戏管理结构
   'menu.GameManagement': '游戏管理',
@@ -22,8 +39,16 @@ export default {
   'menu.Operations': '运营管理',
   'menu.Operations.Approvals': '审批管理',
   'menu.Operations.Audit': '审计日志',
+  'menu.Operations.OperationLogs': '操作日志',
   'menu.Operations.Registry': '服务注册表',
   'menu.Operations.Servers': '服务列表',
+
+  // 运维管理
+  'menu.Ops': '运维管理',
+  'menu.Ops.Services': '服务列表',
+  'menu.Ops.Jobs': '任务监控',
+  'menu.Ops.Alerts': '告警中心',
+  'menu.Ops.RateLimits': '限速管理',
 
   // Legacy menu items (保持向后兼容)
   'menu.GM': '运营',

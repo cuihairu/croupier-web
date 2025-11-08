@@ -2,7 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Card, Table, Button, Modal, Form, Input, Switch, Select, Tag, Space, Popconfirm } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { getMessage } from '@/utils/antdApp';
-import { listUsers, createUser, updateUser, deleteUser, setUserPassword, listRoles, type UserRecord } from '@/services/croupier';
+import { listUsers, createUser, updateUser, deleteUser, setUserPassword, listRoles, listUserGames, setUserGames, type UserRecord } from '@/services/croupier';
+import { listGamesMeta, type Game as GameMeta } from '@/services/croupier/gamesMeta';
 
 export default function UsersV2() {
   const [users, setUsers] = useState<UserRecord[]>([]);
@@ -10,25 +11,37 @@ export default function UsersV2() {
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [pwdOpen, setPwdOpen] = useState(false);
+  const [scopeOpen, setScopeOpen] = useState(false);
   const [editing, setEditing] = useState<UserRecord | null>(null);
   const [form] = Form.useForm();
   const [pwdForm] = Form.useForm();
+  const [scopeForm] = Form.useForm();
+  const [games, setGames] = useState<GameMeta[]>([]);
 
   const roleOptions = useMemo(() => roles.map(r => ({ label: r.name, value: r.name })), [roles]);
 
   const refresh = async () => {
     setLoading(true);
     try {
-      const [u, r] = await Promise.all([listUsers(), listRoles()]);
+      const [u, r, g] = await Promise.all([listUsers(), listRoles(), listGamesMeta()]);
       setUsers(u.users || []);
       setRoles((r.roles || []).map((x: any) => ({ id: x.id, name: x.name })));
+      setGames(g.games || []);
     } finally { setLoading(false); }
   };
   useEffect(() => { refresh(); }, []);
 
-  const openAdd = () => { setEditing(null); form.resetFields(); setModalOpen(true); };
-  const openEdit = (rec: UserRecord) => { setEditing(rec); form.setFieldsValue({ username: rec.username, display_name: rec.display_name, email: rec.email, phone: (rec as any).phone, active: (rec as any).active, roles: rec.roles || [] }); setModalOpen(true); };
-  const openPwd = (rec: UserRecord) => { setEditing(rec); pwdForm.resetFields(); setPwdOpen(true); };
+  const openAdd = () => { setEditing(null); setModalOpen(true); };
+  const openEdit = (rec: UserRecord) => { setEditing(rec); setModalOpen(true); };
+  const openPwd = (rec: UserRecord) => { setEditing(rec); setPwdOpen(true); };
+  const openScope = async (rec: UserRecord) => {
+    setEditing(rec);
+    setScopeOpen(true);
+    try {
+      const resp = await listUserGames(rec.id);
+      scopeForm.setFieldsValue({ game_ids: (resp.game_ids || []) });
+    } catch {}
+  };
 
   const submitUser = async () => {
     const v = await form.validateFields();
@@ -52,6 +65,31 @@ export default function UsersV2() {
     setPwdOpen(false);
   };
 
+  const submitScope = async () => {
+    const v = await scopeForm.validateFields();
+    if (!editing) return;
+    await setUserGames(editing.id, v.game_ids || []);
+    getMessage()?.success('已保存');
+    setScopeOpen(false);
+  };
+
+  // Sync form fields only when modal is opened to avoid "useForm not connected" warnings
+  useEffect(() => {
+    if (!modalOpen) return;
+    if (editing) {
+      form.setFieldsValue({ username: editing.username, display_name: editing.display_name, email: editing.email, phone: (editing as any).phone, active: (editing as any).active, roles: editing.roles || [] });
+    } else {
+      form.resetFields();
+      form.setFieldsValue({ active: true });
+    }
+  }, [modalOpen, editing]);
+
+  useEffect(() => {
+    if (pwdOpen) {
+      pwdForm.resetFields();
+    }
+  }, [pwdOpen]);
+
   const remove = async (rec: UserRecord) => { await deleteUser(rec.id); getMessage()?.success('已删除'); refresh(); };
 
   const columns: ColumnsType<UserRecord> = [
@@ -65,9 +103,12 @@ export default function UsersV2() {
       <Space>
         <Button size="small" onClick={() => openEdit(rec)}>编辑</Button>
         <Button size="small" onClick={() => openPwd(rec)}>设置密码</Button>
+        <Button size="small" onClick={() => openScope(rec)}>权限分配</Button>
         <Popconfirm title="确定删除该用户？" onConfirm={() => remove(rec)}>
           <Button size="small" danger>删除</Button>
         </Popconfirm>
+        <Button size="small" onClick={() => window.open(`/admin/operation-logs?actor=${encodeURIComponent(rec.username)}`, '_blank')}>操作日志</Button>
+        <Button size="small" onClick={() => window.open(`/admin/login-logs?actor=${encodeURIComponent(rec.username)}`, '_blank')}>登录日志</Button>
       </Space>
     )},
   ];
@@ -97,6 +138,14 @@ export default function UsersV2() {
       <Modal title={`设置密码：${editing?.username || ''}`} open={pwdOpen} onOk={submitPwd} onCancel={() => setPwdOpen(false)} destroyOnHidden>
         <Form form={pwdForm} layout="vertical">
           <Form.Item label="新密码" name="password" rules={[{ required: true, message: '请输入密码' }, { min: 6, message: '至少 6 位' }]}> <Input.Password /> </Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal title={`权限分配：${editing?.username || ''}`} open={scopeOpen} onOk={submitScope} onCancel={() => setScopeOpen(false)} destroyOnHidden>
+        <Form form={scopeForm} layout="vertical">
+          <Form.Item label="可访问游戏" name="game_ids">
+            <Select mode="multiple" options={(games||[]).map(g=>({ label: g.name, value: g.id }))} placeholder="选择可访问的游戏" />
+          </Form.Item>
         </Form>
       </Modal>
     </div>

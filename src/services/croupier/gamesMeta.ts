@@ -7,7 +7,7 @@ export type Game = {
   description?: string;
   alias_name?: string;
   homepage?: string;
-  status?: string;       // online|offline|running
+  status?: string;       // dev|test|running|online|offline|maintenance
   enabled?: boolean;
   created_at?: string;
   updated_at?: string;

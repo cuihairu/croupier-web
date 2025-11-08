@@ -11,10 +11,15 @@ export type MessageItem = {
 };
 
 export async function unreadCount() {
+  // avoid request when no token present
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : '';
+  if (!token) return { count: 0 } as any;
   return request<{ count: number }>('/api/messages/unread_count');
 }
 
 export async function listMessages(params?: { status?: 'unread' | 'all'; page?: number; size?: number }) {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : '';
+  if (!token) return { messages: [], total: 0, page: params?.page || 1, size: params?.size || 10 } as any;
   return request<{ messages: MessageItem[]; total: number; page: number; size: number }>('/api/messages', { params });
 }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Input, Divider, Button, Space, Typography, message } from 'antd';
+import { Modal, Form, Input, Divider, Button, Space, Typography, App } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import FormRender from 'form-render';
 import { CheckCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
@@ -44,6 +44,9 @@ export interface XEntityFormProps<T = any> {
   // Customization
   submitButtonText?: string;
   validateButtonText?: string;
+  cancelButtonText?: string;
+  successMessage?: string;
+  failureMessage?: string;
   extraFooterButtons?: React.ReactNode[];
 
   // Optional custom content area rendered after basic fields.
@@ -72,6 +75,9 @@ export default function XEntityForm<T = any>({
   uiSchemaLabel = 'UI Schema',
   submitButtonText,
   validateButtonText = 'Validate',
+  cancelButtonText = 'Cancel',
+  successMessage,
+  failureMessage,
   extraFooterButtons = [],
   customContent,
   getInitialValues,
@@ -79,6 +85,8 @@ export default function XEntityForm<T = any>({
   getUiSchemaData,
 }: XEntityFormProps<T>) {
   const [form] = Form.useForm();
+  // Use App context message API to avoid calling static message in render
+  const { message } = App.useApp();
   const [schemaData, setSchemaData] = useState<any>({});
   const [uiSchemaData, setUiSchemaData] = useState<any>({});
   const [validationResult, setValidationResult] = useState<EntityValidationResult | null>(null);
@@ -155,10 +163,14 @@ export default function XEntityForm<T = any>({
       };
 
       await onSubmit(entityData);
-      message.success(`${isEditing ? 'Updated' : 'Created'} successfully`);
+      message.success(
+        successMessage || `${isEditing ? 'Updated' : 'Created'} successfully`
+      );
       onCancel();
     } catch (error: any) {
-      message.error(error?.message || `Failed to ${isEditing ? 'update' : 'create'}`);
+      message.error(
+        error?.message || failureMessage || `Failed to ${isEditing ? 'update' : 'create'}`
+      );
     } finally {
       setLoading(false);
     }
@@ -173,7 +185,7 @@ export default function XEntityForm<T = any>({
       </Button>
     ] : []),
     <Button key="cancel" onClick={onCancel}>
-      Cancel
+      {cancelButtonText}
     </Button>,
     <Button key="submit" type="primary" onClick={handleSubmit} loading={loading}>
       {submitButtonText || (isEditing ? 'Update' : 'Create')}

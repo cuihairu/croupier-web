@@ -16,6 +16,12 @@ export default function access(initialState: { currentUser?: API.CurrentUser } |
     canPacksReload: has('packs:reload') || has('admin'),
     canPacksExport: has('packs:export') || has('admin'),
     canAuditRead: has('audit:read') || has('admin'),
+    // 运维管理（Ops）
+    canOpsRead: has('ops:read') || has('admin') || has('registry:read'),
+    canOpsManage: has('ops:manage') || has('admin'),
+    // Support (客服系统)
+    canSupportRead: has('support:read') || has('admin'),
+    canSupportManage: has('support:manage') || has('admin'),
     // 权限管理相关权限（与后端的 RBAC key 对齐）
     canPermissionManage: has('roles:read') || has('roles:manage') || has('users:read') || has('users:manage') || has('admin'),
     canRoleManage: has('roles:read') || has('roles:manage') || has('admin'),

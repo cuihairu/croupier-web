@@ -25,13 +25,16 @@ export async function getInitialState(): Promise<{
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
   const fetchUserInfo = async () => {
+    // Only call backend when we have a token; otherwise avoid a 401 on boot
     try {
+      const token = localStorage.getItem('token');
+      if (!token) return undefined;
       const me = await fetchMe();
       return { name: me.username, userid: me.username, access: (me.roles||[]).join(',') } as any;
     } catch (error) {
       history.push(loginPath);
+      return undefined;
     }
-    return undefined;
   };
   // 如果不是登录页面，执行
   const { location } = history;
@@ -58,8 +61,14 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     }, [inst]);
     return null;
   };
+  const isAuthed = !!initialState?.currentUser;
   return {
-    actionsRender: () => [<GameSelector key="scope" />, <MessagesBell key="msgs" />, <Question key="doc" />, <SelectLang key="SelectLang" />],
+    actionsRender: () => [
+      <GameSelector key="scope" />,
+      isAuthed ? <MessagesBell key="msgs" /> : null,
+      <Question key="doc" />,
+      <SelectLang key="SelectLang" />,
+    ].filter(Boolean) as any,
     avatarProps: {
       src: initialState?.currentUser?.avatar,
       title: <AvatarName />,

@@ -16,6 +16,16 @@ const Footer: React.FC = () => {
           blankTarget: true,
         },
         {
+          key: 'croupier',
+          title: (
+            <span>
+              <GithubOutlined style={{ marginRight: 6 }} /> Croupier
+            </span>
+          ),
+          href: 'https://github.com/cuihairu/croupier',
+          blankTarget: true,
+        },
+        {
           key: 'github',
           title: <GithubOutlined />,
           href: 'https://github.com/ant-design/ant-design-pro',

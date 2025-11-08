@@ -40,7 +40,7 @@ export default function GamesEnvsPage() {
       title: 'Actions', key: 'actions', width: 180,
       render: (_, rec) => (
         <Space>
-          <Button size="small" onClick={() => { setEditing(rec); editForm.setFieldsValue({ env: rec.env, description: rec.description }); setEditOpen(true); }}>Edit</Button>
+          <Button size="small" onClick={() => { setEditing(rec); setEditOpen(true); }}>Edit</Button>
           <Button size="small" danger onClick={async () => {
             Modal.confirm({ title: 'Delete Env', content: `Delete env "${rec.env}"?`, onOk: async () => { await deleteGameEnv(gameId!, { id: rec.id, env: rec.env }); message.success('Deleted'); loadEnvs(gameId); } });
           }}>Delete</Button>
@@ -60,6 +60,13 @@ export default function GamesEnvsPage() {
     await updateGameEnv(gameId!, editing.env, v.env, v.description);
     setEditOpen(false); setEditing(null); message.success('Updated'); loadEnvs(gameId);
   };
+
+  // Avoid calling editForm API before the form is mounted
+  useEffect(() => {
+    if (editOpen && editing) {
+      editForm.setFieldsValue({ env: editing.env, description: editing.description });
+    }
+  }, [editOpen, editing, editForm]);
 
   return (
     <div style={{ padding: 24 }}>
@@ -86,7 +93,7 @@ export default function GamesEnvsPage() {
         />
       </Card>
 
-      <Modal title="新增环境" open={addOpen} onOk={onAdd} onCancel={() => setAddOpen(false)} destroyOnClose>
+      <Modal title="新增环境" open={addOpen} onOk={onAdd} onCancel={() => setAddOpen(false)} destroyOnHidden>
         <Form form={form} layout="vertical">
           <Form.Item name="env" label="Env" rules={[{ required: true, message: '请输入环境名' }]}>
             <Input placeholder="e.g. dev / test / stage / prod" />
@@ -97,7 +104,7 @@ export default function GamesEnvsPage() {
         </Form>
       </Modal>
 
-      <Modal title="编辑环境" open={editOpen} onOk={onEdit} onCancel={() => setEditOpen(false)} destroyOnClose>
+      <Modal title="编辑环境" open={editOpen} onOk={onEdit} onCancel={() => setEditOpen(false)} destroyOnHidden>
         <Form form={editForm} layout="vertical">
           <Form.Item name="env" label="Env" rules={[{ required: true, message: '请输入环境名' }]}>
             <Input />
@@ -110,4 +117,3 @@ export default function GamesEnvsPage() {
     </div>
   );
 }
-

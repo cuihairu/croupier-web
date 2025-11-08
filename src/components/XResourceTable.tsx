@@ -1,5 +1,5 @@
 import React, { useRef, ReactNode } from 'react';
-import { Button, Space, Modal, message } from 'antd';
+import { Button, Space, Modal, App } from 'antd';
 import { ProTable, ProColumns } from '@ant-design/pro-components';
 import { PlusOutlined, EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 
@@ -61,6 +61,8 @@ export default function XResourceTable<T = any>({
   canPreview = true,
 }: XResourceTableProps<T>) {
   const tableRef = useRef<any>();
+  // Use App context message API to avoid React 18 concurrent-mode warnings
+  const { message } = App.useApp();
 
   // Build action column if any action is enabled
   const shouldShowActions = (canEdit && onEdit) || (canDelete && onDelete) || (canPreview && onPreview);

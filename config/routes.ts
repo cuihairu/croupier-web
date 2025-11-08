@@ -23,6 +23,46 @@ export default [
     ],
   },
   {
+    path: '/support',
+    name: 'Support',
+    icon: 'customerService',
+    access: 'canSupportRead',
+    routes: [
+      { path: '/support', redirect: '/support/tickets' },
+      {
+        path: '/support/tickets',
+        name: 'Tickets',
+        access: 'canSupportRead',
+        component: './Support/Tickets',
+      },
+      {
+        path: '/support/tickets/:id',
+        name: 'TicketDetail',
+        access: 'canSupportRead',
+        component: './Support/Tickets/Detail',
+        hideInMenu: true,
+      },
+      {
+        path: '/support/faq',
+        name: 'FAQ',
+        access: 'canSupportRead',
+        component: './Support/FAQ',
+      },
+      {
+        path: '/support/bugs',
+        name: 'Bugs',
+        access: 'canSupportRead',
+        component: './Support/Bugs',
+      },
+      {
+        path: '/support/feedback',
+        name: 'Feedback',
+        access: 'canSupportRead',
+        component: './Support/Feedback',
+      },
+    ],
+  },
+  {
     path: '/admin',
     name: 'AdminUsers',
     icon: 'team',
@@ -37,27 +77,24 @@ export default [
           { path: '/admin/account/messages', name: 'Messages', component: './Account/Messages' },
         ],
       },
+      // Back-office user management (mirrors Security pages for convenience)
       {
         path: '/admin/permissions',
         name: 'Permissions',
-        icon: 'safety',
         access: 'canPermissionManage',
         routes: [
+          { path: '/admin/permissions', redirect: '/admin/permissions/users' },
           {
-            path: '/admin/permissions',
-            redirect: '/admin/permissions/roles',
+            path: '/admin/permissions/users',
+            name: 'Users',
+            access: 'canUserManage',
+            component: './Permissions/UsersV2',
           },
           {
             path: '/admin/permissions/roles',
             name: 'Roles',
             access: 'canRoleManage',
             component: './Permissions/RolesV2',
-          },
-          {
-            path: '/admin/permissions/users',
-            name: 'Users',
-            access: 'canUserManage',
-            component: './Permissions/UsersV2',
           },
           {
             path: '/admin/permissions/config',
@@ -67,6 +104,12 @@ export default [
           },
         ],
       },
+      // Quick links to audit pages
+      { path: '/admin/audit', name: 'Audit', access: 'canAuditRead', component: './Audit' },
+      // Login logs shortcut page (wraps Audit with preset kind=login)
+      { path: '/admin/login-logs', name: 'LoginLogs', access: 'canAuditRead', component: './Admin/LoginLogs' },
+      // Operation logs (audit view focused on non-login events)
+      { path: '/admin/operation-logs', name: 'OperationLogs', access: 'canAuditRead', component: './Admin/OperationLogs' },
     ],
   },
   {
@@ -121,6 +164,19 @@ export default [
     ],
   },
   {
+    path: '/ops',
+    name: 'Ops',
+    icon: 'cluster',
+    access: 'canOpsRead',
+    routes: [
+      { path: '/ops', redirect: '/ops/services' },
+      { path: '/ops/services', name: 'Services', access: 'canOpsRead', component: './Ops/Services' },
+      { path: '/ops/jobs', name: 'Jobs', access: 'canOpsRead', component: './Ops/Jobs' },
+      { path: '/ops/alerts', name: 'Alerts', access: 'canOpsRead', component: './Ops/Alerts' },
+      { path: '/ops/rate-limits', name: 'RateLimits', access: 'canOpsManage', component: './Ops/RateLimits' },
+    ],
+  },
+  {
     path: '/operations',
     name: 'Operations',
     icon: 'dashboard',
@@ -142,6 +198,12 @@ export default [
         component: './Audit',
       },
       {
+        path: '/operations/operation-logs',
+        name: 'OperationLogs',
+        access: 'canAuditRead',
+        component: './Admin/OperationLogs',
+      },
+      {
         path: '/operations/registry',
         name: 'Registry',
         access: 'canRegistryRead',
@@ -152,6 +214,34 @@ export default [
         name: 'Servers',
         access: 'canRegistryRead',
         component: './Servers',
+      },
+    ],
+  },
+  // Security settings
+  {
+    path: '/security',
+    name: 'Security',
+    icon: 'setting',
+    access: 'canPermissionManage',
+    routes: [
+      { path: '/security', redirect: '/security/permissions/roles' },
+      {
+        path: '/security/permissions/roles',
+        name: 'Roles',
+        access: 'canRoleManage',
+        component: './Permissions/RolesV2',
+      },
+      {
+        path: '/security/permissions/users',
+        name: 'Users',
+        access: 'canUserManage',
+        component: './Permissions/UsersV2',
+      },
+      {
+        path: '/security/permissions/config',
+        name: 'Config',
+        access: 'canPermissionConfig',
+        component: './Permissions/Config',
       },
     ],
   },
@@ -170,10 +260,21 @@ export default [
     path: '/account',
     redirect: '/admin/account/center',
   },
-  {
-    path: '/permissions',
-    redirect: '/admin/permissions/roles',
-  },
+  { path: '/account/messages', redirect: '/admin/account/messages' },
+  { path: '/account/center', redirect: '/admin/account/center' },
+  { path: '/account/settings', redirect: '/admin/account/settings' },
+  { path: '/permissions', redirect: '/security/permissions/roles' },
+  // Legacy redirects for system->security renaming
+  { path: '/system', redirect: '/security/permissions/roles' },
+  { path: '/system/permissions', redirect: '/security/permissions/roles' },
+  { path: '/system/permissions/roles', redirect: '/security/permissions/roles' },
+  { path: '/system/permissions/users', redirect: '/security/permissions/users' },
+  { path: '/system/permissions/config', redirect: '/security/permissions/config' },
+  // Legacy redirects for admin/permissions
+  { path: '/admin/permissions', redirect: '/security/permissions/roles' },
+  { path: '/admin/permissions/roles', redirect: '/security/permissions/roles' },
+  { path: '/admin/permissions/users', redirect: '/security/permissions/users' },
+  { path: '/admin/permissions/config', redirect: '/security/permissions/config' },
   // Game management legacy redirects
   {
     path: '/game-mgmt/games-meta',

@@ -19,9 +19,9 @@ export default function RolesV2() {
   };
   useEffect(() => { refresh(); }, []);
 
-  const openAdd = () => { setEditing(null); form.resetFields(); setEditOpen(true); };
-  const openEdit = (rec: RoleRecord) => { setEditing(rec); form.setFieldsValue({ name: rec.name, description: rec.description }); setEditOpen(true); };
-  const openPerms = (rec: RoleRecord) => { setEditing(rec); permsForm.setFieldsValue({ perms: rec.perms || [] }); setPermsOpen(true); };
+  const openAdd = () => { setEditing(null); setEditOpen(true); };
+  const openEdit = (rec: RoleRecord) => { setEditing(rec); setEditOpen(true); };
+  const openPerms = (rec: RoleRecord) => { setEditing(rec); setPermsOpen(true); };
 
   const submitEdit = async () => {
     const v = await form.validateFields();
@@ -36,6 +36,17 @@ export default function RolesV2() {
     getMessage()?.success('权限已更新');
     setPermsOpen(false); refresh();
   };
+
+  // Avoid using form instances before their Form mounts
+  useEffect(() => {
+    if (!editOpen) return;
+    if (editing) { form.setFieldsValue({ name: editing.name, description: editing.description }); }
+    else { form.resetFields(); }
+  }, [editOpen, editing]);
+
+  useEffect(() => {
+    if (permsOpen) { permsForm.setFieldsValue({ perms: editing?.perms || [] }); }
+  }, [permsOpen, editing]);
 
   const remove = async (rec: RoleRecord) => { await deleteRole(rec.id); getMessage()?.success('已删除'); refresh(); };
 
