@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Card, Table, Space, Tag, Select, Input, Button } from 'antd';
+import { Card, Table, Space, Tag, Select, Input, Button, App, Modal } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { request } from '@umijs/max';
 import { fetchRegistry, type ServerAgent as RegistryAgent } from '@/services/croupier/registry';
 
 export default function OpsNodesPage() {
+  const { message } = App.useApp();
   const [loading, setLoading] = useState(false);
   const [rows, setRows] = useState<RegistryAgent[]>([]);
   const [q, setQ] = useState('');
@@ -54,6 +55,18 @@ export default function OpsNodesPage() {
     });
   }, [rows, q, healthy, env, game]);
 
+  const drain = async (id: string) => {
+    try { await request.post(`/api/ops/nodes/${encodeURIComponent(id)}/drain`); message.success('已下线'); load(); } catch(e:any){ message.error(e?.message||'操作失败'); }
+  };
+  const undrain = async (id: string) => {
+    try { await request.post(`/api/ops/nodes/${encodeURIComponent(id)}/undrain`); message.success('已取消下线'); load(); } catch(e:any){ message.error(e?.message||'操作失败'); }
+  };
+  const restart = async (id: string) => {
+    Modal.confirm({ title:'重启节点', content:`确认重启 ${id} ?`, onOk: async ()=>{
+      try { await request.post(`/api/ops/nodes/${encodeURIComponent(id)}/restart`); message.success('已下发重启'); } catch(e:any){ message.error(e?.message||'操作失败'); }
+    }});
+  };
+
   const cols: ColumnsType<RegistryAgent> = [
     { title:'Agent', dataIndex:'agent_id', width: 200, ellipsis: true },
     { title:'Type', dataIndex:'type', width: 90, render:(v)=> v||'agent' },
@@ -65,6 +78,13 @@ export default function OpsNodesPage() {
     { title:'Health', dataIndex:'healthy', width: 90, render:(v)=> v? <Tag color='green'>healthy</Tag> : <Tag>expired</Tag> },
     { title:'TTL', dataIndex:'expires_in_sec', width: 80 },
     { title:'RPC Addr', dataIndex:'rpc_addr', width: 220, ellipsis: true },
+    { title:'操作', width: 220, fixed:'right', render: (_:any, r)=> (
+      <Space>
+        <Button size='small' onClick={()=> drain(r.agent_id)}>下线</Button>
+        <Button size='small' onClick={()=> undrain(r.agent_id)}>取消下线</Button>
+        <Button size='small' onClick={()=> restart(r.agent_id)}>重启</Button>
+      </Space>
+    )},
   ];
 
   const games = Array.from(new Set(rows.map(r=> r.game_id).filter(Boolean))).map(v=> ({ label:v, value:v }));
@@ -72,7 +92,7 @@ export default function OpsNodesPage() {
 
   return (
     <div style={{ padding: 24 }}>
-      <Card title='节点信息' extra={<Space>
+      <Card title='节点维护' extra={<Space>
         <Select allowClear placeholder='Game' value={game} onChange={setGame as any} style={{ width: 140 }} options={games} />
         <Select allowClear placeholder='Env' value={env} onChange={setEnv as any} style={{ width: 120 }} options={envs} />
         <Select allowClear placeholder='健康' value={healthy as any} onChange={setHealthy as any} style={{ width: 120 }} options={[{label:'healthy',value:'healthy'},{label:'unhealthy',value:'unhealthy'}]} />

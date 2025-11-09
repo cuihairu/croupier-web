@@ -48,14 +48,14 @@ export default {
   // Ops
   'menu.Ops': 'Operations',
   'menu.Ops.Services': 'Services',
-  'menu.Ops.Nodes': 'Nodes',
+  'menu.Ops.Nodes': 'Node Maintenance',
   'menu.Ops.Jobs': 'Jobs',
   'menu.Ops.Alerts': 'Alerts',
   'menu.Ops.RateLimits': 'Rate Limits',
   'menu.Ops.MQ': 'Message Queue',
   'menu.Ops.Certificates': 'Certificates',
   'menu.Ops.Notifications': 'Notifications',
-  'menu.Ops.AnalyticsFilters': 'Analytics Filters',
+  'menu.Ops.AnalyticsFilters': 'Sampling Control',
 
   // Analytics
   'menu.Analytics': 'Analytics',

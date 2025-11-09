@@ -48,14 +48,14 @@ export default {
   // 运维管理
   'menu.Ops': '运维管理',
   'menu.Ops.Services': '服务列表',
-  'menu.Ops.Nodes': '节点信息',
+  'menu.Ops.Nodes': '节点维护',
   'menu.Ops.Jobs': '任务监控',
   'menu.Ops.Alerts': '告警中心',
   'menu.Ops.RateLimits': '限速管理',
   'menu.Ops.MQ': '消息队列',
   'menu.Ops.Certificates': '证书监控',
   'menu.Ops.Notifications': '事件通知',
-  'menu.Ops.AnalyticsFilters': '埋点配置',
+  'menu.Ops.AnalyticsFilters': '采样控制',
 
   // 数据分析
   'menu.Analytics': '数据分析',
