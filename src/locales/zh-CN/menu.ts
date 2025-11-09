@@ -37,7 +37,7 @@ export default {
   'menu.GameManagement.GamePacks': '功能包管理',
 
   // 运营管理
-  'menu.Operations': '运营管理',
+  'menu.Operations': '游戏运营',
   'menu.Operations.Approvals': '审批管理',
   'menu.Operations.Audit': '审计日志',
   'menu.Operations.OperationLogs': '操作日志',
