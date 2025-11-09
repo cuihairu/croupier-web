@@ -1,14 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Space, Select, Tag } from 'antd';
 import { useAccess } from '@umijs/max';
-import { listGamesMeta, type Game as GameMeta } from '@/services/croupier/gamesMeta';
+import { listMyGames, type Game as GameMeta } from '@/services/croupier';
 import { listGameEnvs } from '@/services/croupier/envs';
 
 const ENVS = ['prod', 'stage', 'test', 'dev'];
 
 export default function GameSelector() {
   const access: any = useAccess?.() || {};
-  const canListGames = !!(access.canGamesRead || access.canGamesManage);
+  const canListGames = true; // listMyGames is always allowed for authenticated users
 
   const [games, setGames] = useState<GameMeta[]>([]);
   const [envOptions, setEnvOptions] = useState<string[]>(ENVS);
@@ -18,34 +18,42 @@ export default function GameSelector() {
   const [selectedGameId, setSelectedGameId] = useState<number | undefined>(undefined);
   const [env, setEnv] = useState<string | undefined>(localStorage.getItem('env') || 'dev');
 
-  // Load games list if permitted
+  // Load games list (scope-aware)
   useEffect(() => {
     if (!canListGames) return;
     (async () => {
       try {
-        const res = await listGamesMeta();
-        setGames(res.games || []);
+        const res = await listMyGames();
+        const gs = res.games || [];
+        setGames(gs);
+        // Ensure selection is valid; otherwise default to first
+        const validIds = new Set((gs || []).map((g:any)=> g.id));
+        let nextId = selectedGameId;
+        if (!nextId || !validIds.has(nextId as any)) {
+          nextId = (gs[0] as any)?.id;
+        }
+        if (nextId) {
+          const gObj: any = (gs || []).find((x:any)=> x.id === nextId);
+          const ev = Array.isArray(gObj?.envs) && gObj.envs.length > 0 ? gObj.envs : ENVS;
+          setSelectedGameId(nextId as any);
+          setGame(gObj?.name);
+          setEnvOptions(ev);
+          if (!env || !ev.includes(env)) setEnv(ev[0]);
+        }
       } catch {}
     })();
   }, [canListGames]);
 
-  // When game changes, persist and try to load envs for that game (if we can match it to an id)
+  // When game changes, persist and set envs for that game (prefer scope-aware envs from /api/me/games)
   useEffect(() => {
     if (game) localStorage.setItem('game_id', game);
     const gid = selectedGameId ?? games.find((x) => x.name === game)?.id;
-    if (gid) {
-      (async () => {
-        try {
-          const res = await listGameEnvs(gid!);
-          const opts = (res.envs || []).map((e) => e.env).filter(Boolean);
-          setEnvOptions(opts.length ? opts : ENVS);
-        } catch {
-          setEnvOptions(ENVS);
-        }
-      })();
-    } else {
-      // Fallback to default list if not found
-      setEnvOptions(ENVS);
+    const gObj: any = (games || []).find((x) => (x as any).id === gid);
+    const envs: string[] = Array.isArray((gObj as any)?.envs) && (gObj as any).envs.length > 0 ? (gObj as any).envs : ENVS;
+    setEnvOptions(envs);
+    // Default env: first if current env not set或不在列表
+    if (!env || !envs.includes(env)) {
+      setEnv(envs[0]);
     }
   }, [game, games, selectedGameId]);
 

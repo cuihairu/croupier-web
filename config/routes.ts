@@ -185,15 +185,9 @@ export default [
     routes: [
       {
         path: '/game',
-        redirect: '/game/meta',
+        redirect: '/game/environments',
       },
-      // 游戏基础配置
-      {
-        path: '/game/meta',
-        name: 'GameMeta',
-        access: 'canGamesRead',
-        component: './GamesMeta',
-      },
+      // 游戏基础配置页面已下线，合并到环境/实体等页面
       {
         path: '/game/environments',
         name: 'GameEnvironments',

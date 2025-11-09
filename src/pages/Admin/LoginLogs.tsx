@@ -135,6 +135,7 @@ export default function LoginLogsPage() {
             return v;
           } },
           { title: '设备', render: (_:any, r:any)=> detectOS(String(r.meta?.ua||'')) },
+          { title: '浏览器', render: (_:any, r:any)=> detectBrowser(String(r.meta?.ua||'')) },
         ]}
         dataSource={paged}
         expandable={{

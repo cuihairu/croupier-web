@@ -28,7 +28,8 @@ export default function AnalyticsRealtimePage() {
       const nextOnline = keep((ptsOnline||[]).concat([[now, online]]));
       const nextA5 = keep((ptsA5||[]).concat([[now, a5]]));
       const nextA15 = keep((ptsA15||[]).concat([[now, a15]]));
-      const nextRev5 = keep((ptsRev5||[]).concat([[now, rev5]]));
+      // store revenue in Yuan for spark consistency with UI
+      const nextRev5 = keep((ptsRev5||[]).concat([[now, rev5/100]]));
       setPtsOnline(nextOnline); setPtsA5(nextA5); setPtsA15(nextA15); setPtsRev5(nextRev5);
       // persist to sessionStorage
       try { sessionStorage.setItem('realtime:series', JSON.stringify({ online: nextOnline, a5: nextA5, a15: nextA15, rev5: nextRev5 })); } catch {}
@@ -98,7 +99,8 @@ export default function AnalyticsRealtimePage() {
               const t = Date.now()-10*60*1000;
               return (arr||[]).filter(p=> p[0]>=t);
             };
-            const csvRows = [['ts','online','active_5m','active_15m','rev_5m']];
+            // revenue column exported in Yuan (to match UI/spark)
+            const csvRows = [['ts','online','active_5m','active_15m','rev_5m_yuan']];
             const o = last10(ptsOnline), a5 = last10(ptsA5), a15 = last10(ptsA15), rv = last10(ptsRev5);
             const idx = new Set<number>([...o,...a5,...a15,...rv].map(p=> p[0]));
             const times = Array.from(idx).sort((a,b)=> a-b);
@@ -147,12 +149,13 @@ export default function AnalyticsRealtimePage() {
         <Row gutter={[16,16]} style={{ marginTop: 12 }}>
           <Col span={6}><Card loading={loading}><Statistic title="注册用户总数" value={data?.registered_total||0} /><div style={{ marginTop: 6 }}><Spark data={[]} /></div></Card></Col>
           <Col span={6}><Card loading={loading}>
-            <Statistic title="5分钟订单额(分)" value={data?.rev_5m||0} />
+            <Statistic title="5分钟订单额(元)" value={(Number(data?.rev_5m||0))/100} precision={2} prefix="¥" />
             <div style={{ marginTop: 6 }}>
               <Spark data={ptsRev5} />
             </div>
           </Card></Col>
-          <Col span={6}><Card loading={loading}><Statistic title="支付成功率" value={data?.pay_succ_rate||0} suffix="%" /><div style={{ marginTop: 6 }}><Spark data={[]} /></div></Card></Col>
+          <Col span={6}><Card loading={loading}><Statistic title="支付成功率" value={data?.pay_succ_rate||0} precision={2} suffix="%" /><div style={{ marginTop: 6 }}><Spark data={[]} /></div></Card></Col>
+          <Col span={6}><Card loading={loading}><Statistic title="今日充值(元)" value={(Number(data?.rev_today||0))/100} precision={2} prefix="¥" /><div style={{ marginTop: 6 }}><Spark data={[]} /></div></Card></Col>
         </Row>
       </Card>
     </div>

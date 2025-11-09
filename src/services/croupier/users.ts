@@ -37,3 +37,11 @@ export async function listUserGames(id: number) {
 export async function setUserGames(id: number, game_ids: number[]) {
   return request<void>(`/api/users/${id}/games`, { method: 'PUT', data: { game_ids } });
 }
+
+export async function listUserGameEnvs(id: number, game_id: number) {
+  return request<{ envs: string[] }>(`/api/users/${id}/games/${game_id}/envs`);
+}
+
+export async function setUserGameEnvs(id: number, game_id: number, envs: string[]) {
+  return request<void>(`/api/users/${id}/games/${game_id}/envs`, { method: 'PUT', data: { envs } });
+}

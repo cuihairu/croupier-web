@@ -1,7 +1,6 @@
 export * from './auth';
 export * from './functions';
 export * from './games';
-export * from './gamesMeta';
 export * from './assignments';
 export * from './registry';
 export * from './ops';
@@ -13,5 +12,5 @@ export * from './users';
 export * from './roles';
 export * from './messages';
 export * from './entities';
-// Types are colocated with each API module (functions/games/gamesMeta/audit).
+// Types are colocated with each API module (functions/games/audit).
 // No separate shared types barrel to avoid duplicate exports.

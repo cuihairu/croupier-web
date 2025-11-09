@@ -29,7 +29,6 @@ export default {
 
   // 新的游戏管理结构
   'menu.GameManagement': '游戏管理',
-  'menu.GameManagement.GameMeta': '游戏列表',
   'menu.GameManagement.GameEnvironments': '游戏环境',
   'menu.GameManagement.GameEntities': '实体管理',
   'menu.GameManagement.GameFunctions': '功能管理',

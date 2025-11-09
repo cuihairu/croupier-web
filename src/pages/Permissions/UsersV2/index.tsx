@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Card, Table, Button, Modal, Form, Input, Switch, Select, Tag, Space, Popconfirm } from 'antd';
+import { Card, Table, Button, Modal, Form, Input, Switch, Select, Tag, Space, Popconfirm, Divider } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { getMessage } from '@/utils/antdApp';
-import { listUsers, createUser, updateUser, deleteUser, setUserPassword, listRoles, listUserGames, setUserGames, type UserRecord } from '@/services/croupier';
-import { listGamesMeta, type Game as GameMeta } from '@/services/croupier/gamesMeta';
+import { listUsers, createUser, updateUser, deleteUser, setUserPassword, listRoles, listUserGames, setUserGames, listUserGameEnvs, setUserGameEnvs, type UserRecord } from '@/services/croupier';
+import { listGamesMeta, type Game as GameMeta } from '@/services/croupier';
+import { listGameEnvs } from '@/services/croupier/envs';
 
 export default function UsersV2() {
   const [users, setUsers] = useState<UserRecord[]>([]);
@@ -17,6 +18,9 @@ export default function UsersV2() {
   const [pwdForm] = Form.useForm();
   const [scopeForm] = Form.useForm();
   const [games, setGames] = useState<GameMeta[]>([]);
+  const [selectedGid, setSelectedGid] = useState<number | undefined>(undefined);
+  const [envOptions, setEnvOptions] = useState<string[]>([]);
+  const [envSel, setEnvSel] = useState<string[]>([]);
 
   const roleOptions = useMemo(() => roles.map(r => ({ label: r.name, value: r.name })), [roles]);
 
@@ -38,8 +42,27 @@ export default function UsersV2() {
     setEditing(rec);
     setScopeOpen(true);
     try {
-      const resp = await listUserGames(rec.id);
-      scopeForm.setFieldsValue({ game_ids: (resp.game_ids || []) });
+      // choose initial game: user's first assigned, else first game
+      const cur = await listUserGames(rec.id);
+      const userGids: number[] = cur.game_ids || [];
+      const initId = userGids[0] ?? (games[0] as any)?.id;
+      if (initId) {
+        setSelectedGid(initId);
+        // load env options and current env scope
+        try {
+          const r = await listGameEnvs(initId);
+          const opts = (r.envs || []).map((e:any)=> e.env).filter(Boolean);
+          setEnvOptions(opts);
+        } catch { setEnvOptions([]); }
+        try {
+          const r2 = await listUserGameEnvs(rec.id, initId);
+          setEnvSel(r2.envs || []);
+        } catch { setEnvSel([]); }
+      } else {
+        setSelectedGid(undefined);
+        setEnvOptions([]);
+        setEnvSel([]);
+      }
     } catch {}
   };
 
@@ -68,7 +91,13 @@ export default function UsersV2() {
   const submitScope = async () => {
     const v = await scopeForm.validateFields();
     if (!editing) return;
-    await setUserGames(editing.id, v.game_ids || []);
+    const gid = selectedGid;
+    if (!gid) { getMessage()?.warning('请选择游戏'); return; }
+    // merge selected game into user's game list
+    const cur = await listUserGames(editing.id);
+    const uniq = new Set<number>([...(cur.game_ids||[]), gid]);
+    await setUserGames(editing.id, Array.from(uniq));
+    await setUserGameEnvs(editing.id, gid, envSel||[]);
     getMessage()?.success('已保存');
     setScopeOpen(false);
   };
@@ -103,7 +132,7 @@ export default function UsersV2() {
       <Space>
         <Button size="small" onClick={() => openEdit(rec)}>编辑</Button>
         <Button size="small" onClick={() => openPwd(rec)}>设置密码</Button>
-        <Button size="small" onClick={() => openScope(rec)}>权限分配</Button>
+        <Button size="small" onClick={() => openScope(rec)}>游戏分配</Button>
         <Popconfirm title="确定删除该用户？" onConfirm={() => remove(rec)}>
           <Button size="small" danger>删除</Button>
         </Popconfirm>
@@ -141,10 +170,38 @@ export default function UsersV2() {
         </Form>
       </Modal>
 
-      <Modal title={`权限分配：${editing?.username || ''}`} open={scopeOpen} onOk={submitScope} onCancel={() => setScopeOpen(false)} destroyOnHidden>
+      <Modal title={`游戏分配：${editing?.username || ''}`} open={scopeOpen} onOk={submitScope} onCancel={() => setScopeOpen(false)} destroyOnHidden>
         <Form form={scopeForm} layout="vertical">
-          <Form.Item label="可访问游戏" name="game_ids">
-            <Select mode="multiple" options={(games||[]).map(g=>({ label: g.name, value: g.id }))} placeholder="选择可访问的游戏" />
+          <Form.Item label="选择游戏" name="game_id">
+            <Select
+              placeholder="选择一个游戏"
+            options={(games||[]).map(g=>({ label: g.name, value: g.id }))}
+              value={selectedGid}
+              onChange={async (gid:number)=>{
+                setSelectedGid(gid);
+                try {
+                  const r = await listGameEnvs(gid);
+                  const opts = (r.envs || []).map((e:any)=> e.env).filter(Boolean);
+                  setEnvOptions(opts);
+                } catch { setEnvOptions([]); }
+                if (editing) {
+                  try {
+                    const r2 = await listUserGameEnvs(editing.id, gid);
+                    setEnvSel(r2.envs || []);
+                  } catch { setEnvSel([]); }
+                }
+              }}
+            />
+          </Form.Item>
+          <Form.Item label="环境范围（留空=不限制）" name="envs">
+            <Select
+              mode="multiple"
+              placeholder="选择允许访问的环境"
+              value={envSel}
+              onChange={(arr:string[])=> setEnvSel(arr||[])}
+              options={(envOptions.length? envOptions: ['prod','stage','test','dev']).map(e=>({ label: e, value: e }))}
+              style={{ minWidth: 320 }}
+            />
           </Form.Item>
         </Form>
       </Modal>

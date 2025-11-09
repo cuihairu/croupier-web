@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Card, Space, Select, Button, Table, Modal, Form, Input, App, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { listGamesMeta, type Game as GameMeta } from '@/services/croupier/gamesMeta';
+import { listGamesMeta, type Game as GameMeta } from '@/services/croupier';
 import { listGameEnvs, addGameEnv, updateGameEnv, deleteGameEnv, type GameEnv } from '@/services/croupier/envs';
 
 export default function GamesEnvsPage() {
@@ -34,7 +34,9 @@ export default function GamesEnvsPage() {
   useEffect(() => { if (gameId) loadEnvs(gameId); }, [gameId]);
 
   const columns: ColumnsType<GameEnv> = useMemo(() => ([
-    { title: 'Env', dataIndex: 'env', width: 220 },
+    { title: 'Env', dataIndex: 'env', width: 220, render: (v, rec) => (
+      <Tag color={rec.color || 'default'}>{v}</Tag>
+    ) },
     { title: 'Description', dataIndex: 'description', ellipsis: true },
     {
       title: 'Actions', key: 'actions', width: 180,
@@ -42,7 +44,7 @@ export default function GamesEnvsPage() {
         <Space>
           <Button size="small" onClick={() => { setEditing(rec); setEditOpen(true); }}>Edit</Button>
           <Button size="small" danger onClick={async () => {
-            Modal.confirm({ title: 'Delete Env', content: `Delete env "${rec.env}"?`, onOk: async () => { await deleteGameEnv(gameId!, { id: rec.id, env: rec.env }); message.success('Deleted'); loadEnvs(gameId); } });
+            Modal.confirm({ title: 'Delete Env', content: `Delete env "${rec.env}"?`, onOk: async () => { await deleteGameEnv(gameId!, { env: rec.env }); message.success('Deleted'); loadEnvs(gameId); } });
           }}>Delete</Button>
         </Space>
       )
@@ -51,20 +53,20 @@ export default function GamesEnvsPage() {
 
   const onAdd = async () => {
     const v = await form.validateFields();
-    await addGameEnv(gameId!, v.env, v.description);
+    await addGameEnv(gameId!, v.env, v.description, v.color);
     setAddOpen(false); form.resetFields(); message.success('Added'); loadEnvs(gameId);
   };
   const onEdit = async () => {
     const v = await editForm.validateFields();
     if (!editing) return;
-    await updateGameEnv(gameId!, editing.env, v.env, v.description);
+    await updateGameEnv(gameId!, editing.env, v.env, v.description, v.color);
     setEditOpen(false); setEditing(null); message.success('Updated'); loadEnvs(gameId);
   };
 
   // Avoid calling editForm API before the form is mounted
   useEffect(() => {
     if (editOpen && editing) {
-      editForm.setFieldsValue({ env: editing.env, description: editing.description });
+      editForm.setFieldsValue({ env: editing.env, description: editing.description, color: editing.color });
     }
   }, [editOpen, editing, editForm]);
 
@@ -101,6 +103,9 @@ export default function GamesEnvsPage() {
           <Form.Item name="description" label="描述">
             <Input.TextArea rows={3} placeholder="简单描述" />
           </Form.Item>
+          <Form.Item name="color" label="颜色 (Tag)" tooltip="AntD Tag 颜色，如 #1677ff 或 green">
+            <Input placeholder="#1677ff / blue / green / gold" />
+          </Form.Item>
         </Form>
       </Modal>
 
@@ -111,6 +116,9 @@ export default function GamesEnvsPage() {
           </Form.Item>
           <Form.Item name="description" label="描述">
             <Input.TextArea rows={3} />
+          </Form.Item>
+          <Form.Item name="color" label="颜色 (Tag)">
+            <Input placeholder="#1677ff / blue / green / gold" />
           </Form.Item>
         </Form>
       </Modal>
