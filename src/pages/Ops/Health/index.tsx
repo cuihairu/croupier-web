@@ -63,7 +63,7 @@ export default function OpsHealthPage() {
         <Form form={form} layout='vertical' initialValues={{ interval_sec:60, timeout_ms: 1000 }}>
           <Form.Item label='ID' name='id' rules={[{ required:true }]}><Input placeholder='唯一ID'/></Form.Item>
           <Form.Item label='类型' name='kind' rules={[{ required:true }]}>
-            <Select options={[{label:'http',value:'http'},{label:'tcp',value:'tcp'},{label:'redis',value:'redis'},{label:'tls',value:'tls'}]} />
+            <Select options={[{label:'http',value:'http'},{label:'tcp',value:'tcp'},{label:'redis',value:'redis'},{label:'tls',value:'tls'},{label:'postgres',value:'postgres'},{label:'clickhouse',value:'clickhouse'},{label:'kafka',value:'kafka'}]} />
           </Form.Item>
           <Form.Item label='目标' name='target' rules={[{ required:true }]}><Input placeholder='URL 或 host:port 或 redis://'/></Form.Item>
           <Form.Item label='期望' name='expect'><Input placeholder='可选：例如 http 期望状态码 200'/></Form.Item>
@@ -75,4 +75,3 @@ export default function OpsHealthPage() {
     </div>
   );
 }
-

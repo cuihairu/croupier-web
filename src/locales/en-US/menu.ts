@@ -58,6 +58,7 @@ export default {
   'menu.Ops.Notifications': 'Notifications',
   'menu.Ops.AnalyticsFilters': 'Sampling Control',
   'menu.Ops.Backups': 'Backups',
+  'menu.Ops.Maintenance': 'Maintenance',
 
   // Analytics
   'menu.Analytics': 'Analytics',

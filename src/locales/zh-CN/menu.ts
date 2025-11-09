@@ -58,6 +58,7 @@ export default {
   'menu.Ops.Notifications': '事件通知',
   'menu.Ops.AnalyticsFilters': '采样控制',
   'menu.Ops.Backups': '数据备份',
+  'menu.Ops.Maintenance': '维护公告',
 
   // 数据分析
   'menu.Analytics': '数据分析',

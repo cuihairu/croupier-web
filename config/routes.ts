@@ -246,6 +246,7 @@ export default [
       { path: '/ops/certificates', name: 'Certificates', access: 'canOpsManage', component: './Ops/Certificates' },
       { path: '/ops/notifications', name: 'Notifications', access: 'canOpsManage', component: './Ops/Notifications' },
       { path: '/ops/analytics-filters', name: 'AnalyticsFilters', access: 'canOpsManage', component: './Ops/AnalyticsFilters' },
+      { path: '/ops/maintenance', name: 'Maintenance', access: 'canOpsManage', component: './Ops/Maintenance' },
     ],
   },
   // Security menu removed (duplicated with AdminUsers/Permissions)
