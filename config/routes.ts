@@ -28,6 +28,54 @@ export default [
       { path: '/analytics/segments', name: 'Segments', access: 'canAnalyticsRead', component: './Analytics/Segments' },
     ],
   },
+  // Move 运营管理 (Operations) to second position in the menu
+  {
+    path: '/operations',
+    name: 'Operations',
+    icon: 'dashboard',
+    routes: [
+      {
+        path: '/operations',
+        redirect: '/operations/approvals',
+      },
+      {
+        path: '/operations/approvals',
+        name: 'Approvals',
+        access: 'canApprovalsRead',
+        component: './Approvals',
+      },
+      {
+        path: '/operations/audit',
+        name: 'Audit',
+        access: 'canAuditRead',
+        component: './Audit',
+      },
+      {
+        path: '/operations/operation-logs',
+        name: 'OperationLogs',
+        access: 'canAuditRead',
+        component: './Admin/OperationLogs',
+      },
+      {
+        path: '/operations/registry',
+        name: 'Registry',
+        access: 'canRegistryRead',
+        component: './Registry',
+      },
+      {
+        path: '/operations/servers',
+        name: 'Servers',
+        access: 'canRegistryRead',
+        component: './Servers',
+      },
+      {
+        path: '/operations/configs',
+        name: 'Configs',
+        access: 'canOpsRead',
+        component: './Operations/Configs',
+      },
+    ],
+  },
   {
     path: '/user',
     layout: false,
@@ -196,53 +244,6 @@ export default [
       { path: '/ops/certificates', name: 'Certificates', access: 'canOpsManage', component: './Ops/Certificates' },
       { path: '/ops/notifications', name: 'Notifications', access: 'canOpsManage', component: './Ops/Notifications' },
       { path: '/ops/analytics-filters', name: 'AnalyticsFilters', access: 'canOpsManage', component: './Ops/AnalyticsFilters' },
-    ],
-  },
-  {
-    path: '/operations',
-    name: 'Operations',
-    icon: 'dashboard',
-    routes: [
-      {
-        path: '/operations',
-        redirect: '/operations/approvals',
-      },
-      {
-        path: '/operations/approvals',
-        name: 'Approvals',
-        access: 'canApprovalsRead',
-        component: './Approvals',
-      },
-      {
-        path: '/operations/audit',
-        name: 'Audit',
-        access: 'canAuditRead',
-        component: './Audit',
-      },
-      {
-        path: '/operations/operation-logs',
-        name: 'OperationLogs',
-        access: 'canAuditRead',
-        component: './Admin/OperationLogs',
-      },
-      {
-        path: '/operations/registry',
-        name: 'Registry',
-        access: 'canRegistryRead',
-        component: './Registry',
-      },
-      {
-        path: '/operations/servers',
-        name: 'Servers',
-        access: 'canRegistryRead',
-        component: './Servers',
-      },
-      {
-        path: '/operations/configs',
-        name: 'Configs',
-        access: 'canOpsRead',
-        component: './Operations/Configs',
-      },
     ],
   },
   // Security menu removed (duplicated with AdminUsers/Permissions)
