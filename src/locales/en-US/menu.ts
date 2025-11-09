@@ -48,6 +48,7 @@ export default {
   // Ops
   'menu.Ops': 'Operations',
   'menu.Ops.Services': 'Services',
+  'menu.Ops.Health': 'Health',
   'menu.Ops.Nodes': 'Node Maintenance',
   'menu.Ops.Jobs': 'Jobs',
   'menu.Ops.Alerts': 'Alerts',
@@ -56,6 +57,7 @@ export default {
   'menu.Ops.Certificates': 'Certificates',
   'menu.Ops.Notifications': 'Notifications',
   'menu.Ops.AnalyticsFilters': 'Sampling Control',
+  'menu.Ops.Backups': 'Backups',
 
   // Analytics
   'menu.Analytics': 'Analytics',

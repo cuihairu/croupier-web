@@ -236,10 +236,12 @@ export default [
     routes: [
       { path: '/ops', redirect: '/ops/services' },
       { path: '/ops/services', name: 'Services', access: 'canOpsRead', component: './Ops/Services' },
+      { path: '/ops/health', name: 'Health', access: 'canOpsRead', component: './Ops/Health' },
       { path: '/ops/nodes', name: 'Nodes', access: 'canOpsRead', component: './Ops/Nodes' },
       { path: '/ops/jobs', name: 'Jobs', access: 'canOpsRead', component: './Ops/Jobs' },
       { path: '/ops/alerts', name: 'Alerts', access: 'canOpsRead', component: './Ops/Alerts' },
       { path: '/ops/rate-limits', name: 'RateLimits', access: 'canOpsManage', component: './Ops/RateLimits' },
+      { path: '/ops/backups', name: 'Backups', access: 'canOpsManage', component: './Ops/Backups' },
       { path: '/ops/mq', name: 'MQ', access: 'canOpsRead', component: './Ops/MQ' },
       { path: '/ops/certificates', name: 'Certificates', access: 'canOpsManage', component: './Ops/Certificates' },
       { path: '/ops/notifications', name: 'Notifications', access: 'canOpsManage', component: './Ops/Notifications' },
