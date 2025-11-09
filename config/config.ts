@@ -153,4 +153,20 @@ export default defineConfig({
   },
   esbuildMinifyIIFE: true,
   requestRecord: {},
+  // Monaco editor: enable by default when dependency exists; fallback to shim if
+  // not installed or explicitly disabled via DISABLE_MONACO=1.
+  alias: (() => {
+    const disable = process.env.DISABLE_MONACO === '1' || process.env.DISABLE_MONACO === 'true';
+    if (disable) {
+      return { '@monaco-editor/react': join(__dirname, '../src/shims/monacoReactShim') };
+    }
+    try {
+      // If real package is installed, use it by default
+      require.resolve('@monaco-editor/react');
+      return {};
+    } catch {
+      // Auto-fallback without breaking build
+      return { '@monaco-editor/react': join(__dirname, '../src/shims/monacoReactShim') };
+    }
+  })(),
 });

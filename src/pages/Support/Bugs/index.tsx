@@ -101,7 +101,7 @@ export default function SupportBugsPage() {
         pagination={{ current: page, pageSize: size, total, showSizeChanger: true, onChange:(p,ps)=>{ setPage(p); setSize(ps||20);} }}
       />
 
-      <Modal title={editing? '编辑缺陷':'新建缺陷'} open={open} onOk={onSubmit} onCancel={()=>setOpen(false)} destroyOnClose>
+      <Modal title={editing? '编辑缺陷':'新建缺陷'} open={open} onOk={onSubmit} onCancel={()=>setOpen(false)} destroyOnHidden>
         <Form form={form} layout="vertical" initialValues={{ priority:'normal', status:'open' }}>
           <Form.Item label="标题" name="title" rules={[{ required:true, message:'请输入标题' }]}> <Input /> </Form.Item>
           <Form.Item label="内容" name="content"> <Input.TextArea rows={4} /> </Form.Item>

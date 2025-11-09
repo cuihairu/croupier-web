@@ -81,3 +81,44 @@ export async function fetchOpsConfig() {
 export async function updateAgentMeta(agent_id: string, data: { region?: string; zone?: string }) {
   return request<void>(`/api/ops/agents/${encodeURIComponent(agent_id)}/meta`, { method: 'PUT', data });
 }
+
+// Registry API 已在 services/croupier/registry.ts 提供，避免重复导出导致冲突
+
+// --- Certificates (HTTPS) ---
+export type Certificate = {
+  id: number; domain: string; port: number; issuer?: string; subject?: string; algorithm?: string; key_usage?: string;
+  valid_from?: string; valid_to?: string; days_left?: number; status?: 'valid'|'expiring'|'expired'|'error'|'pending'; last_checked?: string; error_msg?: string; alert_days?: number;
+};
+export async function listCertificates(params?: { page?: number; size?: number; status?: string }) {
+  const r = await request<any>("/api/certificates", { params });
+  const raw = (r?.certificates || []) as any[];
+  const norm = raw.map((c: any) => ({
+    id: c.id ?? c.ID,
+    domain: c.domain ?? c.Domain,
+    port: c.port ?? c.Port,
+    issuer: c.issuer ?? c.Issuer,
+    subject: c.subject ?? c.Subject,
+    algorithm: c.algorithm ?? c.Algorithm,
+    key_usage: c.key_usage ?? c.KeyUsage,
+    valid_from: c.valid_from ?? c.ValidFrom,
+    valid_to: c.valid_to ?? c.ValidTo,
+    days_left: c.days_left ?? c.DaysLeft,
+    status: c.status ?? c.Status,
+    last_checked: c.last_checked ?? c.LastChecked,
+    error_msg: c.error_msg ?? c.ErrorMsg,
+    alert_days: c.alert_days ?? c.AlertDays,
+  })) as Certificate[];
+  return { certificates: norm, total: r?.total || 0, page: r?.page || 1, size: r?.size || (params?.size || 10) };
+}
+export async function addCertificate(data: { domain: string; port?: number; alert_days?: number }) {
+  return request("/api/certificates", { method: 'POST', data });
+}
+export async function checkCertificate(id: number) {
+  return request(`/api/certificates/${id}/check`, { method: 'POST' });
+}
+export async function checkAllCertificates() {
+  return request(`/api/certificates/check-all`, { method: 'POST' });
+}
+export async function deleteCertificate(id: number) {
+  return request(`/api/certificates/${id}`, { method: 'DELETE' });
+}

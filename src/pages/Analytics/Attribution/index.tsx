@@ -41,7 +41,7 @@ export default function AnalyticsAttributionPage() {
           <Tag color="purple">回本天数: {data?.summary?.payback_days||'-'}</Tag>
         </Space>
         <Table style={{ marginTop: 12 }} size="small" loading={loading}
-          rowKey={(r:any,i:number)=> i}
+          rowKey={(r:any)=> String(r.channel ?? r.campaign ?? '')}
           dataSource={data?.by_channel||[]}
           columns={[{title:'渠道',dataIndex:'channel'},{title:'安装',dataIndex:'installs'},{title:'注册',dataIndex:'signups'},{title:'首日付费额(分)',dataIndex:'rev_d0_cents'},{title:'CPI(分)',dataIndex:'cpi_cents'},{title:'ROAS D1/D7/D30',render:(_:any,r:any)=> `${r.roas_d1||0}/${r.roas_d7||0}/${r.roas_d30||0}`}]}
           pagination={{ pageSize: 10 }}

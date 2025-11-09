@@ -90,7 +90,12 @@ export default function OpsAlertsPage() {
           <Button onClick={()=> { load(); (async()=>{ try { const s = await listSilences(); setSilences(s.silences||[]);} catch{} })(); }}>刷新</Button>
         </Space>
       }>
-        <Table rowKey={(_,i)=>String(i)} loading={loading} dataSource={data} columns={columns} pagination={{ pageSize: 10 }} onRow={(rec)=> ({ onClick: ()=> setDetail(rec) })} />
+        <Table rowKey={(r)=> `${r.service||''}|${r.instance||''}|${r.summary||''}|${r.starts_at||''}`}
+               loading={loading}
+               dataSource={data}
+               columns={columns}
+               pagination={{ pageSize: 10 }}
+               onRow={(rec)=> ({ onClick: ()=> setDetail(rec) })} />
       </Card>
       <Card title="静默列表" style={{ marginTop: 16 }} extra={<Button onClick={async ()=>{ try { const s = await listSilences(); setSilences(s.silences||[]);} catch{} }}>刷新</Button>}>
         <Table rowKey={(r)=> String(r.id)} dataSource={silences} columns={[

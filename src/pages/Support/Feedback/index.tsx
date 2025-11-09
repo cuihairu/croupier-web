@@ -82,7 +82,7 @@ export default function SupportFeedbackPage() {
         pagination={{ current: page, pageSize: size, total, showSizeChanger: true, onChange:(p,ps)=>{ setPage(p); setSize(ps||20);} }}
       />
 
-      <Modal title={editing? '编辑反馈':'新建反馈'} open={open} onOk={onSubmit} onCancel={()=> setOpen(false)} destroyOnClose>
+      <Modal title={editing? '编辑反馈':'新建反馈'} open={open} onOk={onSubmit} onCancel={()=> setOpen(false)} destroyOnHidden>
         <Form form={form} layout="vertical" initialValues={{ priority:'normal', status:'new' }}>
           <Form.Item label="玩家ID" name="player_id"> <Input /> </Form.Item>
           <Form.Item label="联系方式" name="contact"> <Input /> </Form.Item>

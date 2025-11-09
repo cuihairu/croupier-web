@@ -27,7 +27,7 @@ export default function AnalyticsSegmentsPage() {
         <DatePicker.RangePicker value={range as any} onChange={setRange as any} />
         <Button type="primary" onClick={load}>查询</Button>
       </Space>}>
-        <Table size="small" loading={loading} rowKey={(r:any,i:number)=> i}
+        <Table size="small" loading={loading} rowKey={(r:any)=> String(r.name ?? r.segment ?? '')}
           dataSource={data?.segments||[]}
           columns={[{title:'Segment',dataIndex:'name',render:(v:any)=> <Tag>{String(v)}</Tag>},{title:'人数',dataIndex:'users'},{title:'占比',dataIndex:'ratio',render:(v:any)=> v!=null? `${v}%`:'-'},{title:'ARPU',dataIndex:'arpu'}]}
           pagination={{ pageSize: 10 }}
@@ -36,4 +36,3 @@ export default function AnalyticsSegmentsPage() {
     </div>
   );
 }
-

@@ -17,10 +17,10 @@ export default [
     icon: 'areaChart',
     access: 'canAnalyticsRead',
     routes: [
-      { path: '/analytics', redirect: '/analytics/overview' },
+      { path: '/analytics', redirect: '/analytics/realtime' },
+      { path: '/analytics/realtime', name: 'Realtime', access: 'canAnalyticsRead', component: './Analytics/Realtime' },
       { path: '/analytics/overview', name: 'Overview', access: 'canAnalyticsRead', component: './Analytics/Overview' },
       { path: '/analytics/retention', name: 'Retention', access: 'canAnalyticsRead', component: './Analytics/Retention' },
-      { path: '/analytics/realtime', name: 'Realtime', access: 'canAnalyticsRead', component: './Analytics/Realtime' },
       { path: '/analytics/behavior', name: 'Behavior', access: 'canAnalyticsRead', component: './Analytics/Behavior' },
       { path: '/analytics/payments', name: 'Payments', access: 'canAnalyticsRead', component: './Analytics/Payments' },
       { path: '/analytics/levels', name: 'Levels', access: 'canAnalyticsRead', component: './Analytics/Levels' },
@@ -188,10 +188,14 @@ export default [
     routes: [
       { path: '/ops', redirect: '/ops/services' },
       { path: '/ops/services', name: 'Services', access: 'canOpsRead', component: './Ops/Services' },
+      { path: '/ops/nodes', name: 'Nodes', access: 'canOpsRead', component: './Ops/Nodes' },
       { path: '/ops/jobs', name: 'Jobs', access: 'canOpsRead', component: './Ops/Jobs' },
       { path: '/ops/alerts', name: 'Alerts', access: 'canOpsRead', component: './Ops/Alerts' },
       { path: '/ops/rate-limits', name: 'RateLimits', access: 'canOpsManage', component: './Ops/RateLimits' },
       { path: '/ops/mq', name: 'MQ', access: 'canOpsRead', component: './Ops/MQ' },
+      { path: '/ops/certificates', name: 'Certificates', access: 'canOpsManage', component: './Ops/Certificates' },
+      { path: '/ops/notifications', name: 'Notifications', access: 'canOpsManage', component: './Ops/Notifications' },
+      { path: '/ops/analytics-filters', name: 'AnalyticsFilters', access: 'canOpsManage', component: './Ops/AnalyticsFilters' },
     ],
   },
   {
@@ -233,36 +237,15 @@ export default [
         access: 'canRegistryRead',
         component: './Servers',
       },
-    ],
-  },
-  // Security settings
-  {
-    path: '/security',
-    name: 'Security',
-    icon: 'setting',
-    access: 'canPermissionManage',
-    routes: [
-      { path: '/security', redirect: '/security/permissions/roles' },
       {
-        path: '/security/permissions/roles',
-        name: 'Roles',
-        access: 'canRoleManage',
-        component: './Permissions/RolesV2',
-      },
-      {
-        path: '/security/permissions/users',
-        name: 'Users',
-        access: 'canUserManage',
-        component: './Permissions/UsersV2',
-      },
-      {
-        path: '/security/permissions/config',
-        name: 'Config',
-        access: 'canPermissionConfig',
-        component: './Permissions/Config',
+        path: '/operations/configs',
+        name: 'Configs',
+        access: 'canOpsRead',
+        component: './Operations/Configs',
       },
     ],
   },
+  // Security menu removed (duplicated with AdminUsers/Permissions)
   {
     path: '/',
     redirect: '/analytics/realtime',
@@ -275,18 +258,18 @@ export default [
   { path: '/account/messages', redirect: '/admin/account/messages' },
   { path: '/account/center', redirect: '/admin/account/center' },
   { path: '/account/settings', redirect: '/admin/account/settings' },
-  { path: '/permissions', redirect: '/security/permissions/roles' },
-  // Legacy redirects for system->security renaming
-  { path: '/system', redirect: '/security/permissions/roles' },
-  { path: '/system/permissions', redirect: '/security/permissions/roles' },
-  { path: '/system/permissions/roles', redirect: '/security/permissions/roles' },
-  { path: '/system/permissions/users', redirect: '/security/permissions/users' },
-  { path: '/system/permissions/config', redirect: '/security/permissions/config' },
+  { path: '/permissions', redirect: '/admin/permissions/roles' },
+  // Legacy redirects for system->admin renaming
+  { path: '/system', redirect: '/admin/permissions/roles' },
+  { path: '/system/permissions', redirect: '/admin/permissions/roles' },
+  { path: '/system/permissions/roles', redirect: '/admin/permissions/roles' },
+  { path: '/system/permissions/users', redirect: '/admin/permissions/users' },
+  { path: '/system/permissions/config', redirect: '/admin/permissions/config' },
   // Legacy redirects for admin/permissions
-  { path: '/admin/permissions', redirect: '/security/permissions/roles' },
-  { path: '/admin/permissions/roles', redirect: '/security/permissions/roles' },
-  { path: '/admin/permissions/users', redirect: '/security/permissions/users' },
-  { path: '/admin/permissions/config', redirect: '/security/permissions/config' },
+  { path: '/admin/permissions', redirect: '/admin/permissions/roles' },
+  { path: '/admin/permissions/roles', redirect: '/admin/permissions/roles' },
+  { path: '/admin/permissions/users', redirect: '/admin/permissions/users' },
+  { path: '/admin/permissions/config', redirect: '/admin/permissions/config' },
   // Game management legacy redirects
   {
     path: '/game-mgmt/games-meta',

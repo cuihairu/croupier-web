@@ -43,14 +43,19 @@ export default {
   'menu.Operations.OperationLogs': 'Operation Logs',
   'menu.Operations.Registry': 'Service Registry',
   'menu.Operations.Servers': 'Servers',
+  'menu.Operations.Configs': 'Configs',
 
   // Ops
   'menu.Ops': 'Operations',
   'menu.Ops.Services': 'Services',
+  'menu.Ops.Nodes': 'Nodes',
   'menu.Ops.Jobs': 'Jobs',
   'menu.Ops.Alerts': 'Alerts',
   'menu.Ops.RateLimits': 'Rate Limits',
   'menu.Ops.MQ': 'Message Queue',
+  'menu.Ops.Certificates': 'Certificates',
+  'menu.Ops.Notifications': 'Notifications',
+  'menu.Ops.AnalyticsFilters': 'Analytics Filters',
 
   // Analytics
   'menu.Analytics': 'Analytics',

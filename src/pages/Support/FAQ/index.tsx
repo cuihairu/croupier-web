@@ -60,7 +60,7 @@ export default function SupportFAQPage() {
           )}
         ]}
       />
-      <Modal title={editing? '编辑 FAQ':'新建 FAQ'} open={open} onOk={onSubmit} onCancel={()=> setOpen(false)} destroyOnClose>
+      <Modal title={editing? '编辑 FAQ':'新建 FAQ'} open={open} onOk={onSubmit} onCancel={()=> setOpen(false)} destroyOnHidden>
         <Form form={form} layout="vertical" initialValues={{ visible: true, sort: 0 }}>
           <Form.Item label="问题" name="question" rules={[{ required:true, message:'请输入问题' }]}> <Input.TextArea rows={3} /> </Form.Item>
           <Form.Item label="答案" name="answer" rules={[{ required:true, message:'请输入答案' }]}> <Input.TextArea rows={6} /> </Form.Item>
@@ -73,4 +73,3 @@ export default function SupportFAQPage() {
     </Card>
   );
 }
-

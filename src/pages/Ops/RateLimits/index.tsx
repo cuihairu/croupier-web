@@ -115,7 +115,7 @@ export default function OpsRateLimitsPage() {
         <Table rowKey={(r)=> `${r.scope}:${r.key}`} loading={loading} dataSource={rules} columns={columns} pagination={{ pageSize: 10 }} />
       </Card>
 
-      <Modal title="编辑限速规则" open={open} onOk={onSubmit} onCancel={()=> { setOpen(false); setPreview(null); }} destroyOnClose>
+      <Modal title="编辑限速规则" open={open} onOk={onSubmit} onCancel={()=> { setOpen(false); setPreview(null); }} destroyOnHidden>
         <Form form={form} layout="vertical" onValuesChange={onFormValuesChange} initialValues={{ scope:'function', limit_qps: 10, percent: 100 }}>
           <Form.Item label="作用域" name="scope" rules={[{required:true}]}> <Select options={[{label:'函数', value:'function'},{label:'服务', value:'service'}]} onChange={()=> form.setFieldValue('key','')} /> </Form.Item>
           <Form.Item noStyle shouldUpdate={(prev,cur)=> prev.scope!==cur.scope}>

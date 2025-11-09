@@ -193,7 +193,7 @@ export default function TicketDetailPage() {
         </Space>
       </Modal>
     </Card>
-    <Modal title="编辑工单" open={editOpen} onOk={submitEdit} onCancel={()=> setEditOpen(false)} destroyOnClose>
+    <Modal title="编辑工单" open={editOpen} onOk={submitEdit} onCancel={()=> setEditOpen(false)} destroyOnHidden>
       <Form form={form} layout="vertical">
         <Form.Item label="标题" name="title" rules={[{ required:true, message:'请输入标题' }]}> <Input /> </Form.Item>
         <Form.Item label="内容" name="content"> <Input.TextArea rows={4} /> </Form.Item>

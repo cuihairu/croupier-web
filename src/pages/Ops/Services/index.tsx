@@ -79,27 +79,27 @@ export default function OpsServicesPage() {
   }, [rows, filter]);
 
   const columns: ColumnsType<OpsAgent> = [
-    { title: 'Agent ID', dataIndex: 'agent_id', width: 220, ellipsis: true },
-    { title: 'Game', dataIndex: 'game_id', width: 140 },
-    { title: 'Env', dataIndex: 'env', width: 100 },
-    { title: 'IP', dataIndex: 'ip', width: 140 },
-    { title: 'Type', dataIndex: 'type', width: 100, render: (v) => v || 'agent' },
-    { title: 'Version', dataIndex: 'version', width: 120 },
-    { title: 'QPS(1m)', key: 'qps', width: 110, render: (_:any, r:any) => (typeof r.qps_1m === 'number' ? r.qps_1m.toFixed(1) : '-') },
-    { title: '限速', dataIndex: 'qps_limit', width: 90, render: (v)=> v||'' },
-    { title: '错误率', key: 'err', width: 120, render: (_:any, r:any) => {
+    { title: 'Agent ID', dataIndex: 'agent_id', width: 180, ellipsis: true },
+    { title: 'Game', dataIndex: 'game_id', width: 100 },
+    { title: 'Env', dataIndex: 'env', width: 80 },
+    { title: 'IP', dataIndex: 'ip', width: 120, ellipsis: true },
+    { title: 'Type', dataIndex: 'type', width: 90, render: (v) => v || 'agent' },
+    { title: 'Version', dataIndex: 'version', width: 100, ellipsis: true },
+    { title: 'QPS(1m)', key: 'qps', width: 90, render: (_:any, r:any) => (typeof r.qps_1m === 'number' ? r.qps_1m.toFixed(1) : '-') },
+    { title: '限速', dataIndex: 'qps_limit', width: 80, render: (v)=> v||'' },
+    { title: '错误率', key: 'err', width: 100, render: (_:any, r:any) => {
       const rate = typeof r.error_rate === 'number' ? r.error_rate : undefined;
       if (rate === undefined) return '';
       const pct = Math.min(100, Math.max(0, Math.round(rate*1000)/10));
       const color = pct < 1 ? 'green' : pct < 5 ? 'gold' : 'red';
       return <Tooltip title={`${pct}%`}><Tag color={color}>{pct}%</Tag></Tooltip>;
     }},
-    { title: '活动连接', dataIndex: 'active_conns', width: 100 },
-    { title: '平均延迟', key: 'lat', width: 120, render: (_:any, r:any)=> (typeof r.avg_latency_ms === 'number' && r.avg_latency_ms>0) ? `${r.avg_latency_ms} ms` : '' },
-    { title: 'Health', dataIndex: 'healthy', width: 100, render: (v:boolean) => v ? <Tag color="green">healthy</Tag> : <Tag>expired</Tag> },
-    { title: 'TTL(s)', dataIndex: 'expires_in_sec', width: 90 },
-    { title: 'Last Seen', dataIndex: 'last_seen', width: 180, render: (v:any)=> v ? new Date(v).toLocaleString() : '' },
-    { title: 'RPC Addr', dataIndex: 'rpc_addr', ellipsis: true },
+    { title: '连接', dataIndex: 'active_conns', width: 80 },
+    { title: '延迟', key: 'lat', width: 90, render: (_:any, r:any)=> (typeof r.avg_latency_ms === 'number' && r.avg_latency_ms>0) ? `${r.avg_latency_ms} ms` : '' },
+    { title: 'Health', dataIndex: 'healthy', width: 90, render: (v:boolean) => v ? <Tag color="green">healthy</Tag> : <Tag>expired</Tag> },
+    { title: 'TTL', dataIndex: 'expires_in_sec', width: 70 },
+    { title: '最后活跃', dataIndex: 'last_seen', width: 160, render: (v:any)=> v ? new Date(v).toLocaleString() : '' },
+    { title: 'RPC Addr', dataIndex: 'rpc_addr', width: 200, ellipsis: true },
   ];
 
   return (
@@ -133,6 +133,9 @@ export default function OpsServicesPage() {
           dataSource={data}
           loading={loading}
           columns={columns}
+          size='small'
+          scroll={{ x: 1200 }}
+          tableLayout='fixed'
           onRow={(rec)=> ({ onClick: ()=> setDetail(rec) })}
           pagination={{ pageSize: 10 }}
         />
