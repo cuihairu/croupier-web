@@ -1,0 +1,4581 @@
+{
+  "version": "1",
+  "events": {
+    "common_attributes": [
+      {
+        "key": "user_id",
+        "pii": "pseudonymous",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "key": "session_id",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "key": "device_id",
+        "pii": "pseudonymous",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "enum": "platform",
+        "key": "platform",
+        "type": "enum"
+      },
+      {
+        "key": "region",
+        "type": "string"
+      },
+      {
+        "key": "country",
+        "type": "string"
+      },
+      {
+        "key": "app_version",
+        "type": "string"
+      },
+      {
+        "key": "build_number",
+        "type": "string"
+      },
+      {
+        "key": "server",
+        "type": "string"
+      },
+      {
+        "key": "game_type",
+        "type": "string"
+      },
+      {
+        "key": "genre_code",
+        "type": "string"
+      },
+      {
+        "format": "iso8601",
+        "key": "event_time",
+        "type": "datetime"
+      }
+    ],
+    "enums": {
+      "ad_format": [
+        "rewarded",
+        "interstitial",
+        "banner",
+        "native"
+      ],
+      "ad_placement": [
+        "between_waves",
+        "revive",
+        "booster",
+        "double_reward",
+        "interstitial"
+      ],
+      "currency_kind": [
+        "soft",
+        "hard",
+        "real"
+      ],
+      "game_mode": [
+        "pve",
+        "pvp",
+        "coop",
+        "ranked",
+        "casual"
+      ],
+      "match_result": [
+        "win",
+        "lose",
+        "draw",
+        "abandon"
+      ],
+      "performance_grade": [
+        "low",
+        "mid",
+        "high"
+      ],
+      "platform": [
+        "ios",
+        "android",
+        "windows",
+        "macos",
+        "linux",
+        "web",
+        "ps",
+        "xbox",
+        "switch"
+      ],
+      "queue_type": [
+        "solo",
+        "duo",
+        "squad",
+        "ranked",
+        "unranked"
+      ]
+    },
+    "events": [
+      {
+        "category": "session",
+        "id": "session.start",
+        "optional_attributes": [
+          "entry_point",
+          "campaign_id",
+          "country",
+          "region",
+          "device_id"
+        ],
+        "required_attributes": [
+          "user_id",
+          "session_id",
+          "event_time",
+          "platform"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "session",
+        "id": "session.end",
+        "optional_attributes": [
+          "duration_ms",
+          "cause_of_end"
+        ],
+        "required_attributes": [
+          "user_id",
+          "session_id",
+          "event_time"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "user",
+        "id": "user.register",
+        "optional_attributes": [
+          "channel",
+          "device_id",
+          "country",
+          "region"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "user",
+        "id": "user.login",
+        "optional_attributes": [
+          "method",
+          "device_id",
+          "app_version"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "progression",
+        "id": "progression.start",
+        "optional_attributes": [
+          "chapter_id",
+          "stage_id",
+          "attempt_index",
+          "difficulty",
+          "wave_index",
+          "is_boss_wave"
+        ],
+        "required_attributes": [
+          "user_id",
+          "session_id",
+          "event_time",
+          "level_id"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "progression",
+        "id": "progression.complete",
+        "optional_attributes": [
+          "chapter_id",
+          "stage_id",
+          "duration_ms",
+          "stars",
+          "retries",
+          "wave_index",
+          "is_boss_wave",
+          "hearts_remaining"
+        ],
+        "required_attributes": [
+          "user_id",
+          "session_id",
+          "event_time",
+          "level_id"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "progression",
+        "id": "progression.fail",
+        "optional_attributes": [
+          "chapter_id",
+          "stage_id",
+          "duration_ms",
+          "reason",
+          "wave_index",
+          "is_boss_wave",
+          "hearts_remaining"
+        ],
+        "required_attributes": [
+          "user_id",
+          "session_id",
+          "event_time",
+          "level_id"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "match",
+        "id": "match.start",
+        "optional_attributes": [
+          "queue_type",
+          "team_id",
+          "map_id",
+          "mmr",
+          "queue_time_ms",
+          "deck_id",
+          "deck_archetype",
+          "deck_cards",
+          "game_variant",
+          "seat_id",
+          "stakes"
+        ],
+        "required_attributes": [
+          "user_id",
+          "session_id",
+          "event_time",
+          "match_id",
+          "game_mode"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "match",
+        "id": "match.end",
+        "optional_attributes": [
+          "duration_ms",
+          "kills",
+          "deaths",
+          "assists",
+          "damage_done",
+          "damage_taken",
+          "heal_done",
+          "surrender",
+          "deck_id",
+          "deck_archetype",
+          "deck_cards",
+          "rake",
+          "pot",
+          "seat_id",
+          "stakes"
+        ],
+        "required_attributes": [
+          "user_id",
+          "session_id",
+          "event_time",
+          "match_id",
+          "match_result"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "round",
+        "id": "round.start",
+        "optional_attributes": [
+          "game_variant",
+          "seat_id",
+          "stakes"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "match_id",
+          "round_id"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "round",
+        "id": "round.end",
+        "optional_attributes": [
+          "rake",
+          "duration_ms",
+          "pot"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "match_id",
+          "round_id",
+          "result"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "combat",
+        "id": "combat.stats",
+        "optional_attributes": [
+          "weapon_id",
+          "map_id",
+          "shots",
+          "hits",
+          "headshots",
+          "damage_done"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "deck",
+        "id": "deck.set_active",
+        "optional_attributes": [
+          "deck_archetype",
+          "card_ids"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "deck_id"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "economy",
+        "id": "economy.earn",
+        "optional_attributes": [
+          "source",
+          "item_id",
+          "currency_kind",
+          "balance_after"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "currency",
+          "amount"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "economy",
+        "id": "economy.spend",
+        "optional_attributes": [
+          "sink",
+          "item_id",
+          "currency_kind",
+          "balance_after"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "currency",
+          "amount"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "monetization",
+        "id": "monetization.purchase_attempt",
+        "optional_attributes": [
+          "price_usd",
+          "currency_code",
+          "payment_provider"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "order_id",
+          "sku_id"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "monetization",
+        "id": "monetization.purchase_success",
+        "optional_attributes": [
+          "currency_code",
+          "payment_provider",
+          "tax_usd",
+          "country"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "order_id",
+          "sku_id",
+          "price_usd"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "monetization",
+        "id": "monetization.purchase_fail",
+        "optional_attributes": [
+          "reason"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "order_id",
+          "sku_id"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "ad",
+        "id": "ad.impression",
+        "optional_attributes": [
+          "ecpm_usd",
+          "revenue_usd",
+          "placement_type"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "ad_network",
+          "placement_id",
+          "ad_format"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "ad",
+        "id": "ad.click",
+        "optional_attributes": [
+          "placement_type"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "ad_network",
+          "placement_id",
+          "ad_format"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "ad",
+        "id": "ad.reward",
+        "optional_attributes": [
+          "reward_type",
+          "reward_amount",
+          "placement_type"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "ad_network",
+          "placement_id"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "loot",
+        "id": "gacha.pull",
+        "optional_attributes": [
+          "rarity",
+          "pity_counter",
+          "item_ids"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "pool_id",
+          "pulls"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "crafting",
+        "id": "craft.complete",
+        "optional_attributes": [
+          "inputs",
+          "output_item_id",
+          "duration_ms"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "recipe_id"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "ui",
+        "id": "ui.screen_view",
+        "optional_attributes": [
+          "from_screen"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "screen_name"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "ui",
+        "id": "ui.click",
+        "optional_attributes": [
+          "screen_name"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "element_id"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "performance",
+        "id": "performance.frame",
+        "metric": {
+          "type": "histogram",
+          "unit": "fps"
+        },
+        "optional_attributes": [
+          "frame_time_ms",
+          "memory_mb",
+          "cpu_load",
+          "gpu_load"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "fps"
+        ],
+        "signal": "metric"
+      },
+      {
+        "category": "performance",
+        "id": "performance.device",
+        "optional_attributes": [
+          "device_model",
+          "os_version",
+          "gpu_model",
+          "perf_grade"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "network",
+        "id": "network.rtt",
+        "optional_attributes": [
+          "jitter_ms",
+          "packet_loss"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "rtt_ms"
+        ],
+        "signal": "metric"
+      },
+      {
+        "category": "error",
+        "id": "error.crash",
+        "optional_attributes": [
+          "stack_hash",
+          "signal_code",
+          "scene",
+          "device_id"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "session_id"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "error",
+        "id": "error.anr",
+        "optional_attributes": [
+          "scene",
+          "app_state",
+          "device_id"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "social",
+        "id": "social.guild_join",
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "guild_id"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "social",
+        "id": "social.guild_leave",
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "guild_id"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "td",
+        "id": "td.tower.build",
+        "optional_attributes": [
+          "wave_index"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "level_id",
+          "tower_id",
+          "tower_type",
+          "pos_x",
+          "pos_y",
+          "cost"
+        ],
+        "signal": "log"
+      },
+      {
+        "category": "td",
+        "id": "td.tower.upgrade",
+        "optional_attributes": [
+          "wave_index",
+          "tower_type"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "level_id",
+          "tower_id",
+          "from_level",
+          "to_level",
+          "cost"
+        ],
+        "signal": "log"
+      }
+    ],
+    "naming": {
+      "attribute_case": "snake_case",
+      "event_id": "lower.dot.segments"
+    },
+    "privacy": {
+      "device_id": "pseudonymous",
+      "user_id": "pseudonymous"
+    },
+    "version": "0.1.0"
+  },
+  "metrics": {
+    "metrics": [
+      {
+        "dimensions": [
+          "platform",
+          "region",
+          "channel"
+        ],
+        "id": "dau",
+        "source": "unique(user_id) on events in [session.start, user.login]",
+        "type": "counter",
+        "window": "1d",
+        "zh_desc": "当日内产生关键事件（session.start 或 user.login）的独立用户数量，用于衡量日活规模。",
+        "zh_name": "日活跃用户数"
+      },
+      {
+        "dimensions": [
+          "platform",
+          "region"
+        ],
+        "id": "wau",
+        "source": "unique(user_id) on events in [session.start, user.login]",
+        "type": "counter",
+        "window": "7d",
+        "zh_desc": "最近7天内产生关键事件的独立用户数量（日去重），衡量周活规模。",
+        "zh_name": "周活跃用户数"
+      },
+      {
+        "dimensions": [
+          "platform",
+          "region"
+        ],
+        "id": "mau",
+        "source": "unique(user_id) on events in [session.start, user.login]",
+        "type": "counter",
+        "window": "30d",
+        "zh_desc": "最近30天内产生关键事件的独立用户数量（日去重），衡量月活规模。",
+        "zh_name": "月活跃用户数"
+      },
+      {
+        "denominator": "users with user.register on day 0",
+        "dimensions": [
+          "channel",
+          "platform",
+          "region"
+        ],
+        "id": "retention_d1",
+        "numerator": "users with session.start on day+1 and user.register on day 0",
+        "type": "ratio",
+        "window": "1d",
+        "zh_desc": "在注册当日（D0）注册且在次日（D1）仍有启动/游玩行为的用户占比；分母为D0注册用户数。",
+        "zh_name": "次日留存率"
+      },
+      {
+        "denominator": "users with user.register on day 0",
+        "dimensions": [
+          "channel",
+          "platform"
+        ],
+        "id": "retention_d7",
+        "numerator": "users with session.start on day+7 and user.register on day 0",
+        "type": "ratio",
+        "window": "7d",
+        "zh_desc": "在注册当日（D0）注册且在第7天（D7）仍有启动/游玩行为的用户占比。",
+        "zh_name": "7日留存率"
+      },
+      {
+        "denominator": "users with user.register on day 0",
+        "dimensions": [
+          "channel",
+          "platform"
+        ],
+        "id": "retention_d30",
+        "numerator": "users with session.start on day+30 and user.register on day 0",
+        "type": "ratio",
+        "window": "30d",
+        "zh_desc": "在注册当日（D0）注册且在第30天（D30）仍有启动/游玩行为的用户占比。",
+        "zh_name": "30日留存率"
+      },
+      {
+        "agg": "p50",
+        "dimensions": [
+          "platform",
+          "region",
+          "entry_point"
+        ],
+        "id": "session_length_p50",
+        "source": "session.end.duration_ms",
+        "type": "histogram",
+        "unit": "ms",
+        "zh_desc": "会话结束事件（session.end.duration_ms）的中位数，反映典型单次游玩时长。",
+        "zh_name": "会话时长P50"
+      },
+      {
+        "agg": "p95",
+        "dimensions": [
+          "platform",
+          "region"
+        ],
+        "id": "session_length_p95",
+        "source": "session.end.duration_ms",
+        "type": "histogram",
+        "unit": "ms",
+        "zh_desc": "会话结束事件（session.end.duration_ms）的95分位，反映重度用户或极端会话时长。",
+        "zh_name": "会话时长P95"
+      },
+      {
+        "denominator": "count(session.end)",
+        "dimensions": [
+          "platform",
+          "app_version"
+        ],
+        "id": "crash_rate",
+        "numerator": "count(error.crash)",
+        "type": "ratio",
+        "zh_desc": "崩溃事件数（error.crash）占会话结束数（session.end）的比例，越低越好。",
+        "zh_name": "崩溃率"
+      },
+      {
+        "denominator": "unique(user_id) on session.start",
+        "dimensions": [
+          "platform",
+          "app_version"
+        ],
+        "id": "crash_free_users_rate",
+        "numerator": "unique(user_id) with no error.crash",
+        "type": "ratio",
+        "zh_desc": "当日启动过的用户中，从未发生崩溃的用户占比，衡量整体稳定性体验。",
+        "zh_name": "无崩溃用户占比"
+      },
+      {
+        "denominator": "count(session.end)",
+        "dimensions": [
+          "platform",
+          "app_version"
+        ],
+        "id": "anr_rate",
+        "numerator": "count(error.anr)",
+        "type": "ratio",
+        "zh_desc": "ANR事件数（error.anr）占会话结束数（session.end）的比例，越低越好。",
+        "zh_name": "ANR率"
+      },
+      {
+        "dimensions": [
+          "region",
+          "platform",
+          "channel"
+        ],
+        "formula": "sum(monetization.purchase_success.price_usd) / dau",
+        "id": "arpu",
+        "type": "gauge",
+        "window": "1d",
+        "zh_desc": "当日总收入除以DAU，反映平均变现能力。",
+        "zh_name": "每用户平均收入（ARPU）"
+      },
+      {
+        "dimensions": [
+          "region",
+          "platform"
+        ],
+        "formula": "sum(monetization.purchase_success.price_usd) / unique(purchasers)",
+        "id": "arppu",
+        "type": "gauge",
+        "window": "1d",
+        "zh_desc": "当日总收入除以付费用户数，反映付费深度。",
+        "zh_name": "每付费用户平均收入（ARPPU）"
+      },
+      {
+        "denominator": "dau",
+        "dimensions": [
+          "channel",
+          "platform"
+        ],
+        "id": "pur",
+        "numerator": "unique(purchasers)",
+        "type": "ratio",
+        "window": "1d",
+        "zh_desc": "当日付费用户数占DAU的比例，衡量付费渗透。",
+        "zh_name": "付费率（PUR）"
+      },
+      {
+        "dimensions": [
+          "ad_network",
+          "placement_id",
+          "platform"
+        ],
+        "formula": "sum(ad.impression.revenue_usd) / dau",
+        "id": "ad_arpu",
+        "type": "gauge",
+        "window": "1d",
+        "zh_desc": "当日广告收入除以DAU，衡量广告变现强度。",
+        "zh_name": "广告ARPU"
+      },
+      {
+        "dimensions": [
+          "ad_network",
+          "placement_id",
+          "platform"
+        ],
+        "formula": "count(ad.impression) / dau",
+        "id": "ad_impressions_per_dau",
+        "type": "gauge",
+        "window": "1d",
+        "zh_desc": "广告曝光次数除以DAU，反映人均曝光强度。",
+        "zh_name": "广告曝光数/DAU"
+      },
+      {
+        "denominator": "count(match.end)",
+        "dimensions": [
+          "game_mode",
+          "map_id"
+        ],
+        "id": "win_rate",
+        "numerator": "count(match.end where match_result = 'win')",
+        "type": "ratio",
+        "zh_desc": "胜场数占总对局数的比例，可按模式/地图等维度切片。",
+        "zh_name": "胜率"
+      },
+      {
+        "dimensions": [
+          "game_mode",
+          "hero_id"
+        ],
+        "formula": "(sum(kills) + sum(assists)) / max(1, sum(deaths))",
+        "id": "kda",
+        "source": "match.end",
+        "type": "gauge",
+        "zh_desc": "（击杀+助攻）/ max(1, 死亡）在统计窗口内的聚合，反映个人战绩表现。",
+        "zh_name": "KDA"
+      },
+      {
+        "denominator": "sum(combat.stats.shots)",
+        "dimensions": [
+          "weapon_id",
+          "map_id"
+        ],
+        "id": "accuracy_rate",
+        "numerator": "sum(combat.stats.hits)",
+        "type": "ratio",
+        "zh_desc": "命中次数占射击次数的比例，反映射击精度。",
+        "zh_name": "命中率"
+      },
+      {
+        "agg": "p95",
+        "dimensions": [
+          "queue_type",
+          "game_mode",
+          "region"
+        ],
+        "id": "queue_time_p95",
+        "source": "match.start.queue_time_ms",
+        "type": "histogram",
+        "unit": "ms",
+        "zh_desc": "匹配开始事件中的排队等待时长的95分位，反映极端等待体验。",
+        "zh_name": "匹配等待时长P95"
+      },
+      {
+        "denominator": "count(progression.start)",
+        "dimensions": [
+          "level_id",
+          "difficulty"
+        ],
+        "id": "level_completion_rate",
+        "numerator": "count(progression.complete)",
+        "type": "ratio",
+        "zh_desc": "关卡完成事件占关卡开始事件的比例，衡量关卡难度与漏斗。",
+        "zh_name": "关卡完成率"
+      },
+      {
+        "dimensions": [
+          "level_id"
+        ],
+        "formula": "avg(progression.complete.retries)",
+        "id": "retries_avg",
+        "type": "gauge",
+        "zh_desc": "每次关卡完成前的平均重试次数，反映关卡挑战性。",
+        "zh_name": "平均重试次数"
+      },
+      {
+        "dimensions": [
+          "pool_id"
+        ],
+        "formula": "avg(gacha.pull.pity_counter)",
+        "id": "pity_counter_avg",
+        "type": "gauge",
+        "zh_desc": "抽卡保底计数的平均值，反映卡池保底区间的实际位置。",
+        "zh_name": "平均保底计数"
+      },
+      {
+        "denominator": "sum(economy.earn.amount)",
+        "dimensions": [
+          "platform",
+          "region"
+        ],
+        "id": "idle_offline_income_share",
+        "numerator": "sum(economy.earn.amount where source = 'offline')",
+        "type": "ratio",
+        "window": "1d",
+        "zh_desc": "离线来源的收益金额占总收益金额的比例，用于评估放置收益依赖度。",
+        "zh_name": "离线收益占比"
+      },
+      {
+        "dimensions": [
+          "platform",
+          "region"
+        ],
+        "formula": "sum(economy.earn.amount) / nullif(sum(economy.spend.amount),0)",
+        "id": "economy_balance_ratio",
+        "type": "gauge",
+        "window": "1d",
+        "zh_desc": "收入总额与支出总额的比值，衡量游戏内经济供需平衡。",
+        "zh_name": "经济产消比"
+      },
+      {
+        "denominator": "count(match.end)",
+        "dimensions": [
+          "card_id",
+          "deck_archetype"
+        ],
+        "id": "card_usage_rate",
+        "numerator": "count(match.end where contains(deck_cards, card_id))",
+        "type": "ratio",
+        "zh_desc": "含指定卡牌的对局占全部对局的比例，反映卡牌出场频率。",
+        "zh_name": "卡牌使用率"
+      },
+      {
+        "denominator": "count(match.end where contains(deck_cards, card_id))",
+        "dimensions": [
+          "card_id",
+          "deck_archetype"
+        ],
+        "id": "card_win_rate",
+        "numerator": "count(match.end where match_result = 'win' and contains(deck_cards, card_id))",
+        "type": "ratio",
+        "zh_desc": "使用指定卡牌的对局中获胜的比例，反映卡牌强度。",
+        "zh_name": "卡牌胜率"
+      },
+      {
+        "denominator": "count(match.end)",
+        "dimensions": [
+          "deck_archetype"
+        ],
+        "id": "deck_archetype_share",
+        "numerator": "count(match.end where deck_archetype = X)",
+        "type": "ratio",
+        "zh_desc": "指定卡组原型参与的对局占比，反映环境占有率。",
+        "zh_name": "卡组原型占比"
+      },
+      {
+        "denominator": "count(match.end where deck_archetype = X)",
+        "dimensions": [
+          "deck_archetype"
+        ],
+        "id": "deck_archetype_win_rate",
+        "numerator": "count(match.end where match_result = 'win' and deck_archetype = X)",
+        "type": "ratio",
+        "zh_desc": "指定卡组原型对局中的胜率，反映环境强度。",
+        "zh_name": "卡组原型胜率"
+      },
+      {
+        "agg": "p50",
+        "dimensions": [
+          "game_variant",
+          "stakes"
+        ],
+        "id": "avg_round_duration",
+        "source": "round.end.duration_ms",
+        "type": "histogram",
+        "unit": "ms",
+        "zh_desc": "round.end.duration_ms 的中位数，描述单回合典型耗时。",
+        "zh_name": "回合时长P50"
+      },
+      {
+        "denominator": "count(match.end)",
+        "dimensions": [
+          "seat_id",
+          "game_variant"
+        ],
+        "id": "win_rate_by_seat",
+        "numerator": "count(match.end where result = 'win')",
+        "type": "ratio",
+        "zh_desc": "不同座位位次的胜率，用于公平性与位置优势分析。",
+        "zh_name": "按座位胜率"
+      },
+      {
+        "dimensions": [
+          "game_variant",
+          "stakes"
+        ],
+        "formula": "sum(match.end.rake) / nullif(sum(match.end.pot),0)",
+        "id": "rake_rate",
+        "type": "gauge",
+        "zh_desc": "平台抽佣金额占底池或有效投注金额的比例，衡量商业化合理性。",
+        "zh_name": "抽水率"
+      },
+      {
+        "denominator": "count(match.end)",
+        "dimensions": [
+          "game_variant"
+        ],
+        "id": "afk_leave_rate",
+        "numerator": "count(match.end where result = 'abandon')",
+        "type": "ratio",
+        "zh_desc": "以放弃/掉线结束的对局占比，衡量对局稳定与反作弊。",
+        "zh_name": "中途离场率"
+      },
+      {
+        "denominator": "count(progression.start)",
+        "dimensions": [
+          "level_id",
+          "difficulty"
+        ],
+        "id": "td_level_clear_rate",
+        "numerator": "count(progression.complete)",
+        "type": "ratio",
+        "zh_desc": "塔防关卡的完成率，衡量关卡难度与节奏。",
+        "zh_name": "塔防关卡通关率"
+      },
+      {
+        "denominator": "count(progression.start where wave_index is not null)",
+        "dimensions": [
+          "level_id",
+          "wave_index"
+        ],
+        "id": "td_wave_fail_rate_by_wave",
+        "numerator": "count(progression.fail where wave_index is not null)",
+        "type": "ratio",
+        "zh_desc": "在各波次发生失败的比例，定位具体波次的难点。",
+        "zh_name": "各波次失败率"
+      },
+      {
+        "dimensions": [
+          "level_id",
+          "difficulty"
+        ],
+        "formula": "avg(progression.complete.hearts_remaining)",
+        "id": "td_avg_hearts_remaining",
+        "type": "gauge",
+        "zh_desc": "通关时剩余生命（或“心”）的平均值，反映通关裕量。",
+        "zh_name": "平均残余生命"
+      },
+      {
+        "denominator": "count(progression.start)",
+        "dimensions": [
+          "tower_type",
+          "level_id"
+        ],
+        "id": "td_tower_usage_rate_by_type",
+        "numerator": "count(td.tower.build where tower_type = T)",
+        "type": "ratio",
+        "zh_desc": "各塔型被建造的频次占比，评估塔型热度与平衡。",
+        "zh_name": "塔型使用率"
+      },
+      {
+        "denominator": "count(td.tower.build)",
+        "dimensions": [
+          "level_id"
+        ],
+        "id": "td_upgrade_rate",
+        "numerator": "count(td.tower.upgrade)",
+        "type": "ratio",
+        "zh_desc": "升级次数相对建造次数的比例，反映升级策略与资源压力。",
+        "zh_name": "塔升级率"
+      }
+    ],
+    "version": "0.1.0"
+  },
+  "game_types": {
+    "game_types": [
+      {
+        "aliases": [
+          "PUZ",
+          "益智",
+          "解谜",
+          "三消"
+        ],
+        "breakdowns": [
+          "platform",
+          "region",
+          "channel",
+          "level_id"
+        ],
+        "characteristics": [
+          "short_sessions",
+          "many_levels",
+          "ads_heavy"
+        ],
+        "description": "轻度解谜/消除，核心循环为关卡尝试-\u003e失败/重试-\u003e道具/体力驱动推进，节奏短平快。变现以激励视频/插屏广告为主，内购为体力/道具/去广告；分析关注关卡漏斗、重试分布、广告曝光/奖励转化与D1/D7留存。",
+        "examples": [
+          "Candy Crush Saga",
+          "Toon Blast",
+          "Homescapes"
+        ],
+        "id": "casual_puzzle",
+        "name": "Casual Puzzle",
+        "recommended_events": [
+          "session.start",
+          "session.end",
+          "progression.start",
+          "progression.complete",
+          "ad.impression",
+          "monetization.purchase_success",
+          "error.crash",
+          "performance.frame"
+        ],
+        "recommended_metrics": [
+          "dau",
+          "retention_d1",
+          "session_length_p50",
+          "ad_arpu",
+          "level_completion_rate"
+        ],
+        "summary": "Casual Puzzle 休闲解谜/消除类"
+      },
+      {
+        "aliases": [
+          "HC",
+          "超休闲"
+        ],
+        "breakdowns": [
+          "platform",
+          "channel",
+          "level_id"
+        ],
+        "characteristics": [
+          "ultra_short_sessions",
+          "ua_driven"
+        ],
+        "description": "极简单指操作，核心为快速体验-\u003e分数追求-\u003e关卡或外观轻养成，生命周期短。变现高度依赖广告与买量闭环；关注前3局留存、前端流失、eCPM与曝光/DAU、渠道ROI。",
+        "examples": [
+          "Helix Jump",
+          "Aquapark.io"
+        ],
+        "id": "hyper_casual",
+        "name": "Hyper Casual",
+        "recommended_events": [
+          "session.start",
+          "session.end",
+          "progression.start",
+          "progression.complete",
+          "ad.impression"
+        ],
+        "recommended_metrics": [
+          "dau",
+          "retention_d1",
+          "session_length_p50",
+          "ad_impressions_per_dau"
+        ],
+        "summary": "Hyper Casual 超休闲"
+      },
+      {
+        "aliases": [
+          "放置",
+          "挂机",
+          "incremental"
+        ],
+        "breakdowns": [
+          "platform",
+          "region"
+        ],
+        "characteristics": [
+          "offline_income",
+          "long_retention"
+        ],
+        "description": "放置成长与数值指数扩张，在线/离线收益积累驱动解锁与循环深化。变现以加速/产能/离线收益包为主；关注离线收益口径、产消平衡、长期留存与召回、核心节点付费。",
+        "examples": [
+          "Adventure Capitalist",
+          "Idle Heroes"
+        ],
+        "id": "idle_incremental",
+        "name": "Idle / Incremental",
+        "recommended_events": [
+          "session.start",
+          "session.end",
+          "economy.earn",
+          "economy.spend",
+          "progression.complete",
+          "monetization.purchase_success"
+        ],
+        "recommended_metrics": [
+          "retention_d7",
+          "dau",
+          "arpu",
+          "session_length_p95"
+        ],
+        "summary": "Idle/Incremental 放置/增量游戏"
+      },
+      {
+        "aliases": [
+          "RPG",
+          "角色扮演"
+        ],
+        "breakdowns": [
+          "platform",
+          "region",
+          "chapter_id"
+        ],
+        "characteristics": [
+          "long_term_progression",
+          "gear_score",
+          "gacha"
+        ],
+        "description": "角色养成（等级/装备/技能）与副本推进，抽卡或掉落构成长线追求。变现以卡池/礼包/战令为主；关注等级/战力进度、付费漏斗与LTV、保底与稀有度、公平性与活动节奏。",
+        "examples": [
+          "Final Fantasy",
+          "Dragon Quest"
+        ],
+        "id": "rpg",
+        "name": "RPG",
+        "recommended_events": [
+          "session.start",
+          "progression.start",
+          "progression.complete",
+          "economy.earn",
+          "economy.spend",
+          "gacha.pull",
+          "monetization.purchase_success",
+          "match.start",
+          "match.end"
+        ],
+        "recommended_metrics": [
+          "dau",
+          "retention_d7",
+          "arpu",
+          "arppu",
+          "win_rate",
+          "kda"
+        ],
+        "summary": "RPG 角色扮演游戏（Role-Playing Game）"
+      },
+      {
+        "aliases": [
+          "ARPG",
+          "动作RPG",
+          "刷刷刷"
+        ],
+        "breakdowns": [
+          "platform",
+          "region"
+        ],
+        "characteristics": [
+          "action_combat",
+          "loot_grind",
+          "gear_score"
+        ],
+        "description": "即时战斗与数值成长并重，刷副本/装备构成核心循环。变现以通行证/外观/卡池为主；关注战力与副本效率、掉落概率、公平性与活动节奏。",
+        "examples": [
+          "Diablo",
+          "Path of Exile",
+          "Torchlight"
+        ],
+        "id": "arpg",
+        "name": "ARPG",
+        "recommended_events": [
+          "session.start",
+          "progression.start",
+          "progression.complete",
+          "economy.earn",
+          "economy.spend",
+          "gacha.pull",
+          "monetization.purchase_success"
+        ],
+        "recommended_metrics": [
+          "retention_d7",
+          "arpu",
+          "arppu",
+          "level_completion_rate"
+        ],
+        "summary": "ARPG 动作角色扮演（Action RPG）"
+      },
+      {
+        "aliases": [
+          "SRPG",
+          "战棋RPG",
+          "策略RPG"
+        ],
+        "breakdowns": [
+          "level_id"
+        ],
+        "characteristics": [
+          "turn_based",
+          "grid_combat",
+          "lineup"
+        ],
+        "description": "回合制网格战斗与养成结合，关卡策略性强。变现以卡池/角色包/皮肤为主；关注关卡完成率与重试、角色/阵容使用率、活动关卡参与度。",
+        "examples": [
+          "Fire Emblem",
+          "Disgaea",
+          "Triangle Strategy"
+        ],
+        "id": "srpg",
+        "name": "SRPG",
+        "recommended_events": [
+          "progression.start",
+          "progression.fail",
+          "progression.complete",
+          "gacha.pull",
+          "monetization.purchase_success"
+        ],
+        "recommended_metrics": [
+          "level_completion_rate",
+          "retries_avg",
+          "retention_d7"
+        ],
+        "summary": "SRPG 战棋/策略角色扮演（Simulation/Tactical RPG）"
+      },
+      {
+        "aliases": [
+          "MMORPG",
+          "大型多人在线RPG",
+          "网游RPG"
+        ],
+        "breakdowns": [
+          "platform",
+          "region",
+          "guild_id"
+        ],
+        "characteristics": [
+          "guild",
+          "raid",
+          "economy_complex"
+        ],
+        "description": "大型多人在线，长线成长与公会社交，团队副本/世界事件/交易经济构成核心。变现以月卡/礼包/外观/服务为主；关注公会覆盖与活跃、组队/副本完成、经济通胀/交易异常、跨服活动与服务器稳定性。",
+        "examples": [
+          "World of Warcraft",
+          "Final Fantasy XIV"
+        ],
+        "id": "mmorpg",
+        "name": "MMORPG",
+        "recommended_events": [
+          "session.start",
+          "match.start",
+          "match.end",
+          "social.guild_join",
+          "social.guild_leave",
+          "economy.earn",
+          "economy.spend",
+          "monetization.purchase_success"
+        ],
+        "recommended_metrics": [
+          "retention_d30",
+          "dau",
+          "arpu",
+          "crash_rate"
+        ],
+        "summary": "MMORPG 大型多人在线角色扮演游戏（Massively Multiplayer Online RPG）"
+      },
+      {
+        "aliases": [
+          "SLG",
+          "4X",
+          "策略"
+        ],
+        "breakdowns": [
+          "region"
+        ],
+        "characteristics": [
+          "resources",
+          "build_tech",
+          "wars"
+        ],
+        "description": "资源采集-\u003e建筑升级-\u003e科技解锁-\u003e扩张对抗的长周期策略循环。变现以加速/资源/建造队列为主；关注资源产消比、建筑/科技进度、战报胜率与损耗、联盟活跃与留存。",
+        "examples": [
+          "Civilization",
+          "Clash of Clans",
+          "Stellaris"
+        ],
+        "id": "strategy_4x",
+        "name": "Strategy 4X/SLG",
+        "recommended_events": [
+          "progression.start",
+          "progression.complete",
+          "economy.earn",
+          "economy.spend",
+          "match.end"
+        ],
+        "recommended_metrics": [
+          "retention_d7",
+          "dau",
+          "arpu"
+        ],
+        "summary": "Strategy 4X/SLG 策略（4X: eXplore/eXpand/eXploit/eXterminate）"
+      },
+      {
+        "aliases": [
+          "RTS",
+          "即时战略",
+          "即时策略"
+        ],
+        "breakdowns": [
+          "map_id",
+          "game_mode"
+        ],
+        "characteristics": [
+          "real_time",
+          "macro_micro",
+          "base_building"
+        ],
+        "description": "实时资源采集、建造与部队指挥，运营与微操并重。变现以买断/DLC/装饰/赛季为主；关注胜率、对局时长、APM近似指标（可由操作频次估算）、匹配等待与性能。",
+        "examples": [
+          "StarCraft",
+          "Age of Empires"
+        ],
+        "id": "rts",
+        "name": "RTS",
+        "recommended_events": [
+          "match.start",
+          "match.end",
+          "performance.frame"
+        ],
+        "recommended_metrics": [
+          "win_rate",
+          "session_length_p50",
+          "crash_rate"
+        ],
+        "summary": "RTS 即时战略（Real-Time Strategy）"
+      },
+      {
+        "aliases": [
+          "TD",
+          "塔防"
+        ],
+        "breakdowns": [
+          "level_id",
+          "map_id"
+        ],
+        "characteristics": [
+          "waves",
+          "pathing",
+          "tower_building"
+        ],
+        "description": "路径/格点上布置防御塔抵御波次进攻，资源分配与塔型搭配为核心。变现以广告/关卡包/增益为主；关注关卡难度与失败波次、塔型使用率、瓶颈路口热力、广告收益。",
+        "examples": [
+          "Plants vs. Zombies",
+          "Kingdom Rush",
+          "Bloons TD"
+        ],
+        "id": "tower_defense",
+        "name": "Tower Defense",
+        "recommended_events": [
+          "progression.start",
+          "progression.fail",
+          "progression.complete",
+          "ad.impression",
+          "monetization.purchase_success"
+        ],
+        "recommended_metrics": [
+          "level_completion_rate",
+          "retries_avg",
+          "ad_arpu",
+          "retention_d7"
+        ],
+        "summary": "Tower Defense 塔防（TD）"
+      },
+      {
+        "aliases": [
+          "MOBA",
+          "多人在线竞技"
+        ],
+        "breakdowns": [
+          "game_mode",
+          "map_id"
+        ],
+        "characteristics": [
+          "match_based",
+          "roles",
+          "mmr"
+        ],
+        "description": "团队对局，分路与角色定位协作，技能与经济节奏决定胜负。变现以外观/战令为主；关注胜率/KDA、对局时长/中途退出、匹配质量（MMR差/等待时长）、英雄与装备平衡。",
+        "examples": [
+          "League of Legends",
+          "Dota 2",
+          "Honor of Kings"
+        ],
+        "id": "moba",
+        "name": "MOBA",
+        "recommended_events": [
+          "match.start",
+          "match.end",
+          "economy.earn",
+          "monetization.purchase_success",
+          "session.start",
+          "error.crash",
+          "performance.frame"
+        ],
+        "recommended_metrics": [
+          "win_rate",
+          "kda",
+          "session_length_p50",
+          "crash_rate"
+        ],
+        "summary": "MOBA 多人在线战术竞技（Multiplayer Online Battle Arena）"
+      },
+      {
+        "aliases": [
+          "FPS",
+          "TPS",
+          "射击",
+          "枪战"
+        ],
+        "breakdowns": [
+          "weapon_id",
+          "map_id",
+          "game_mode"
+        ],
+        "characteristics": [
+          "aim_precision",
+          "net_sensitivity"
+        ],
+        "description": "射击命中与手感为核心，地图资源与回合目标塑造战斗节奏。变现以外观/通行证为主；关注命中/爆头率、TTK、网络延迟/抖动/丢包、外挂与异常行为线索。",
+        "examples": [
+          "Counter-Strike",
+          "Call of Duty",
+          "Overwatch"
+        ],
+        "id": "shooter",
+        "name": "Shooter FPS/TPS",
+        "recommended_events": [
+          "match.start",
+          "match.end",
+          "performance.frame",
+          "network.rtt",
+          "error.crash",
+          "monetization.purchase_success",
+          "combat.stats"
+        ],
+        "recommended_metrics": [
+          "accuracy_rate",
+          "win_rate",
+          "session_length_p50",
+          "crash_rate"
+        ],
+        "summary": "Shooter 第一/第三人称射击（First/Third-Person Shooter）"
+      },
+      {
+        "aliases": [
+          "大逃杀",
+          "吃鸡",
+          "BR"
+        ],
+        "breakdowns": [
+          "map_id",
+          "game_mode"
+        ],
+        "characteristics": [
+          "large_map",
+          "drop_randomness"
+        ],
+        "description": "大地图多人淘汰，搜集-\u003e生存-\u003e圈内博弈，随机掉落与安全区推进影响节奏。变现以外观/通行证/主题活动为主；关注开局死亡热区、圈段存活率、资源热度、匹配时长与性能稳定。",
+        "examples": [
+          "PUBG",
+          "Fortnite",
+          "Apex Legends"
+        ],
+        "id": "battle_royale",
+        "name": "Battle Royale",
+        "recommended_events": [
+          "match.start",
+          "match.end",
+          "performance.frame",
+          "network.rtt"
+        ],
+        "recommended_metrics": [
+          "win_rate",
+          "session_length_p95",
+          "crash_rate"
+        ],
+        "summary": "Battle Royale 大逃杀"
+      },
+      {
+        "aliases": [
+          "SPG",
+          "体育"
+        ],
+        "breakdowns": [
+          "game_mode"
+        ],
+        "characteristics": [
+          "competitive_rules",
+          "teamplay"
+        ],
+        "description": "基于真实或拟制体育规则的对抗或团队竞技，数据结构化且公平性要求高。变现以包年/通行证/外观为主；关注胜率/段位、犯规与公平性、延迟与断线、模式参与。",
+        "examples": [
+          "EA Sports FC",
+          "NBA 2K"
+        ],
+        "id": "sports",
+        "name": "Sports",
+        "recommended_events": [
+          "match.start",
+          "match.end",
+          "performance.frame",
+          "error.crash"
+        ],
+        "recommended_metrics": [
+          "win_rate",
+          "session_length_p50",
+          "crash_rate"
+        ],
+        "summary": "Sports 体育类（SPG）"
+      },
+      {
+        "aliases": [
+          "RAC",
+          "竞速",
+          "赛车"
+        ],
+        "breakdowns": [
+          "track_id",
+          "game_mode"
+        ],
+        "characteristics": [
+          "timed_runs",
+          "vehicle_handling"
+        ],
+        "description": "车辆操控与赛道熟练度决定成绩，含计时赛与对战赛。变现以车辆/外观/通行证为主；关注成绩分布、碰撞/犯规、匹配与延迟、赛道偏好。",
+        "examples": [
+          "Forza Horizon",
+          "Gran Turismo",
+          "Mario Kart"
+        ],
+        "id": "racing",
+        "name": "Racing",
+        "recommended_events": [
+          "match.start",
+          "match.end",
+          "performance.frame",
+          "error.crash"
+        ],
+        "recommended_metrics": [
+          "session_length_p50",
+          "crash_rate"
+        ],
+        "summary": "Racing 赛车竞速（RAC）"
+      },
+      {
+        "aliases": [
+          "CCG",
+          "卡牌",
+          "集换式卡牌",
+          "TCG"
+        ],
+        "breakdowns": [
+          "card_id",
+          "deck_archetype"
+        ],
+        "characteristics": [
+          "deck_building",
+          "balance"
+        ],
+        "description": "卡牌收集与构筑，对局环境与资源稀缺决定卡组生态。变现以卡包/通行证/皮肤为主；关注卡牌使用率/胜率、卡组原型识别、抽到率与保底机制、环境健康度。",
+        "examples": [
+          "Hearthstone",
+          "Legends of Runeterra"
+        ],
+        "id": "card_ccg",
+        "name": "Card / CCG",
+        "recommended_events": [
+          "match.start",
+          "match.end",
+          "monetization.purchase_success",
+          "gacha.pull"
+        ],
+        "recommended_metrics": [
+          "win_rate",
+          "arpu",
+          "arppu"
+        ],
+        "summary": "Card/CCG 集换式卡牌（Collectible Card Game）"
+      },
+      {
+        "aliases": [
+          "Rogue",
+          "肉鸽"
+        ],
+        "breakdowns": [
+          "level_id"
+        ],
+        "characteristics": [
+          "random_nodes",
+          "replayability"
+        ],
+        "description": "随机关卡/构筑与复玩性强，失败-重来推动技能熟练与路线探索。变现以内购解锁/外观/轻度成长为主；关注层数/节点通过率、构筑选择热度、死亡原因与复玩间隔。",
+        "examples": [
+          "Hades",
+          "Dead Cells",
+          "Slay the Spire"
+        ],
+        "id": "roguelike",
+        "name": "Roguelike / Roguelite",
+        "recommended_events": [
+          "progression.start",
+          "progression.fail",
+          "progression.complete",
+          "economy.earn"
+        ],
+        "recommended_metrics": [
+          "level_completion_rate",
+          "retries_avg",
+          "retention_d7"
+        ],
+        "summary": "Roguelike/Roguelite 类 Rogue 随机地牢"
+      },
+      {
+        "aliases": [
+          "SIM",
+          "模拟经营"
+        ],
+        "breakdowns": [
+          "region"
+        ],
+        "characteristics": [
+          "production_cycle",
+          "long_path_optimization"
+        ],
+        "description": "经营循环（产出-\u003e加工-\u003e销售-\u003e再投资）与长期规划，系统耦合复杂。变现以加速/货币包/DLC为主；关注产销与库存周转、建造/解锁节奏、用户分层与长期留存。",
+        "examples": [
+          "SimCity",
+          "Cities: Skylines",
+          "Planet Coaster"
+        ],
+        "id": "simulation_tycoon",
+        "name": "Simulation / Tycoon",
+        "recommended_events": [
+          "economy.earn",
+          "economy.spend",
+          "craft.complete",
+          "monetization.purchase_success"
+        ],
+        "recommended_metrics": [
+          "arpu",
+          "retention_d30"
+        ],
+        "summary": "Simulation/Tycoon 模拟经营"
+      },
+      {
+        "aliases": [
+          "沙盒",
+          "生存",
+          "开放世界"
+        ],
+        "breakdowns": [
+          "biome_id"
+        ],
+        "characteristics": [
+          "open_world",
+          "crafting",
+          "harvesting"
+        ],
+        "description": "开放世界采集/制作/建造与生存压力驱动，目标自定与高自由度。变现以DLC/装饰/服务器服务为主；关注资源热区、合成/蓝图漏斗、死亡/饥饿/环境致死、长期稳定性。",
+        "examples": [
+          "Minecraft",
+          "ARK",
+          "Rust"
+        ],
+        "id": "sandbox_survival",
+        "name": "Sandbox / Survival",
+        "recommended_events": [
+          "craft.complete",
+          "progression.complete",
+          "performance.frame",
+          "error.crash"
+        ],
+        "recommended_metrics": [
+          "session_length_p95",
+          "crash_rate"
+        ],
+        "summary": "Sandbox/Survival 沙盒/生存"
+      },
+      {
+        "aliases": [
+          "派对",
+          "聚会"
+        ],
+        "breakdowns": [
+          "game_mode"
+        ],
+        "characteristics": [
+          "short_rounds",
+          "social"
+        ],
+        "description": "轻量聚会社交小游戏，短局高频互动与随机事件提升乐趣。变现以皮肤/票券/套包为主；关注房间转化、掉线/重连、模式参与与留存。",
+        "examples": [
+          "Fall Guys",
+          "Mario Party"
+        ],
+        "id": "party",
+        "name": "Party",
+        "recommended_events": [
+          "match.start",
+          "match.end",
+          "session.start"
+        ],
+        "recommended_metrics": [
+          "win_rate",
+          "retention_d1"
+        ],
+        "summary": "Party 派对小游戏"
+      },
+      {
+        "aliases": [
+          "音游",
+          "节奏",
+          "音乐游戏"
+        ],
+        "breakdowns": [
+          "song_id",
+          "difficulty"
+        ],
+        "characteristics": [
+          "timing_accuracy"
+        ],
+        "description": "音乐节奏判定，谱面/手感与判定窗口共同塑造体验。变现以曲包/订阅/外观为主；关注命中偏差分布、谱面难度与通过率、设备/延迟校准影响。",
+        "examples": [
+          "Beat Saber",
+          "Cytus",
+          "osu!"
+        ],
+        "id": "rhythm",
+        "name": "Rhythm",
+        "recommended_events": [
+          "session.start",
+          "session.end",
+          "ui.screen_view"
+        ],
+        "recommended_metrics": [
+          "session_length_p50",
+          "retention_d7"
+        ],
+        "summary": "Rhythm 音乐节奏"
+      },
+      {
+        "aliases": [
+          "平台动作",
+          "银河城",
+          "横版"
+        ],
+        "breakdowns": [
+          "level_id"
+        ],
+        "characteristics": [
+          "precision_movement"
+        ],
+        "description": "平台跳跃与战斗、探索解锁相结合，地图回溯式进展。变现以买断/DLC/外观为主；关注死亡热力点、机关/跳跃失败、关卡时长与重试。",
+        "examples": [
+          "Hollow Knight",
+          "Ori",
+          "Celeste",
+          "Metroid"
+        ],
+        "id": "platformer_metroidvania",
+        "name": "Platformer / Metroidvania",
+        "recommended_events": [
+          "progression.start",
+          "progression.fail",
+          "progression.complete",
+          "performance.frame"
+        ],
+        "recommended_metrics": [
+          "level_completion_rate",
+          "retries_avg"
+        ],
+        "summary": "Platformer/Metroidvania 横版平台/银河城"
+      },
+      {
+        "aliases": [
+          "AVG",
+          "冒险",
+          "视觉小说",
+          "VN"
+        ],
+        "breakdowns": [
+          "chapter_id"
+        ],
+        "characteristics": [
+          "branching_story"
+        ],
+        "description": "线性或分支叙事，交互适中，重在剧情推进与演出表现。变现以章节/结局解锁/语音包为主；关注分支选择分布、章节流失节点、结局达成率与周目行为。",
+        "examples": [
+          "Life is Strange",
+          "Steins;Gate"
+        ],
+        "id": "narrative_adventure",
+        "name": "Narrative / Adventure / VN",
+        "recommended_events": [
+          "progression.start",
+          "progression.complete",
+          "ui.screen_view"
+        ],
+        "recommended_metrics": [
+          "retention_d7",
+          "session_length_p50"
+        ],
+        "summary": "Narrative/Adventure/VN 叙事/冒险/视觉小说（Visual Novel）"
+      },
+      {
+        "aliases": [
+          "社交赌场",
+          "Slots",
+          "Poker"
+        ],
+        "breakdowns": [
+          "region"
+        ],
+        "characteristics": [
+          "rtp",
+          "chips_economy"
+        ],
+        "description": "模拟博彩机制，筹码经济与RTP/波动性调控支撑长期留存。变现以筹码包/订阅/活动为主；关注RTP/波动、下注/筹码留存、付费/广告收益结构与风控异常。",
+        "examples": [
+          "Slotomania",
+          "Zynga Poker"
+        ],
+        "id": "social_casino",
+        "name": "Social Casino",
+        "recommended_events": [
+          "economy.earn",
+          "economy.spend",
+          "monetization.purchase_success",
+          "ad.impression"
+        ],
+        "recommended_metrics": [
+          "arpu",
+          "arppu",
+          "ad_arpu",
+          "retention_d30"
+        ],
+        "summary": "Social Casino 社交赌场/模拟博彩"
+      },
+      {
+        "aliases": [
+          "FTG",
+          "格斗"
+        ],
+        "breakdowns": [
+          "character_id",
+          "stage_id"
+        ],
+        "characteristics": [
+          "duel",
+          "frame_data",
+          "combos"
+        ],
+        "description": "1v1或小型多人对战，连段判定与帧数博弈决定对抗深度。变现以买断/角色包/外观为主；关注胜率对战公平、角色对局表、断线率与输入延迟。",
+        "examples": [
+          "Street Fighter",
+          "Tekken",
+          "Mortal Kombat"
+        ],
+        "id": "fighting_ftg",
+        "name": "Fighting (FTG)",
+        "recommended_events": [
+          "match.start",
+          "match.end",
+          "performance.frame",
+          "network.rtt"
+        ],
+        "recommended_metrics": [
+          "win_rate",
+          "session_length_p50",
+          "crash_rate"
+        ],
+        "summary": "FTG 格斗类（Fighting Game）"
+      },
+      {
+        "aliases": [
+          "SFTG",
+          "模拟格斗"
+        ],
+        "breakdowns": [
+          "character_id",
+          "arena_id"
+        ],
+        "characteristics": [
+          "simulation",
+          "stamina",
+          "grappling"
+        ],
+        "description": "偏模拟与规则化的格斗/搏击体验，物理与体能系统占比更高。变现以买断/DLC/角色包为主；关注胜率、回合时长、犯规与判罚、网络延迟。",
+        "examples": [
+          "UFC",
+          "WWE 2K"
+        ],
+        "id": "fighting_sim",
+        "name": "Fighting Simulation (SFTG)",
+        "recommended_events": [
+          "match.start",
+          "match.end",
+          "performance.frame",
+          "network.rtt"
+        ],
+        "recommended_metrics": [
+          "win_rate",
+          "session_length_p50",
+          "crash_rate"
+        ],
+        "summary": "SFTG 模拟格斗（Simulation Fighting）"
+      },
+      {
+        "aliases": [
+          "TAB",
+          "桌游",
+          "棋牌",
+          "棋类",
+          "麻将"
+        ],
+        "breakdowns": [
+          "game_variant"
+        ],
+        "characteristics": [
+          "turn_based",
+          "rules_strict",
+          "social"
+        ],
+        "description": "规则明确、轮次清晰的棋类/桌游/棋牌，社交属性强。变现以买断/道具/房卡为主；关注对局时长、胜率与段位、房间转化、作弊与异常对局。",
+        "examples": [
+          "Chess",
+          "Mahjong",
+          "Uno"
+        ],
+        "id": "board_table",
+        "name": "Board / Table",
+        "recommended_events": [
+          "match.start",
+          "match.end"
+        ],
+        "recommended_metrics": [
+          "win_rate",
+          "session_length_p50"
+        ],
+        "summary": "TAB 桌面/棋牌（Table/Board Game）"
+      },
+      {
+        "aliases": [
+          "FLY",
+          "飞行模拟"
+        ],
+        "breakdowns": [
+          "aircraft_id"
+        ],
+        "characteristics": [
+          "simulation",
+          "vehicle",
+          "physics"
+        ],
+        "description": "高真实度载具系统与物理仿真，学习曲线较陡，硬件影响显著。变现以买断/DLC/载具包为主；关注性能与稳定性、会话时长、任务完成率与设备适配。",
+        "examples": [
+          "Microsoft Flight Simulator"
+        ],
+        "id": "flight_sim",
+        "name": "Flight Simulation",
+        "recommended_events": [
+          "session.start",
+          "session.end",
+          "performance.frame",
+          "error.crash"
+        ],
+        "recommended_metrics": [
+          "session_length_p95",
+          "crash_rate"
+        ],
+        "summary": "FLY 飞行模拟（Flight Simulation）"
+      },
+      {
+        "aliases": [
+          "EDU",
+          "养成",
+          "育成"
+        ],
+        "breakdowns": [
+          "stage_id"
+        ],
+        "characteristics": [
+          "raising",
+          "education",
+          "long_term"
+        ],
+        "description": "以养成/教学为目标的轻交互体验，强调长期陪伴与阶段成果。变现以订阅/礼包/道具为主；关注阶段转化、长期留存与召回、内容完成度。",
+        "examples": [
+          "Princess Maker",
+          "Tamagotchi"
+        ],
+        "id": "raising_sim",
+        "name": "Raising / Education",
+        "recommended_events": [
+          "progression.start",
+          "progression.complete",
+          "monetization.purchase_success"
+        ],
+        "recommended_metrics": [
+          "retention_d30",
+          "arpu"
+        ],
+        "summary": "EDU 养成/教育（Raising/Education）"
+      },
+      {
+        "aliases": [
+          "ACT",
+          "动作"
+        ],
+        "breakdowns": [
+          "level_id"
+        ],
+        "characteristics": [
+          "action",
+          "timing",
+          "reaction"
+        ],
+        "description": "以动作与反应为主的通用向玩法，包含闯关/对战/探索等多种形态。变现因子多样；关注关卡完成与死亡热力、对战胜率与时长、性能与输入延迟。",
+        "examples": [
+          "Devil May Cry",
+          "Bayonetta"
+        ],
+        "id": "action_act",
+        "name": "Action (ACT)",
+        "recommended_events": [
+          "progression.start",
+          "progression.fail",
+          "progression.complete",
+          "match.start",
+          "match.end",
+          "performance.frame"
+        ],
+        "recommended_metrics": [
+          "level_completion_rate",
+          "session_length_p50"
+        ],
+        "summary": "ACT 动作类（Action Game）"
+      }
+    ],
+    "version": "0.1.0"
+  },
+  "taxonomy": {
+    "genres": [
+      {
+        "aliases": [
+          "RPG",
+          "角色扮演"
+        ],
+        "code": "RPG",
+        "maps_to": [
+          "rpg",
+          "mmorpg",
+          "arpg",
+          "srpg"
+        ],
+        "name": "Role-Playing Game",
+        "zh_name": "角色扮演游戏"
+      },
+      {
+        "aliases": [
+          "ARPG",
+          "动作RPG",
+          "刷刷刷"
+        ],
+        "code": "ARPG",
+        "maps_to": [
+          "arpg",
+          "rpg"
+        ],
+        "name": "Action RPG",
+        "zh_name": "动作角色扮演"
+      },
+      {
+        "aliases": [
+          "SRPG",
+          "战棋RPG",
+          "策略RPG"
+        ],
+        "code": "SRPG",
+        "maps_to": [
+          "srpg",
+          "strategy_4x"
+        ],
+        "name": "Simulation/Tactical RPG",
+        "zh_name": "模拟/战棋RPG"
+      },
+      {
+        "aliases": [
+          "FPS",
+          "第一人称"
+        ],
+        "code": "FPS",
+        "maps_to": [
+          "shooter"
+        ],
+        "name": "First-Person Shooter",
+        "zh_name": "第一人称射击"
+      },
+      {
+        "aliases": [
+          "STG",
+          "射击"
+        ],
+        "code": "STG",
+        "maps_to": [
+          "shooter"
+        ],
+        "name": "Shooting Game",
+        "zh_name": "射击类"
+      },
+      {
+        "aliases": [
+          "RTS",
+          "即时策略"
+        ],
+        "code": "RTS",
+        "maps_to": [
+          "rts",
+          "strategy_4x"
+        ],
+        "name": "Real-Time Strategy",
+        "zh_name": "即时战略"
+      },
+      {
+        "aliases": [
+          "SLG",
+          "策略",
+          "战棋"
+        ],
+        "code": "SLG",
+        "maps_to": [
+          "strategy_4x",
+          "srpg",
+          "tower_defense"
+        ],
+        "name": "Strategy/Simulation Game",
+        "zh_name": "策略/战棋"
+      },
+      {
+        "aliases": [
+          "TD",
+          "塔防"
+        ],
+        "code": "TD",
+        "maps_to": [
+          "tower_defense"
+        ],
+        "name": "Tower Defense",
+        "zh_name": "塔防"
+      },
+      {
+        "aliases": [
+          "RAC",
+          "竞速",
+          "赛车"
+        ],
+        "code": "RAC",
+        "maps_to": [
+          "racing",
+          "sports_racing"
+        ],
+        "name": "Racing",
+        "zh_name": "赛车竞速"
+      },
+      {
+        "aliases": [
+          "ACT",
+          "动作"
+        ],
+        "code": "ACT",
+        "maps_to": [
+          "action_act",
+          "platformer_metroidvania",
+          "shooter"
+        ],
+        "name": "Action Game",
+        "zh_name": "动作类"
+      },
+      {
+        "aliases": [
+          "SIM",
+          "模拟",
+          "经营"
+        ],
+        "code": "SIM",
+        "maps_to": [
+          "simulation_tycoon",
+          "raising_sim",
+          "flight_sim"
+        ],
+        "name": "Simulation",
+        "zh_name": "模拟经营"
+      },
+      {
+        "aliases": [
+          "EDU",
+          "养成",
+          "育成"
+        ],
+        "code": "EDU",
+        "maps_to": [
+          "raising_sim"
+        ],
+        "name": "Raising/Education",
+        "zh_name": "养成/教育"
+      },
+      {
+        "aliases": [
+          "FLY",
+          "飞行模拟"
+        ],
+        "code": "FLY",
+        "maps_to": [
+          "flight_sim"
+        ],
+        "name": "Flight Simulation",
+        "zh_name": "飞行模拟"
+      },
+      {
+        "aliases": [
+          "TAB",
+          "桌游",
+          "棋牌"
+        ],
+        "code": "TAB",
+        "maps_to": [
+          "board_table",
+          "social_casino"
+        ],
+        "name": "Table/Board Game",
+        "zh_name": "桌面/棋牌"
+      },
+      {
+        "aliases": [
+          "SPG",
+          "体育"
+        ],
+        "code": "SPG",
+        "maps_to": [
+          "sports",
+          "sports_racing"
+        ],
+        "name": "Sports Game",
+        "zh_name": "体育类"
+      },
+      {
+        "aliases": [
+          "FTG",
+          "格斗"
+        ],
+        "code": "FTG",
+        "maps_to": [
+          "fighting_ftg"
+        ],
+        "name": "Fighting Game",
+        "zh_name": "格斗类"
+      },
+      {
+        "aliases": [
+          "SFTG",
+          "模拟格斗"
+        ],
+        "code": "SFTG",
+        "maps_to": [
+          "fighting_sim"
+        ],
+        "name": "Simulation Fighting Game",
+        "zh_name": "模拟格斗"
+      },
+      {
+        "aliases": [
+          "PUZ",
+          "益智",
+          "解谜"
+        ],
+        "code": "PUZ",
+        "maps_to": [
+          "casual_puzzle"
+        ],
+        "name": "Puzzle",
+        "zh_name": "益智/解谜"
+      },
+      {
+        "aliases": [
+          "AVG",
+          "冒险",
+          "视觉小说"
+        ],
+        "code": "AVG",
+        "maps_to": [
+          "narrative_adventure"
+        ],
+        "name": "Adventure Game",
+        "zh_name": "冒险类"
+      },
+      {
+        "aliases": [
+          "ETC",
+          "其它",
+          "其他"
+        ],
+        "code": "ETC",
+        "maps_to": [],
+        "name": "Others",
+        "zh_name": "其他"
+      }
+    ],
+    "version": "0.1.0"
+  },
+  "derived": {
+    "events_by_id": {
+      "ad.click": {
+        "category": "ad",
+        "id": "ad.click",
+        "optional_attributes": [
+          "placement_type"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "ad_network",
+          "placement_id",
+          "ad_format"
+        ],
+        "signal": "log"
+      },
+      "ad.impression": {
+        "category": "ad",
+        "id": "ad.impression",
+        "optional_attributes": [
+          "ecpm_usd",
+          "revenue_usd",
+          "placement_type"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "ad_network",
+          "placement_id",
+          "ad_format"
+        ],
+        "signal": "log"
+      },
+      "ad.reward": {
+        "category": "ad",
+        "id": "ad.reward",
+        "optional_attributes": [
+          "reward_type",
+          "reward_amount",
+          "placement_type"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "ad_network",
+          "placement_id"
+        ],
+        "signal": "log"
+      },
+      "combat.stats": {
+        "category": "combat",
+        "id": "combat.stats",
+        "optional_attributes": [
+          "weapon_id",
+          "map_id",
+          "shots",
+          "hits",
+          "headshots",
+          "damage_done"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time"
+        ],
+        "signal": "log"
+      },
+      "craft.complete": {
+        "category": "crafting",
+        "id": "craft.complete",
+        "optional_attributes": [
+          "inputs",
+          "output_item_id",
+          "duration_ms"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "recipe_id"
+        ],
+        "signal": "log"
+      },
+      "deck.set_active": {
+        "category": "deck",
+        "id": "deck.set_active",
+        "optional_attributes": [
+          "deck_archetype",
+          "card_ids"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "deck_id"
+        ],
+        "signal": "log"
+      },
+      "economy.earn": {
+        "category": "economy",
+        "id": "economy.earn",
+        "optional_attributes": [
+          "source",
+          "item_id",
+          "currency_kind",
+          "balance_after"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "currency",
+          "amount"
+        ],
+        "signal": "log"
+      },
+      "economy.spend": {
+        "category": "economy",
+        "id": "economy.spend",
+        "optional_attributes": [
+          "sink",
+          "item_id",
+          "currency_kind",
+          "balance_after"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "currency",
+          "amount"
+        ],
+        "signal": "log"
+      },
+      "error.anr": {
+        "category": "error",
+        "id": "error.anr",
+        "optional_attributes": [
+          "scene",
+          "app_state",
+          "device_id"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time"
+        ],
+        "signal": "log"
+      },
+      "error.crash": {
+        "category": "error",
+        "id": "error.crash",
+        "optional_attributes": [
+          "stack_hash",
+          "signal_code",
+          "scene",
+          "device_id"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "session_id"
+        ],
+        "signal": "log"
+      },
+      "gacha.pull": {
+        "category": "loot",
+        "id": "gacha.pull",
+        "optional_attributes": [
+          "rarity",
+          "pity_counter",
+          "item_ids"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "pool_id",
+          "pulls"
+        ],
+        "signal": "log"
+      },
+      "match.end": {
+        "category": "match",
+        "id": "match.end",
+        "optional_attributes": [
+          "duration_ms",
+          "kills",
+          "deaths",
+          "assists",
+          "damage_done",
+          "damage_taken",
+          "heal_done",
+          "surrender",
+          "deck_id",
+          "deck_archetype",
+          "deck_cards",
+          "rake",
+          "pot",
+          "seat_id",
+          "stakes"
+        ],
+        "required_attributes": [
+          "user_id",
+          "session_id",
+          "event_time",
+          "match_id",
+          "match_result"
+        ],
+        "signal": "log"
+      },
+      "match.start": {
+        "category": "match",
+        "id": "match.start",
+        "optional_attributes": [
+          "queue_type",
+          "team_id",
+          "map_id",
+          "mmr",
+          "queue_time_ms",
+          "deck_id",
+          "deck_archetype",
+          "deck_cards",
+          "game_variant",
+          "seat_id",
+          "stakes"
+        ],
+        "required_attributes": [
+          "user_id",
+          "session_id",
+          "event_time",
+          "match_id",
+          "game_mode"
+        ],
+        "signal": "log"
+      },
+      "monetization.purchase_attempt": {
+        "category": "monetization",
+        "id": "monetization.purchase_attempt",
+        "optional_attributes": [
+          "price_usd",
+          "currency_code",
+          "payment_provider"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "order_id",
+          "sku_id"
+        ],
+        "signal": "log"
+      },
+      "monetization.purchase_fail": {
+        "category": "monetization",
+        "id": "monetization.purchase_fail",
+        "optional_attributes": [
+          "reason"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "order_id",
+          "sku_id"
+        ],
+        "signal": "log"
+      },
+      "monetization.purchase_success": {
+        "category": "monetization",
+        "id": "monetization.purchase_success",
+        "optional_attributes": [
+          "currency_code",
+          "payment_provider",
+          "tax_usd",
+          "country"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "order_id",
+          "sku_id",
+          "price_usd"
+        ],
+        "signal": "log"
+      },
+      "network.rtt": {
+        "category": "network",
+        "id": "network.rtt",
+        "optional_attributes": [
+          "jitter_ms",
+          "packet_loss"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "rtt_ms"
+        ],
+        "signal": "metric"
+      },
+      "performance.device": {
+        "category": "performance",
+        "id": "performance.device",
+        "optional_attributes": [
+          "device_model",
+          "os_version",
+          "gpu_model",
+          "perf_grade"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time"
+        ],
+        "signal": "log"
+      },
+      "performance.frame": {
+        "category": "performance",
+        "id": "performance.frame",
+        "metric": {
+          "type": "histogram",
+          "unit": "fps"
+        },
+        "optional_attributes": [
+          "frame_time_ms",
+          "memory_mb",
+          "cpu_load",
+          "gpu_load"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "fps"
+        ],
+        "signal": "metric"
+      },
+      "progression.complete": {
+        "category": "progression",
+        "id": "progression.complete",
+        "optional_attributes": [
+          "chapter_id",
+          "stage_id",
+          "duration_ms",
+          "stars",
+          "retries",
+          "wave_index",
+          "is_boss_wave",
+          "hearts_remaining"
+        ],
+        "required_attributes": [
+          "user_id",
+          "session_id",
+          "event_time",
+          "level_id"
+        ],
+        "signal": "log"
+      },
+      "progression.fail": {
+        "category": "progression",
+        "id": "progression.fail",
+        "optional_attributes": [
+          "chapter_id",
+          "stage_id",
+          "duration_ms",
+          "reason",
+          "wave_index",
+          "is_boss_wave",
+          "hearts_remaining"
+        ],
+        "required_attributes": [
+          "user_id",
+          "session_id",
+          "event_time",
+          "level_id"
+        ],
+        "signal": "log"
+      },
+      "progression.start": {
+        "category": "progression",
+        "id": "progression.start",
+        "optional_attributes": [
+          "chapter_id",
+          "stage_id",
+          "attempt_index",
+          "difficulty",
+          "wave_index",
+          "is_boss_wave"
+        ],
+        "required_attributes": [
+          "user_id",
+          "session_id",
+          "event_time",
+          "level_id"
+        ],
+        "signal": "log"
+      },
+      "round.end": {
+        "category": "round",
+        "id": "round.end",
+        "optional_attributes": [
+          "rake",
+          "duration_ms",
+          "pot"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "match_id",
+          "round_id",
+          "result"
+        ],
+        "signal": "log"
+      },
+      "round.start": {
+        "category": "round",
+        "id": "round.start",
+        "optional_attributes": [
+          "game_variant",
+          "seat_id",
+          "stakes"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "match_id",
+          "round_id"
+        ],
+        "signal": "log"
+      },
+      "session.end": {
+        "category": "session",
+        "id": "session.end",
+        "optional_attributes": [
+          "duration_ms",
+          "cause_of_end"
+        ],
+        "required_attributes": [
+          "user_id",
+          "session_id",
+          "event_time"
+        ],
+        "signal": "log"
+      },
+      "session.start": {
+        "category": "session",
+        "id": "session.start",
+        "optional_attributes": [
+          "entry_point",
+          "campaign_id",
+          "country",
+          "region",
+          "device_id"
+        ],
+        "required_attributes": [
+          "user_id",
+          "session_id",
+          "event_time",
+          "platform"
+        ],
+        "signal": "log"
+      },
+      "social.guild_join": {
+        "category": "social",
+        "id": "social.guild_join",
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "guild_id"
+        ],
+        "signal": "log"
+      },
+      "social.guild_leave": {
+        "category": "social",
+        "id": "social.guild_leave",
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "guild_id"
+        ],
+        "signal": "log"
+      },
+      "td.tower.build": {
+        "category": "td",
+        "id": "td.tower.build",
+        "optional_attributes": [
+          "wave_index"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "level_id",
+          "tower_id",
+          "tower_type",
+          "pos_x",
+          "pos_y",
+          "cost"
+        ],
+        "signal": "log"
+      },
+      "td.tower.upgrade": {
+        "category": "td",
+        "id": "td.tower.upgrade",
+        "optional_attributes": [
+          "wave_index",
+          "tower_type"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "level_id",
+          "tower_id",
+          "from_level",
+          "to_level",
+          "cost"
+        ],
+        "signal": "log"
+      },
+      "ui.click": {
+        "category": "ui",
+        "id": "ui.click",
+        "optional_attributes": [
+          "screen_name"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "element_id"
+        ],
+        "signal": "log"
+      },
+      "ui.screen_view": {
+        "category": "ui",
+        "id": "ui.screen_view",
+        "optional_attributes": [
+          "from_screen"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time",
+          "screen_name"
+        ],
+        "signal": "log"
+      },
+      "user.login": {
+        "category": "user",
+        "id": "user.login",
+        "optional_attributes": [
+          "method",
+          "device_id",
+          "app_version"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time"
+        ],
+        "signal": "log"
+      },
+      "user.register": {
+        "category": "user",
+        "id": "user.register",
+        "optional_attributes": [
+          "channel",
+          "device_id",
+          "country",
+          "region"
+        ],
+        "required_attributes": [
+          "user_id",
+          "event_time"
+        ],
+        "signal": "log"
+      }
+    },
+    "game_types_by_id": {
+      "action_act": {
+        "aliases": [
+          "ACT",
+          "动作"
+        ],
+        "breakdowns": [
+          "level_id"
+        ],
+        "characteristics": [
+          "action",
+          "timing",
+          "reaction"
+        ],
+        "description": "以动作与反应为主的通用向玩法，包含闯关/对战/探索等多种形态。变现因子多样；关注关卡完成与死亡热力、对战胜率与时长、性能与输入延迟。",
+        "examples": [
+          "Devil May Cry",
+          "Bayonetta"
+        ],
+        "id": "action_act",
+        "name": "Action (ACT)",
+        "recommended_events": [
+          "progression.start",
+          "progression.fail",
+          "progression.complete",
+          "match.start",
+          "match.end",
+          "performance.frame"
+        ],
+        "recommended_metrics": [
+          "level_completion_rate",
+          "session_length_p50"
+        ],
+        "summary": "ACT 动作类（Action Game）"
+      },
+      "arpg": {
+        "aliases": [
+          "ARPG",
+          "动作RPG",
+          "刷刷刷"
+        ],
+        "breakdowns": [
+          "platform",
+          "region"
+        ],
+        "characteristics": [
+          "action_combat",
+          "loot_grind",
+          "gear_score"
+        ],
+        "description": "即时战斗与数值成长并重，刷副本/装备构成核心循环。变现以通行证/外观/卡池为主；关注战力与副本效率、掉落概率、公平性与活动节奏。",
+        "examples": [
+          "Diablo",
+          "Path of Exile",
+          "Torchlight"
+        ],
+        "id": "arpg",
+        "name": "ARPG",
+        "recommended_events": [
+          "session.start",
+          "progression.start",
+          "progression.complete",
+          "economy.earn",
+          "economy.spend",
+          "gacha.pull",
+          "monetization.purchase_success"
+        ],
+        "recommended_metrics": [
+          "retention_d7",
+          "arpu",
+          "arppu",
+          "level_completion_rate"
+        ],
+        "summary": "ARPG 动作角色扮演（Action RPG）"
+      },
+      "battle_royale": {
+        "aliases": [
+          "大逃杀",
+          "吃鸡",
+          "BR"
+        ],
+        "breakdowns": [
+          "map_id",
+          "game_mode"
+        ],
+        "characteristics": [
+          "large_map",
+          "drop_randomness"
+        ],
+        "description": "大地图多人淘汰，搜集-\u003e生存-\u003e圈内博弈，随机掉落与安全区推进影响节奏。变现以外观/通行证/主题活动为主；关注开局死亡热区、圈段存活率、资源热度、匹配时长与性能稳定。",
+        "examples": [
+          "PUBG",
+          "Fortnite",
+          "Apex Legends"
+        ],
+        "id": "battle_royale",
+        "name": "Battle Royale",
+        "recommended_events": [
+          "match.start",
+          "match.end",
+          "performance.frame",
+          "network.rtt"
+        ],
+        "recommended_metrics": [
+          "win_rate",
+          "session_length_p95",
+          "crash_rate"
+        ],
+        "summary": "Battle Royale 大逃杀"
+      },
+      "board_table": {
+        "aliases": [
+          "TAB",
+          "桌游",
+          "棋牌",
+          "棋类",
+          "麻将"
+        ],
+        "breakdowns": [
+          "game_variant"
+        ],
+        "characteristics": [
+          "turn_based",
+          "rules_strict",
+          "social"
+        ],
+        "description": "规则明确、轮次清晰的棋类/桌游/棋牌，社交属性强。变现以买断/道具/房卡为主；关注对局时长、胜率与段位、房间转化、作弊与异常对局。",
+        "examples": [
+          "Chess",
+          "Mahjong",
+          "Uno"
+        ],
+        "id": "board_table",
+        "name": "Board / Table",
+        "recommended_events": [
+          "match.start",
+          "match.end"
+        ],
+        "recommended_metrics": [
+          "win_rate",
+          "session_length_p50"
+        ],
+        "summary": "TAB 桌面/棋牌（Table/Board Game）"
+      },
+      "card_ccg": {
+        "aliases": [
+          "CCG",
+          "卡牌",
+          "集换式卡牌",
+          "TCG"
+        ],
+        "breakdowns": [
+          "card_id",
+          "deck_archetype"
+        ],
+        "characteristics": [
+          "deck_building",
+          "balance"
+        ],
+        "description": "卡牌收集与构筑，对局环境与资源稀缺决定卡组生态。变现以卡包/通行证/皮肤为主；关注卡牌使用率/胜率、卡组原型识别、抽到率与保底机制、环境健康度。",
+        "examples": [
+          "Hearthstone",
+          "Legends of Runeterra"
+        ],
+        "id": "card_ccg",
+        "name": "Card / CCG",
+        "recommended_events": [
+          "match.start",
+          "match.end",
+          "monetization.purchase_success",
+          "gacha.pull"
+        ],
+        "recommended_metrics": [
+          "win_rate",
+          "arpu",
+          "arppu"
+        ],
+        "summary": "Card/CCG 集换式卡牌（Collectible Card Game）"
+      },
+      "casual_puzzle": {
+        "aliases": [
+          "PUZ",
+          "益智",
+          "解谜",
+          "三消"
+        ],
+        "breakdowns": [
+          "platform",
+          "region",
+          "channel",
+          "level_id"
+        ],
+        "characteristics": [
+          "short_sessions",
+          "many_levels",
+          "ads_heavy"
+        ],
+        "description": "轻度解谜/消除，核心循环为关卡尝试-\u003e失败/重试-\u003e道具/体力驱动推进，节奏短平快。变现以激励视频/插屏广告为主，内购为体力/道具/去广告；分析关注关卡漏斗、重试分布、广告曝光/奖励转化与D1/D7留存。",
+        "examples": [
+          "Candy Crush Saga",
+          "Toon Blast",
+          "Homescapes"
+        ],
+        "id": "casual_puzzle",
+        "name": "Casual Puzzle",
+        "recommended_events": [
+          "session.start",
+          "session.end",
+          "progression.start",
+          "progression.complete",
+          "ad.impression",
+          "monetization.purchase_success",
+          "error.crash",
+          "performance.frame"
+        ],
+        "recommended_metrics": [
+          "dau",
+          "retention_d1",
+          "session_length_p50",
+          "ad_arpu",
+          "level_completion_rate"
+        ],
+        "summary": "Casual Puzzle 休闲解谜/消除类"
+      },
+      "fighting_ftg": {
+        "aliases": [
+          "FTG",
+          "格斗"
+        ],
+        "breakdowns": [
+          "character_id",
+          "stage_id"
+        ],
+        "characteristics": [
+          "duel",
+          "frame_data",
+          "combos"
+        ],
+        "description": "1v1或小型多人对战，连段判定与帧数博弈决定对抗深度。变现以买断/角色包/外观为主；关注胜率对战公平、角色对局表、断线率与输入延迟。",
+        "examples": [
+          "Street Fighter",
+          "Tekken",
+          "Mortal Kombat"
+        ],
+        "id": "fighting_ftg",
+        "name": "Fighting (FTG)",
+        "recommended_events": [
+          "match.start",
+          "match.end",
+          "performance.frame",
+          "network.rtt"
+        ],
+        "recommended_metrics": [
+          "win_rate",
+          "session_length_p50",
+          "crash_rate"
+        ],
+        "summary": "FTG 格斗类（Fighting Game）"
+      },
+      "fighting_sim": {
+        "aliases": [
+          "SFTG",
+          "模拟格斗"
+        ],
+        "breakdowns": [
+          "character_id",
+          "arena_id"
+        ],
+        "characteristics": [
+          "simulation",
+          "stamina",
+          "grappling"
+        ],
+        "description": "偏模拟与规则化的格斗/搏击体验，物理与体能系统占比更高。变现以买断/DLC/角色包为主；关注胜率、回合时长、犯规与判罚、网络延迟。",
+        "examples": [
+          "UFC",
+          "WWE 2K"
+        ],
+        "id": "fighting_sim",
+        "name": "Fighting Simulation (SFTG)",
+        "recommended_events": [
+          "match.start",
+          "match.end",
+          "performance.frame",
+          "network.rtt"
+        ],
+        "recommended_metrics": [
+          "win_rate",
+          "session_length_p50",
+          "crash_rate"
+        ],
+        "summary": "SFTG 模拟格斗（Simulation Fighting）"
+      },
+      "flight_sim": {
+        "aliases": [
+          "FLY",
+          "飞行模拟"
+        ],
+        "breakdowns": [
+          "aircraft_id"
+        ],
+        "characteristics": [
+          "simulation",
+          "vehicle",
+          "physics"
+        ],
+        "description": "高真实度载具系统与物理仿真，学习曲线较陡，硬件影响显著。变现以买断/DLC/载具包为主；关注性能与稳定性、会话时长、任务完成率与设备适配。",
+        "examples": [
+          "Microsoft Flight Simulator"
+        ],
+        "id": "flight_sim",
+        "name": "Flight Simulation",
+        "recommended_events": [
+          "session.start",
+          "session.end",
+          "performance.frame",
+          "error.crash"
+        ],
+        "recommended_metrics": [
+          "session_length_p95",
+          "crash_rate"
+        ],
+        "summary": "FLY 飞行模拟（Flight Simulation）"
+      },
+      "hyper_casual": {
+        "aliases": [
+          "HC",
+          "超休闲"
+        ],
+        "breakdowns": [
+          "platform",
+          "channel",
+          "level_id"
+        ],
+        "characteristics": [
+          "ultra_short_sessions",
+          "ua_driven"
+        ],
+        "description": "极简单指操作，核心为快速体验-\u003e分数追求-\u003e关卡或外观轻养成，生命周期短。变现高度依赖广告与买量闭环；关注前3局留存、前端流失、eCPM与曝光/DAU、渠道ROI。",
+        "examples": [
+          "Helix Jump",
+          "Aquapark.io"
+        ],
+        "id": "hyper_casual",
+        "name": "Hyper Casual",
+        "recommended_events": [
+          "session.start",
+          "session.end",
+          "progression.start",
+          "progression.complete",
+          "ad.impression"
+        ],
+        "recommended_metrics": [
+          "dau",
+          "retention_d1",
+          "session_length_p50",
+          "ad_impressions_per_dau"
+        ],
+        "summary": "Hyper Casual 超休闲"
+      },
+      "idle_incremental": {
+        "aliases": [
+          "放置",
+          "挂机",
+          "incremental"
+        ],
+        "breakdowns": [
+          "platform",
+          "region"
+        ],
+        "characteristics": [
+          "offline_income",
+          "long_retention"
+        ],
+        "description": "放置成长与数值指数扩张，在线/离线收益积累驱动解锁与循环深化。变现以加速/产能/离线收益包为主；关注离线收益口径、产消平衡、长期留存与召回、核心节点付费。",
+        "examples": [
+          "Adventure Capitalist",
+          "Idle Heroes"
+        ],
+        "id": "idle_incremental",
+        "name": "Idle / Incremental",
+        "recommended_events": [
+          "session.start",
+          "session.end",
+          "economy.earn",
+          "economy.spend",
+          "progression.complete",
+          "monetization.purchase_success"
+        ],
+        "recommended_metrics": [
+          "retention_d7",
+          "dau",
+          "arpu",
+          "session_length_p95"
+        ],
+        "summary": "Idle/Incremental 放置/增量游戏"
+      },
+      "mmorpg": {
+        "aliases": [
+          "MMORPG",
+          "大型多人在线RPG",
+          "网游RPG"
+        ],
+        "breakdowns": [
+          "platform",
+          "region",
+          "guild_id"
+        ],
+        "characteristics": [
+          "guild",
+          "raid",
+          "economy_complex"
+        ],
+        "description": "大型多人在线，长线成长与公会社交，团队副本/世界事件/交易经济构成核心。变现以月卡/礼包/外观/服务为主；关注公会覆盖与活跃、组队/副本完成、经济通胀/交易异常、跨服活动与服务器稳定性。",
+        "examples": [
+          "World of Warcraft",
+          "Final Fantasy XIV"
+        ],
+        "id": "mmorpg",
+        "name": "MMORPG",
+        "recommended_events": [
+          "session.start",
+          "match.start",
+          "match.end",
+          "social.guild_join",
+          "social.guild_leave",
+          "economy.earn",
+          "economy.spend",
+          "monetization.purchase_success"
+        ],
+        "recommended_metrics": [
+          "retention_d30",
+          "dau",
+          "arpu",
+          "crash_rate"
+        ],
+        "summary": "MMORPG 大型多人在线角色扮演游戏（Massively Multiplayer Online RPG）"
+      },
+      "moba": {
+        "aliases": [
+          "MOBA",
+          "多人在线竞技"
+        ],
+        "breakdowns": [
+          "game_mode",
+          "map_id"
+        ],
+        "characteristics": [
+          "match_based",
+          "roles",
+          "mmr"
+        ],
+        "description": "团队对局，分路与角色定位协作，技能与经济节奏决定胜负。变现以外观/战令为主；关注胜率/KDA、对局时长/中途退出、匹配质量（MMR差/等待时长）、英雄与装备平衡。",
+        "examples": [
+          "League of Legends",
+          "Dota 2",
+          "Honor of Kings"
+        ],
+        "id": "moba",
+        "name": "MOBA",
+        "recommended_events": [
+          "match.start",
+          "match.end",
+          "economy.earn",
+          "monetization.purchase_success",
+          "session.start",
+          "error.crash",
+          "performance.frame"
+        ],
+        "recommended_metrics": [
+          "win_rate",
+          "kda",
+          "session_length_p50",
+          "crash_rate"
+        ],
+        "summary": "MOBA 多人在线战术竞技（Multiplayer Online Battle Arena）"
+      },
+      "narrative_adventure": {
+        "aliases": [
+          "AVG",
+          "冒险",
+          "视觉小说",
+          "VN"
+        ],
+        "breakdowns": [
+          "chapter_id"
+        ],
+        "characteristics": [
+          "branching_story"
+        ],
+        "description": "线性或分支叙事，交互适中，重在剧情推进与演出表现。变现以章节/结局解锁/语音包为主；关注分支选择分布、章节流失节点、结局达成率与周目行为。",
+        "examples": [
+          "Life is Strange",
+          "Steins;Gate"
+        ],
+        "id": "narrative_adventure",
+        "name": "Narrative / Adventure / VN",
+        "recommended_events": [
+          "progression.start",
+          "progression.complete",
+          "ui.screen_view"
+        ],
+        "recommended_metrics": [
+          "retention_d7",
+          "session_length_p50"
+        ],
+        "summary": "Narrative/Adventure/VN 叙事/冒险/视觉小说（Visual Novel）"
+      },
+      "party": {
+        "aliases": [
+          "派对",
+          "聚会"
+        ],
+        "breakdowns": [
+          "game_mode"
+        ],
+        "characteristics": [
+          "short_rounds",
+          "social"
+        ],
+        "description": "轻量聚会社交小游戏，短局高频互动与随机事件提升乐趣。变现以皮肤/票券/套包为主；关注房间转化、掉线/重连、模式参与与留存。",
+        "examples": [
+          "Fall Guys",
+          "Mario Party"
+        ],
+        "id": "party",
+        "name": "Party",
+        "recommended_events": [
+          "match.start",
+          "match.end",
+          "session.start"
+        ],
+        "recommended_metrics": [
+          "win_rate",
+          "retention_d1"
+        ],
+        "summary": "Party 派对小游戏"
+      },
+      "platformer_metroidvania": {
+        "aliases": [
+          "平台动作",
+          "银河城",
+          "横版"
+        ],
+        "breakdowns": [
+          "level_id"
+        ],
+        "characteristics": [
+          "precision_movement"
+        ],
+        "description": "平台跳跃与战斗、探索解锁相结合，地图回溯式进展。变现以买断/DLC/外观为主；关注死亡热力点、机关/跳跃失败、关卡时长与重试。",
+        "examples": [
+          "Hollow Knight",
+          "Ori",
+          "Celeste",
+          "Metroid"
+        ],
+        "id": "platformer_metroidvania",
+        "name": "Platformer / Metroidvania",
+        "recommended_events": [
+          "progression.start",
+          "progression.fail",
+          "progression.complete",
+          "performance.frame"
+        ],
+        "recommended_metrics": [
+          "level_completion_rate",
+          "retries_avg"
+        ],
+        "summary": "Platformer/Metroidvania 横版平台/银河城"
+      },
+      "racing": {
+        "aliases": [
+          "RAC",
+          "竞速",
+          "赛车"
+        ],
+        "breakdowns": [
+          "track_id",
+          "game_mode"
+        ],
+        "characteristics": [
+          "timed_runs",
+          "vehicle_handling"
+        ],
+        "description": "车辆操控与赛道熟练度决定成绩，含计时赛与对战赛。变现以车辆/外观/通行证为主；关注成绩分布、碰撞/犯规、匹配与延迟、赛道偏好。",
+        "examples": [
+          "Forza Horizon",
+          "Gran Turismo",
+          "Mario Kart"
+        ],
+        "id": "racing",
+        "name": "Racing",
+        "recommended_events": [
+          "match.start",
+          "match.end",
+          "performance.frame",
+          "error.crash"
+        ],
+        "recommended_metrics": [
+          "session_length_p50",
+          "crash_rate"
+        ],
+        "summary": "Racing 赛车竞速（RAC）"
+      },
+      "raising_sim": {
+        "aliases": [
+          "EDU",
+          "养成",
+          "育成"
+        ],
+        "breakdowns": [
+          "stage_id"
+        ],
+        "characteristics": [
+          "raising",
+          "education",
+          "long_term"
+        ],
+        "description": "以养成/教学为目标的轻交互体验，强调长期陪伴与阶段成果。变现以订阅/礼包/道具为主；关注阶段转化、长期留存与召回、内容完成度。",
+        "examples": [
+          "Princess Maker",
+          "Tamagotchi"
+        ],
+        "id": "raising_sim",
+        "name": "Raising / Education",
+        "recommended_events": [
+          "progression.start",
+          "progression.complete",
+          "monetization.purchase_success"
+        ],
+        "recommended_metrics": [
+          "retention_d30",
+          "arpu"
+        ],
+        "summary": "EDU 养成/教育（Raising/Education）"
+      },
+      "rhythm": {
+        "aliases": [
+          "音游",
+          "节奏",
+          "音乐游戏"
+        ],
+        "breakdowns": [
+          "song_id",
+          "difficulty"
+        ],
+        "characteristics": [
+          "timing_accuracy"
+        ],
+        "description": "音乐节奏判定，谱面/手感与判定窗口共同塑造体验。变现以曲包/订阅/外观为主；关注命中偏差分布、谱面难度与通过率、设备/延迟校准影响。",
+        "examples": [
+          "Beat Saber",
+          "Cytus",
+          "osu!"
+        ],
+        "id": "rhythm",
+        "name": "Rhythm",
+        "recommended_events": [
+          "session.start",
+          "session.end",
+          "ui.screen_view"
+        ],
+        "recommended_metrics": [
+          "session_length_p50",
+          "retention_d7"
+        ],
+        "summary": "Rhythm 音乐节奏"
+      },
+      "roguelike": {
+        "aliases": [
+          "Rogue",
+          "肉鸽"
+        ],
+        "breakdowns": [
+          "level_id"
+        ],
+        "characteristics": [
+          "random_nodes",
+          "replayability"
+        ],
+        "description": "随机关卡/构筑与复玩性强，失败-重来推动技能熟练与路线探索。变现以内购解锁/外观/轻度成长为主；关注层数/节点通过率、构筑选择热度、死亡原因与复玩间隔。",
+        "examples": [
+          "Hades",
+          "Dead Cells",
+          "Slay the Spire"
+        ],
+        "id": "roguelike",
+        "name": "Roguelike / Roguelite",
+        "recommended_events": [
+          "progression.start",
+          "progression.fail",
+          "progression.complete",
+          "economy.earn"
+        ],
+        "recommended_metrics": [
+          "level_completion_rate",
+          "retries_avg",
+          "retention_d7"
+        ],
+        "summary": "Roguelike/Roguelite 类 Rogue 随机地牢"
+      },
+      "rpg": {
+        "aliases": [
+          "RPG",
+          "角色扮演"
+        ],
+        "breakdowns": [
+          "platform",
+          "region",
+          "chapter_id"
+        ],
+        "characteristics": [
+          "long_term_progression",
+          "gear_score",
+          "gacha"
+        ],
+        "description": "角色养成（等级/装备/技能）与副本推进，抽卡或掉落构成长线追求。变现以卡池/礼包/战令为主；关注等级/战力进度、付费漏斗与LTV、保底与稀有度、公平性与活动节奏。",
+        "examples": [
+          "Final Fantasy",
+          "Dragon Quest"
+        ],
+        "id": "rpg",
+        "name": "RPG",
+        "recommended_events": [
+          "session.start",
+          "progression.start",
+          "progression.complete",
+          "economy.earn",
+          "economy.spend",
+          "gacha.pull",
+          "monetization.purchase_success",
+          "match.start",
+          "match.end"
+        ],
+        "recommended_metrics": [
+          "dau",
+          "retention_d7",
+          "arpu",
+          "arppu",
+          "win_rate",
+          "kda"
+        ],
+        "summary": "RPG 角色扮演游戏（Role-Playing Game）"
+      },
+      "rts": {
+        "aliases": [
+          "RTS",
+          "即时战略",
+          "即时策略"
+        ],
+        "breakdowns": [
+          "map_id",
+          "game_mode"
+        ],
+        "characteristics": [
+          "real_time",
+          "macro_micro",
+          "base_building"
+        ],
+        "description": "实时资源采集、建造与部队指挥，运营与微操并重。变现以买断/DLC/装饰/赛季为主；关注胜率、对局时长、APM近似指标（可由操作频次估算）、匹配等待与性能。",
+        "examples": [
+          "StarCraft",
+          "Age of Empires"
+        ],
+        "id": "rts",
+        "name": "RTS",
+        "recommended_events": [
+          "match.start",
+          "match.end",
+          "performance.frame"
+        ],
+        "recommended_metrics": [
+          "win_rate",
+          "session_length_p50",
+          "crash_rate"
+        ],
+        "summary": "RTS 即时战略（Real-Time Strategy）"
+      },
+      "sandbox_survival": {
+        "aliases": [
+          "沙盒",
+          "生存",
+          "开放世界"
+        ],
+        "breakdowns": [
+          "biome_id"
+        ],
+        "characteristics": [
+          "open_world",
+          "crafting",
+          "harvesting"
+        ],
+        "description": "开放世界采集/制作/建造与生存压力驱动，目标自定与高自由度。变现以DLC/装饰/服务器服务为主；关注资源热区、合成/蓝图漏斗、死亡/饥饿/环境致死、长期稳定性。",
+        "examples": [
+          "Minecraft",
+          "ARK",
+          "Rust"
+        ],
+        "id": "sandbox_survival",
+        "name": "Sandbox / Survival",
+        "recommended_events": [
+          "craft.complete",
+          "progression.complete",
+          "performance.frame",
+          "error.crash"
+        ],
+        "recommended_metrics": [
+          "session_length_p95",
+          "crash_rate"
+        ],
+        "summary": "Sandbox/Survival 沙盒/生存"
+      },
+      "shooter": {
+        "aliases": [
+          "FPS",
+          "TPS",
+          "射击",
+          "枪战"
+        ],
+        "breakdowns": [
+          "weapon_id",
+          "map_id",
+          "game_mode"
+        ],
+        "characteristics": [
+          "aim_precision",
+          "net_sensitivity"
+        ],
+        "description": "射击命中与手感为核心，地图资源与回合目标塑造战斗节奏。变现以外观/通行证为主；关注命中/爆头率、TTK、网络延迟/抖动/丢包、外挂与异常行为线索。",
+        "examples": [
+          "Counter-Strike",
+          "Call of Duty",
+          "Overwatch"
+        ],
+        "id": "shooter",
+        "name": "Shooter FPS/TPS",
+        "recommended_events": [
+          "match.start",
+          "match.end",
+          "performance.frame",
+          "network.rtt",
+          "error.crash",
+          "monetization.purchase_success",
+          "combat.stats"
+        ],
+        "recommended_metrics": [
+          "accuracy_rate",
+          "win_rate",
+          "session_length_p50",
+          "crash_rate"
+        ],
+        "summary": "Shooter 第一/第三人称射击（First/Third-Person Shooter）"
+      },
+      "simulation_tycoon": {
+        "aliases": [
+          "SIM",
+          "模拟经营"
+        ],
+        "breakdowns": [
+          "region"
+        ],
+        "characteristics": [
+          "production_cycle",
+          "long_path_optimization"
+        ],
+        "description": "经营循环（产出-\u003e加工-\u003e销售-\u003e再投资）与长期规划，系统耦合复杂。变现以加速/货币包/DLC为主；关注产销与库存周转、建造/解锁节奏、用户分层与长期留存。",
+        "examples": [
+          "SimCity",
+          "Cities: Skylines",
+          "Planet Coaster"
+        ],
+        "id": "simulation_tycoon",
+        "name": "Simulation / Tycoon",
+        "recommended_events": [
+          "economy.earn",
+          "economy.spend",
+          "craft.complete",
+          "monetization.purchase_success"
+        ],
+        "recommended_metrics": [
+          "arpu",
+          "retention_d30"
+        ],
+        "summary": "Simulation/Tycoon 模拟经营"
+      },
+      "social_casino": {
+        "aliases": [
+          "社交赌场",
+          "Slots",
+          "Poker"
+        ],
+        "breakdowns": [
+          "region"
+        ],
+        "characteristics": [
+          "rtp",
+          "chips_economy"
+        ],
+        "description": "模拟博彩机制，筹码经济与RTP/波动性调控支撑长期留存。变现以筹码包/订阅/活动为主；关注RTP/波动、下注/筹码留存、付费/广告收益结构与风控异常。",
+        "examples": [
+          "Slotomania",
+          "Zynga Poker"
+        ],
+        "id": "social_casino",
+        "name": "Social Casino",
+        "recommended_events": [
+          "economy.earn",
+          "economy.spend",
+          "monetization.purchase_success",
+          "ad.impression"
+        ],
+        "recommended_metrics": [
+          "arpu",
+          "arppu",
+          "ad_arpu",
+          "retention_d30"
+        ],
+        "summary": "Social Casino 社交赌场/模拟博彩"
+      },
+      "sports": {
+        "aliases": [
+          "SPG",
+          "体育"
+        ],
+        "breakdowns": [
+          "game_mode"
+        ],
+        "characteristics": [
+          "competitive_rules",
+          "teamplay"
+        ],
+        "description": "基于真实或拟制体育规则的对抗或团队竞技，数据结构化且公平性要求高。变现以包年/通行证/外观为主；关注胜率/段位、犯规与公平性、延迟与断线、模式参与。",
+        "examples": [
+          "EA Sports FC",
+          "NBA 2K"
+        ],
+        "id": "sports",
+        "name": "Sports",
+        "recommended_events": [
+          "match.start",
+          "match.end",
+          "performance.frame",
+          "error.crash"
+        ],
+        "recommended_metrics": [
+          "win_rate",
+          "session_length_p50",
+          "crash_rate"
+        ],
+        "summary": "Sports 体育类（SPG）"
+      },
+      "srpg": {
+        "aliases": [
+          "SRPG",
+          "战棋RPG",
+          "策略RPG"
+        ],
+        "breakdowns": [
+          "level_id"
+        ],
+        "characteristics": [
+          "turn_based",
+          "grid_combat",
+          "lineup"
+        ],
+        "description": "回合制网格战斗与养成结合，关卡策略性强。变现以卡池/角色包/皮肤为主；关注关卡完成率与重试、角色/阵容使用率、活动关卡参与度。",
+        "examples": [
+          "Fire Emblem",
+          "Disgaea",
+          "Triangle Strategy"
+        ],
+        "id": "srpg",
+        "name": "SRPG",
+        "recommended_events": [
+          "progression.start",
+          "progression.fail",
+          "progression.complete",
+          "gacha.pull",
+          "monetization.purchase_success"
+        ],
+        "recommended_metrics": [
+          "level_completion_rate",
+          "retries_avg",
+          "retention_d7"
+        ],
+        "summary": "SRPG 战棋/策略角色扮演（Simulation/Tactical RPG）"
+      },
+      "strategy_4x": {
+        "aliases": [
+          "SLG",
+          "4X",
+          "策略"
+        ],
+        "breakdowns": [
+          "region"
+        ],
+        "characteristics": [
+          "resources",
+          "build_tech",
+          "wars"
+        ],
+        "description": "资源采集-\u003e建筑升级-\u003e科技解锁-\u003e扩张对抗的长周期策略循环。变现以加速/资源/建造队列为主；关注资源产消比、建筑/科技进度、战报胜率与损耗、联盟活跃与留存。",
+        "examples": [
+          "Civilization",
+          "Clash of Clans",
+          "Stellaris"
+        ],
+        "id": "strategy_4x",
+        "name": "Strategy 4X/SLG",
+        "recommended_events": [
+          "progression.start",
+          "progression.complete",
+          "economy.earn",
+          "economy.spend",
+          "match.end"
+        ],
+        "recommended_metrics": [
+          "retention_d7",
+          "dau",
+          "arpu"
+        ],
+        "summary": "Strategy 4X/SLG 策略（4X: eXplore/eXpand/eXploit/eXterminate）"
+      },
+      "tower_defense": {
+        "aliases": [
+          "TD",
+          "塔防"
+        ],
+        "breakdowns": [
+          "level_id",
+          "map_id"
+        ],
+        "characteristics": [
+          "waves",
+          "pathing",
+          "tower_building"
+        ],
+        "description": "路径/格点上布置防御塔抵御波次进攻，资源分配与塔型搭配为核心。变现以广告/关卡包/增益为主；关注关卡难度与失败波次、塔型使用率、瓶颈路口热力、广告收益。",
+        "examples": [
+          "Plants vs. Zombies",
+          "Kingdom Rush",
+          "Bloons TD"
+        ],
+        "id": "tower_defense",
+        "name": "Tower Defense",
+        "recommended_events": [
+          "progression.start",
+          "progression.fail",
+          "progression.complete",
+          "ad.impression",
+          "monetization.purchase_success"
+        ],
+        "recommended_metrics": [
+          "level_completion_rate",
+          "retries_avg",
+          "ad_arpu",
+          "retention_d7"
+        ],
+        "summary": "Tower Defense 塔防（TD）"
+      }
+    },
+    "metrics_by_id": {
+      "accuracy_rate": {
+        "denominator": "sum(combat.stats.shots)",
+        "dimensions": [
+          "weapon_id",
+          "map_id"
+        ],
+        "id": "accuracy_rate",
+        "numerator": "sum(combat.stats.hits)",
+        "type": "ratio",
+        "zh_desc": "命中次数占射击次数的比例，反映射击精度。",
+        "zh_name": "命中率"
+      },
+      "ad_arpu": {
+        "dimensions": [
+          "ad_network",
+          "placement_id",
+          "platform"
+        ],
+        "formula": "sum(ad.impression.revenue_usd) / dau",
+        "id": "ad_arpu",
+        "type": "gauge",
+        "window": "1d",
+        "zh_desc": "当日广告收入除以DAU，衡量广告变现强度。",
+        "zh_name": "广告ARPU"
+      },
+      "ad_impressions_per_dau": {
+        "dimensions": [
+          "ad_network",
+          "placement_id",
+          "platform"
+        ],
+        "formula": "count(ad.impression) / dau",
+        "id": "ad_impressions_per_dau",
+        "type": "gauge",
+        "window": "1d",
+        "zh_desc": "广告曝光次数除以DAU，反映人均曝光强度。",
+        "zh_name": "广告曝光数/DAU"
+      },
+      "afk_leave_rate": {
+        "denominator": "count(match.end)",
+        "dimensions": [
+          "game_variant"
+        ],
+        "id": "afk_leave_rate",
+        "numerator": "count(match.end where result = 'abandon')",
+        "type": "ratio",
+        "zh_desc": "以放弃/掉线结束的对局占比，衡量对局稳定与反作弊。",
+        "zh_name": "中途离场率"
+      },
+      "anr_rate": {
+        "denominator": "count(session.end)",
+        "dimensions": [
+          "platform",
+          "app_version"
+        ],
+        "id": "anr_rate",
+        "numerator": "count(error.anr)",
+        "type": "ratio",
+        "zh_desc": "ANR事件数（error.anr）占会话结束数（session.end）的比例，越低越好。",
+        "zh_name": "ANR率"
+      },
+      "arppu": {
+        "dimensions": [
+          "region",
+          "platform"
+        ],
+        "formula": "sum(monetization.purchase_success.price_usd) / unique(purchasers)",
+        "id": "arppu",
+        "type": "gauge",
+        "window": "1d",
+        "zh_desc": "当日总收入除以付费用户数，反映付费深度。",
+        "zh_name": "每付费用户平均收入（ARPPU）"
+      },
+      "arpu": {
+        "dimensions": [
+          "region",
+          "platform",
+          "channel"
+        ],
+        "formula": "sum(monetization.purchase_success.price_usd) / dau",
+        "id": "arpu",
+        "type": "gauge",
+        "window": "1d",
+        "zh_desc": "当日总收入除以DAU，反映平均变现能力。",
+        "zh_name": "每用户平均收入（ARPU）"
+      },
+      "avg_round_duration": {
+        "agg": "p50",
+        "dimensions": [
+          "game_variant",
+          "stakes"
+        ],
+        "id": "avg_round_duration",
+        "source": "round.end.duration_ms",
+        "type": "histogram",
+        "unit": "ms",
+        "zh_desc": "round.end.duration_ms 的中位数，描述单回合典型耗时。",
+        "zh_name": "回合时长P50"
+      },
+      "card_usage_rate": {
+        "denominator": "count(match.end)",
+        "dimensions": [
+          "card_id",
+          "deck_archetype"
+        ],
+        "id": "card_usage_rate",
+        "numerator": "count(match.end where contains(deck_cards, card_id))",
+        "type": "ratio",
+        "zh_desc": "含指定卡牌的对局占全部对局的比例，反映卡牌出场频率。",
+        "zh_name": "卡牌使用率"
+      },
+      "card_win_rate": {
+        "denominator": "count(match.end where contains(deck_cards, card_id))",
+        "dimensions": [
+          "card_id",
+          "deck_archetype"
+        ],
+        "id": "card_win_rate",
+        "numerator": "count(match.end where match_result = 'win' and contains(deck_cards, card_id))",
+        "type": "ratio",
+        "zh_desc": "使用指定卡牌的对局中获胜的比例，反映卡牌强度。",
+        "zh_name": "卡牌胜率"
+      },
+      "crash_free_users_rate": {
+        "denominator": "unique(user_id) on session.start",
+        "dimensions": [
+          "platform",
+          "app_version"
+        ],
+        "id": "crash_free_users_rate",
+        "numerator": "unique(user_id) with no error.crash",
+        "type": "ratio",
+        "zh_desc": "当日启动过的用户中，从未发生崩溃的用户占比，衡量整体稳定性体验。",
+        "zh_name": "无崩溃用户占比"
+      },
+      "crash_rate": {
+        "denominator": "count(session.end)",
+        "dimensions": [
+          "platform",
+          "app_version"
+        ],
+        "id": "crash_rate",
+        "numerator": "count(error.crash)",
+        "type": "ratio",
+        "zh_desc": "崩溃事件数（error.crash）占会话结束数（session.end）的比例，越低越好。",
+        "zh_name": "崩溃率"
+      },
+      "dau": {
+        "dimensions": [
+          "platform",
+          "region",
+          "channel"
+        ],
+        "id": "dau",
+        "source": "unique(user_id) on events in [session.start, user.login]",
+        "type": "counter",
+        "window": "1d",
+        "zh_desc": "当日内产生关键事件（session.start 或 user.login）的独立用户数量，用于衡量日活规模。",
+        "zh_name": "日活跃用户数"
+      },
+      "deck_archetype_share": {
+        "denominator": "count(match.end)",
+        "dimensions": [
+          "deck_archetype"
+        ],
+        "id": "deck_archetype_share",
+        "numerator": "count(match.end where deck_archetype = X)",
+        "type": "ratio",
+        "zh_desc": "指定卡组原型参与的对局占比，反映环境占有率。",
+        "zh_name": "卡组原型占比"
+      },
+      "deck_archetype_win_rate": {
+        "denominator": "count(match.end where deck_archetype = X)",
+        "dimensions": [
+          "deck_archetype"
+        ],
+        "id": "deck_archetype_win_rate",
+        "numerator": "count(match.end where match_result = 'win' and deck_archetype = X)",
+        "type": "ratio",
+        "zh_desc": "指定卡组原型对局中的胜率，反映环境强度。",
+        "zh_name": "卡组原型胜率"
+      },
+      "economy_balance_ratio": {
+        "dimensions": [
+          "platform",
+          "region"
+        ],
+        "formula": "sum(economy.earn.amount) / nullif(sum(economy.spend.amount),0)",
+        "id": "economy_balance_ratio",
+        "type": "gauge",
+        "window": "1d",
+        "zh_desc": "收入总额与支出总额的比值，衡量游戏内经济供需平衡。",
+        "zh_name": "经济产消比"
+      },
+      "idle_offline_income_share": {
+        "denominator": "sum(economy.earn.amount)",
+        "dimensions": [
+          "platform",
+          "region"
+        ],
+        "id": "idle_offline_income_share",
+        "numerator": "sum(economy.earn.amount where source = 'offline')",
+        "type": "ratio",
+        "window": "1d",
+        "zh_desc": "离线来源的收益金额占总收益金额的比例，用于评估放置收益依赖度。",
+        "zh_name": "离线收益占比"
+      },
+      "kda": {
+        "dimensions": [
+          "game_mode",
+          "hero_id"
+        ],
+        "formula": "(sum(kills) + sum(assists)) / max(1, sum(deaths))",
+        "id": "kda",
+        "source": "match.end",
+        "type": "gauge",
+        "zh_desc": "（击杀+助攻）/ max(1, 死亡）在统计窗口内的聚合，反映个人战绩表现。",
+        "zh_name": "KDA"
+      },
+      "level_completion_rate": {
+        "denominator": "count(progression.start)",
+        "dimensions": [
+          "level_id",
+          "difficulty"
+        ],
+        "id": "level_completion_rate",
+        "numerator": "count(progression.complete)",
+        "type": "ratio",
+        "zh_desc": "关卡完成事件占关卡开始事件的比例，衡量关卡难度与漏斗。",
+        "zh_name": "关卡完成率"
+      },
+      "mau": {
+        "dimensions": [
+          "platform",
+          "region"
+        ],
+        "id": "mau",
+        "source": "unique(user_id) on events in [session.start, user.login]",
+        "type": "counter",
+        "window": "30d",
+        "zh_desc": "最近30天内产生关键事件的独立用户数量（日去重），衡量月活规模。",
+        "zh_name": "月活跃用户数"
+      },
+      "pity_counter_avg": {
+        "dimensions": [
+          "pool_id"
+        ],
+        "formula": "avg(gacha.pull.pity_counter)",
+        "id": "pity_counter_avg",
+        "type": "gauge",
+        "zh_desc": "抽卡保底计数的平均值，反映卡池保底区间的实际位置。",
+        "zh_name": "平均保底计数"
+      },
+      "pur": {
+        "denominator": "dau",
+        "dimensions": [
+          "channel",
+          "platform"
+        ],
+        "id": "pur",
+        "numerator": "unique(purchasers)",
+        "type": "ratio",
+        "window": "1d",
+        "zh_desc": "当日付费用户数占DAU的比例，衡量付费渗透。",
+        "zh_name": "付费率（PUR）"
+      },
+      "queue_time_p95": {
+        "agg": "p95",
+        "dimensions": [
+          "queue_type",
+          "game_mode",
+          "region"
+        ],
+        "id": "queue_time_p95",
+        "source": "match.start.queue_time_ms",
+        "type": "histogram",
+        "unit": "ms",
+        "zh_desc": "匹配开始事件中的排队等待时长的95分位，反映极端等待体验。",
+        "zh_name": "匹配等待时长P95"
+      },
+      "rake_rate": {
+        "dimensions": [
+          "game_variant",
+          "stakes"
+        ],
+        "formula": "sum(match.end.rake) / nullif(sum(match.end.pot),0)",
+        "id": "rake_rate",
+        "type": "gauge",
+        "zh_desc": "平台抽佣金额占底池或有效投注金额的比例，衡量商业化合理性。",
+        "zh_name": "抽水率"
+      },
+      "retention_d1": {
+        "denominator": "users with user.register on day 0",
+        "dimensions": [
+          "channel",
+          "platform",
+          "region"
+        ],
+        "id": "retention_d1",
+        "numerator": "users with session.start on day+1 and user.register on day 0",
+        "type": "ratio",
+        "window": "1d",
+        "zh_desc": "在注册当日（D0）注册且在次日（D1）仍有启动/游玩行为的用户占比；分母为D0注册用户数。",
+        "zh_name": "次日留存率"
+      },
+      "retention_d30": {
+        "denominator": "users with user.register on day 0",
+        "dimensions": [
+          "channel",
+          "platform"
+        ],
+        "id": "retention_d30",
+        "numerator": "users with session.start on day+30 and user.register on day 0",
+        "type": "ratio",
+        "window": "30d",
+        "zh_desc": "在注册当日（D0）注册且在第30天（D30）仍有启动/游玩行为的用户占比。",
+        "zh_name": "30日留存率"
+      },
+      "retention_d7": {
+        "denominator": "users with user.register on day 0",
+        "dimensions": [
+          "channel",
+          "platform"
+        ],
+        "id": "retention_d7",
+        "numerator": "users with session.start on day+7 and user.register on day 0",
+        "type": "ratio",
+        "window": "7d",
+        "zh_desc": "在注册当日（D0）注册且在第7天（D7）仍有启动/游玩行为的用户占比。",
+        "zh_name": "7日留存率"
+      },
+      "retries_avg": {
+        "dimensions": [
+          "level_id"
+        ],
+        "formula": "avg(progression.complete.retries)",
+        "id": "retries_avg",
+        "type": "gauge",
+        "zh_desc": "每次关卡完成前的平均重试次数，反映关卡挑战性。",
+        "zh_name": "平均重试次数"
+      },
+      "session_length_p50": {
+        "agg": "p50",
+        "dimensions": [
+          "platform",
+          "region",
+          "entry_point"
+        ],
+        "id": "session_length_p50",
+        "source": "session.end.duration_ms",
+        "type": "histogram",
+        "unit": "ms",
+        "zh_desc": "会话结束事件（session.end.duration_ms）的中位数，反映典型单次游玩时长。",
+        "zh_name": "会话时长P50"
+      },
+      "session_length_p95": {
+        "agg": "p95",
+        "dimensions": [
+          "platform",
+          "region"
+        ],
+        "id": "session_length_p95",
+        "source": "session.end.duration_ms",
+        "type": "histogram",
+        "unit": "ms",
+        "zh_desc": "会话结束事件（session.end.duration_ms）的95分位，反映重度用户或极端会话时长。",
+        "zh_name": "会话时长P95"
+      },
+      "td_avg_hearts_remaining": {
+        "dimensions": [
+          "level_id",
+          "difficulty"
+        ],
+        "formula": "avg(progression.complete.hearts_remaining)",
+        "id": "td_avg_hearts_remaining",
+        "type": "gauge",
+        "zh_desc": "通关时剩余生命（或“心”）的平均值，反映通关裕量。",
+        "zh_name": "平均残余生命"
+      },
+      "td_level_clear_rate": {
+        "denominator": "count(progression.start)",
+        "dimensions": [
+          "level_id",
+          "difficulty"
+        ],
+        "id": "td_level_clear_rate",
+        "numerator": "count(progression.complete)",
+        "type": "ratio",
+        "zh_desc": "塔防关卡的完成率，衡量关卡难度与节奏。",
+        "zh_name": "塔防关卡通关率"
+      },
+      "td_tower_usage_rate_by_type": {
+        "denominator": "count(progression.start)",
+        "dimensions": [
+          "tower_type",
+          "level_id"
+        ],
+        "id": "td_tower_usage_rate_by_type",
+        "numerator": "count(td.tower.build where tower_type = T)",
+        "type": "ratio",
+        "zh_desc": "各塔型被建造的频次占比，评估塔型热度与平衡。",
+        "zh_name": "塔型使用率"
+      },
+      "td_upgrade_rate": {
+        "denominator": "count(td.tower.build)",
+        "dimensions": [
+          "level_id"
+        ],
+        "id": "td_upgrade_rate",
+        "numerator": "count(td.tower.upgrade)",
+        "type": "ratio",
+        "zh_desc": "升级次数相对建造次数的比例，反映升级策略与资源压力。",
+        "zh_name": "塔升级率"
+      },
+      "td_wave_fail_rate_by_wave": {
+        "denominator": "count(progression.start where wave_index is not null)",
+        "dimensions": [
+          "level_id",
+          "wave_index"
+        ],
+        "id": "td_wave_fail_rate_by_wave",
+        "numerator": "count(progression.fail where wave_index is not null)",
+        "type": "ratio",
+        "zh_desc": "在各波次发生失败的比例，定位具体波次的难点。",
+        "zh_name": "各波次失败率"
+      },
+      "wau": {
+        "dimensions": [
+          "platform",
+          "region"
+        ],
+        "id": "wau",
+        "source": "unique(user_id) on events in [session.start, user.login]",
+        "type": "counter",
+        "window": "7d",
+        "zh_desc": "最近7天内产生关键事件的独立用户数量（日去重），衡量周活规模。",
+        "zh_name": "周活跃用户数"
+      },
+      "win_rate": {
+        "denominator": "count(match.end)",
+        "dimensions": [
+          "game_mode",
+          "map_id"
+        ],
+        "id": "win_rate",
+        "numerator": "count(match.end where match_result = 'win')",
+        "type": "ratio",
+        "zh_desc": "胜场数占总对局数的比例，可按模式/地图等维度切片。",
+        "zh_name": "胜率"
+      },
+      "win_rate_by_seat": {
+        "denominator": "count(match.end)",
+        "dimensions": [
+          "seat_id",
+          "game_variant"
+        ],
+        "id": "win_rate_by_seat",
+        "numerator": "count(match.end where result = 'win')",
+        "type": "ratio",
+        "zh_desc": "不同座位位次的胜率，用于公平性与位置优势分析。",
+        "zh_name": "按座位胜率"
+      }
+    }
+  }
+}
