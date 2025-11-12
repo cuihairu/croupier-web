@@ -32,6 +32,7 @@ export default {
   'menu.GameManagement.GameEnvironments': 'Game Environments',
   'menu.GameManagement.GameEntities': 'Entity Management',
   'menu.GameManagement.GameFunctions': 'Function Management',
+  'menu.GameManagement.ComponentManagement': 'Component Management',
   'menu.GameManagement.GameAssignments': 'Function Assignments',
   'menu.GameManagement.GamePacks': 'Pack Management',
 

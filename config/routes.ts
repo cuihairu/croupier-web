@@ -207,6 +207,13 @@ export default [
         access: 'canFunctionsRead',
         component: './GmFunctions',
       },
+      // 新增统一组件管理中心
+      {
+        path: '/game/component-management',
+        name: 'ComponentManagement',
+        access: 'canFunctionsRead',
+        component: './ComponentManagement',
+      },
       // 游戏运营管理
       {
         path: '/game/assignments',

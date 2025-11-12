@@ -32,6 +32,7 @@ export default {
   'menu.GameManagement.GameEnvironments': '游戏环境',
   'menu.GameManagement.GameEntities': '实体管理',
   'menu.GameManagement.GameFunctions': '功能管理',
+  'menu.GameManagement.ComponentManagement': '组件管理',
   'menu.GameManagement.GameAssignments': '功能分配',
   'menu.GameManagement.GamePacks': '功能包管理',
 

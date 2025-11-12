@@ -16,6 +16,11 @@ export default function access(initialState: { currentUser?: API.CurrentUser } |
     canPacksReload: has('packs:reload') || has('admin'),
     canPacksExport: has('packs:export') || has('admin'),
     canAuditRead: has('audit:read') || has('admin'),
+    // Functions management
+    canFunctionsRead: has('functions:read') || has('functions:manage') || has('admin'),
+    canFunctionsManage: has('functions:manage') || has('admin'),
+    canEntitiesRead: has('entities:read') || has('entities:manage') || has('admin'),
+    canPacksRead: has('packs:read') || has('packs:manage') || has('admin'),
     // 运维管理（Ops）
     canOpsRead: has('ops:read') || has('admin') || has('registry:read'),
     canOpsManage: has('ops:manage') || has('admin'),
