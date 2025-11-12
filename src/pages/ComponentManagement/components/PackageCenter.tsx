@@ -43,19 +43,27 @@ export default function PackageCenter() {
       const response = await fetch('/api/packs/list');
       const data = await response.json();
 
-      // 转换包数据为UI需要的格式
-      const packageList = data.packages?.map((pkg: any) => ({
-        id: pkg.id,
-        name: pkg.name || pkg.id,
-        version: pkg.version || '1.0.0',
-        description: pkg.description || '暂无描述',
-        author: pkg.author || '未知',
-        enabled: pkg.enabled ?? true,
-        functions: Object.keys(pkg.functions || {}),
-        installTime: pkg.installTime || new Date().toISOString(),
-        status: pkg.enabled ? 'active' : 'inactive',
-        dependencies: pkg.dependencies || []
-      })) || [];
+      // 转换包数据为UI需要的格式 - 添加严格的数据验证
+      let packageList: PackageInfo[] = [];
+
+      if (data && Array.isArray(data.packages)) {
+        packageList = data.packages.map((pkg: any) => ({
+          id: pkg.id,
+          name: pkg.name || pkg.id,
+          version: pkg.version || '1.0.0',
+          description: pkg.description || '暂无描述',
+          author: pkg.author || '未知',
+          enabled: pkg.enabled ?? true,
+          functions: Object.keys(pkg.functions || {}),
+          installTime: pkg.installTime || new Date().toISOString(),
+          status: pkg.enabled ? 'active' : 'inactive',
+          dependencies: pkg.dependencies || []
+        }));
+      } else {
+        // API返回错误或格式不正确时，使用空数组
+        console.warn('API返回数据格式不正确:', data);
+        packageList = [];
+      }
 
       setPackages(packageList);
     } catch (error) {

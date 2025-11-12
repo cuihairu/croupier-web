@@ -56,22 +56,31 @@ export default function ComponentManagement() {
   const loadStats = async () => {
     try {
       const [descriptors, registry, packs, entities] = await Promise.all([
-        fetch('/api/descriptors').then(r => r.json()),
-        fetch('/api/registry').then(r => r.json()),
-        fetch('/api/packs/list').then(r => r.json()),
-        fetch('/api/entities/list').then(r => r.json()) // 新增实体统计
+        fetch('/api/descriptors').then(r => r.json()).catch(() => ({})),
+        fetch('/api/registry').then(r => r.json()).catch(() => ({})),
+        fetch('/api/packs/list').then(r => r.json()).catch(() => ({})),
+        fetch('/api/entities/list').then(r => r.json()).catch(() => ({}))
       ]);
 
       setStats({
-        totalFunctions: Object.keys(descriptors || {}).length,
-        activeFunctions: Object.values(descriptors || {}).filter((d: any) => d.enabled).length,
+        totalFunctions: descriptors && typeof descriptors === 'object' ? Object.keys(descriptors).length : 0,
+        activeFunctions: descriptors && typeof descriptors === 'object' ? Object.values(descriptors).filter((d: any) => d?.enabled).length : 0,
         runningJobs: 0, // TODO: 从job API获取
-        availablePackages: packs?.packages?.length || 0,
-        connectedAgents: registry?.agents?.filter((a: any) => a.connected)?.length || 0,
-        virtualObjects: entities?.entities?.length || 0 // 新增虚拟对象统计
+        availablePackages: packs?.packages && Array.isArray(packs.packages) ? packs.packages.length : 0,
+        connectedAgents: registry?.agents && Array.isArray(registry.agents) ? registry.agents.filter((a: any) => a?.connected).length : 0,
+        virtualObjects: entities?.entities && Array.isArray(entities.entities) ? entities.entities.length : 0
       });
     } catch (error) {
       console.error('Failed to load function stats:', error);
+      // 如果网络完全失败，设置默认值
+      setStats({
+        totalFunctions: 0,
+        activeFunctions: 0,
+        runningJobs: 0,
+        availablePackages: 0,
+        connectedAgents: 0,
+        virtualObjects: 0
+      });
     }
   };
 

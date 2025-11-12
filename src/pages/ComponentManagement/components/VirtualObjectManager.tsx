@@ -1,21 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Card, Table, Space, Button, Tag, Modal, Form, Input, Select,
-  Tree, Tabs, Descriptions, List, Avatar, Typography, Popconfirm,
-  Transfer, message, Drawer, Steps, Switch
+  Card,
+  Table,
+  Space,
+  Button,
+  Tag,
+  Modal,
+  Tree,
+  Descriptions,
+  Form,
+  Input,
+  Select,
+  Switch,
+  Popconfirm,
+  message,
+  Drawer,
+  Tabs,
+  Badge,
+  Tooltip,
+  Alert
 } from 'antd';
 import {
-  PlusOutlined, EditOutlined, DeleteOutlined, EyeOutlined,
-  ApartmentOutlined, FunctionOutlined, LinkOutlined,
-  SettingOutlined, ApiOutlined, PlayCircleOutlined,
-  CopyOutlined, ExportOutlined
+  PlusOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  EyeOutlined,
+  ApartmentOutlined,
+  FunctionOutlined,
+  SettingOutlined,
+  PlayCircleOutlined,
+  PauseCircleOutlined
 } from '@ant-design/icons';
 
-const { TabPane } = Tabs;
-const { TextArea } = Input;
-const { Text, Title } = Typography;
 const { Option } = Select;
-const { Step } = Steps;
+const { TextArea } = Input;
+const { TabPane } = Tabs;
 
 interface EntityDefinition {
   id: string;
@@ -27,8 +46,6 @@ interface EntityDefinition {
     [key: string]: {
       function: string;
       description: string;
-      parameters?: any;
-      ui?: any;
     };
   };
   resources?: {
@@ -63,11 +80,9 @@ export default function VirtualObjectManager() {
   const [entities, setEntities] = useState<EntityDefinition[]>([]);
   const [functions, setFunctions] = useState<FunctionInfo[]>([]);
   const [loading, setLoading] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalType, setModalType] = useState<'create' | 'edit' | 'view'>('create');
-  const [selectedEntity, setSelectedEntity] = useState<EntityDefinition | null>(null);
+  const [detailVisible, setDetailVisible] = useState(false);
   const [composerVisible, setComposerVisible] = useState(false);
-  const [activeTab, setActiveTab] = useState('entities');
+  const [selectedEntity, setSelectedEntity] = useState<EntityDefinition | null>(null);
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -81,128 +96,100 @@ export default function VirtualObjectManager() {
       const response = await fetch('/api/entities/list');
       const data = await response.json();
 
-      // 模拟数据 (实际从API获取)
-      const mockEntities: EntityDefinition[] = [
-        {
-          id: 'player-entity',
-          name: '玩家实体',
-          description: '游戏玩家的完整管理实体，包含账户、状态、经济等操作',
-          version: '1.0.0',
-          schema: {
-            type: 'object',
-            properties: {
-              id: { type: 'string', title: '玩家ID' },
-              nickname: { type: 'string', title: '昵称' },
-              level: { type: 'integer', title: '等级' },
-              status: { type: 'string', enum: ['active', 'banned', 'suspended'], title: '状态' }
-            }
-          },
-          operations: {
-            'get': { function: 'player.get', description: '获取玩家信息' },
-            'ban': { function: 'player.ban', description: '封禁玩家' },
-            'unban': { function: 'player.unban', description: '解封玩家' },
-            'addGold': { function: 'economy.addGold', description: '增加金币' },
-            'getInventory': { function: 'inventory.list', description: '获取背包' }
-          },
-          resources: {
-            'player-profile': {
-              title: '玩家档案',
-              functions: ['player.get', 'player.updateProfile']
-            },
-            'player-economy': {
-              title: '经济管理',
-              functions: ['economy.addGold', 'economy.deductGold', 'economy.getBalance']
-            }
-          },
-          relationships: {
-            'guild': { type: 'belongsTo', target: 'guild-entity', cardinality: 'one' },
-            'items': { type: 'hasMany', target: 'item-entity', cardinality: 'many' }
-          },
-          createdAt: '2024-01-15T10:00:00Z',
-          updatedAt: '2024-01-20T15:30:00Z',
-          status: 'active',
-          usageCount: 1250
-        },
-        {
-          id: 'guild-entity',
-          name: '公会实体',
-          description: '游戏公会管理实体，支持公会创建、成员管理、活动组织',
-          version: '1.2.0',
-          schema: {
-            type: 'object',
-            properties: {
-              id: { type: 'string', title: '公会ID' },
-              name: { type: 'string', title: '公会名称' },
-              level: { type: 'integer', title: '公会等级' },
-              memberCount: { type: 'integer', title: '成员数量' }
-            }
-          },
-          operations: {
-            'create': { function: 'guild.create', description: '创建公会' },
-            'dissolve': { function: 'guild.dissolve', description: '解散公会' },
-            'addMember': { function: 'guild.addMember', description: '添加成员' },
-            'removeMember': { function: 'guild.removeMember', description: '移除成员' },
-            'levelUp': { function: 'guild.levelUp', description: '升级公会' }
-          },
-          resources: {
-            'guild-management': {
-              title: '公会管理',
-              functions: ['guild.create', 'guild.dissolve', 'guild.levelUp']
-            },
-            'member-management': {
-              title: '成员管理',
-              functions: ['guild.addMember', 'guild.removeMember', 'guild.listMembers']
-            }
-          },
-          relationships: {
-            'members': { type: 'hasMany', target: 'player-entity', cardinality: 'many' },
-            'leader': { type: 'hasOne', target: 'player-entity', cardinality: 'one' }
-          },
-          createdAt: '2024-01-10T08:00:00Z',
-          updatedAt: '2024-01-25T12:45:00Z',
-          status: 'active',
-          usageCount: 850
-        },
-        {
-          id: 'item-entity',
-          name: '道具实体',
-          description: '游戏道具管理实体，支持道具创建、属性配置、交易等',
-          version: '1.1.0',
-          schema: {
-            type: 'object',
-            properties: {
-              id: { type: 'string', title: '道具ID' },
-              name: { type: 'string', title: '道具名称' },
-              type: { type: 'string', title: '道具类型' },
-              rarity: { type: 'string', enum: ['common', 'rare', 'epic', 'legendary'], title: '稀有度' }
-            }
-          },
-          operations: {
-            'create': { function: 'item.create', description: '创建道具' },
-            'enhance': { function: 'item.enhance', description: '强化道具' },
-            'trade': { function: 'item.trade', description: '道具交易' },
-            'decompose': { function: 'item.decompose', description: '分解道具' }
-          },
-          resources: {
-            'item-crafting': {
-              title: '道具制作',
-              functions: ['item.create', 'item.enhance', 'item.decompose']
-            }
-          },
-          relationships: {
-            'owner': { type: 'belongsTo', target: 'player-entity', cardinality: 'one' }
-          },
-          createdAt: '2024-01-12T14:20:00Z',
-          updatedAt: '2024-01-22T09:15:00Z',
-          status: 'active',
-          usageCount: 2100
-        }
-      ];
+      // 如果API调用失败或返回错误格式，使用模拟数据
+      if (!response.ok || !data || !Array.isArray(data.entities)) {
+        console.warn('API返回格式错误或未授权，使用模拟数据');
 
-      setEntities(mockEntities);
+        // 模拟数据
+        const mockEntities: EntityDefinition[] = [
+          {
+            id: 'player-entity',
+            name: '玩家实体',
+            description: '游戏玩家的完整管理实体，包含账户、状态、经济等操作',
+            version: '1.0.0',
+            schema: {
+              type: 'object',
+              properties: {
+                id: { type: 'string', title: '玩家ID' },
+                nickname: { type: 'string', title: '昵称' },
+                level: { type: 'integer', title: '等级' },
+                status: { type: 'string', enum: ['active', 'banned', 'suspended'], title: '状态' }
+              }
+            },
+            operations: {
+              'get': { function: 'player.get', description: '获取玩家信息' },
+              'ban': { function: 'player.ban', description: '封禁玩家' },
+              'unban': { function: 'player.unban', description: '解封玩家' },
+              'addGold': { function: 'economy.addGold', description: '增加金币' }
+            },
+            resources: {
+              'player-profile': {
+                title: '玩家档案',
+                functions: ['player.get', 'player.updateProfile']
+              },
+              'player-economy': {
+                title: '经济管理',
+                functions: ['economy.addGold', 'economy.deductGold']
+              }
+            },
+            relationships: {
+              'guild': { type: 'belongsTo', target: 'guild-entity', cardinality: 'one' }
+            },
+            createdAt: '2024-01-15T10:00:00Z',
+            updatedAt: '2024-01-20T15:30:00Z',
+            status: 'active',
+            usageCount: 1520
+          },
+          {
+            id: 'guild-entity',
+            name: '公会实体',
+            description: '公会管理实体，包含公会创建、成员管理、等级系统等',
+            version: '1.2.0',
+            schema: {
+              type: 'object',
+              properties: {
+                id: { type: 'string', title: '公会ID' },
+                name: { type: 'string', title: '公会名称' },
+                level: { type: 'integer', title: '公会等级' },
+                memberCount: { type: 'integer', title: '成员数量' }
+              }
+            },
+            operations: {
+              'create': { function: 'guild.create', description: '创建公会' },
+              'dissolve': { function: 'guild.dissolve', description: '解散公会' },
+              'addMember': { function: 'guild.addMember', description: '添加成员' },
+              'removeMember': { function: 'guild.removeMember', description: '移除成员' }
+            },
+            resources: {
+              'guild-management': {
+                title: '公会管理',
+                functions: ['guild.create', 'guild.dissolve', 'guild.levelUp']
+              },
+              'member-management': {
+                title: '成员管理',
+                functions: ['guild.addMember', 'guild.removeMember', 'guild.listMembers']
+              }
+            },
+            relationships: {
+              'members': { type: 'hasMany', target: 'player-entity', cardinality: 'many' },
+              'leader': { type: 'hasOne', target: 'player-entity', cardinality: 'one' }
+            },
+            createdAt: '2024-01-10T08:00:00Z',
+            updatedAt: '2024-01-25T12:45:00Z',
+            status: 'active',
+            usageCount: 850
+          }
+        ];
+
+        setEntities(mockEntities);
+      } else {
+        // API返回正确格式的数据
+        setEntities(data.entities);
+      }
     } catch (error) {
       message.error('加载虚拟对象失败');
       console.error('Load entities error:', error);
+      setEntities([]);
     } finally {
       setLoading(false);
     }
@@ -213,31 +200,37 @@ export default function VirtualObjectManager() {
       const response = await fetch('/api/descriptors');
       const data = await response.json();
 
+      if (!response.ok || !data || typeof data !== 'object') {
+        console.warn('无法获取函数列表，使用空数组');
+        setFunctions([]);
+        return;
+      }
+
       // 转换函数数据
-      const functionList = Object.entries(data || {}).map(([id, desc]: [string, any]) => ({
+      const functionList = Object.entries(data).map(([id, desc]: [string, any]) => ({
         id,
-        name: desc.name || id,
-        description: desc.description || '无描述',
-        parameters: desc.parameters || {},
-        category: desc.category || 'general'
+        name: desc?.name || id,
+        description: desc?.description || '无描述',
+        parameters: desc?.parameters || {},
+        category: desc?.category || 'general'
       }));
 
       setFunctions(functionList);
     } catch (error) {
       console.error('Load functions error:', error);
+      setFunctions([]);
     }
   };
 
   const handleCreateEntity = async (values: any) => {
     try {
       const entityData = {
-        id: values.id,
-        name: values.name,
-        description: values.description,
+        ...values,
+        id: values.name.toLowerCase().replace(/\s+/g, '-'),
         version: '1.0.0',
-        schema: JSON.parse(values.schema),
-        operations: {},
-        status: 'draft'
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        usageCount: 0
       };
 
       const response = await fetch('/api/entities/create', {
@@ -248,7 +241,7 @@ export default function VirtualObjectManager() {
 
       if (response.ok) {
         message.success('虚拟对象创建成功');
-        setModalVisible(false);
+        setComposerVisible(false);
         form.resetFields();
         loadEntities();
       } else {
@@ -276,16 +269,16 @@ export default function VirtualObjectManager() {
     }
   };
 
-  const handleToggleStatus = async (entityId: string, status: string) => {
+  const handleToggleStatus = async (entityId: string, enabled: boolean) => {
     try {
       const response = await fetch(`/api/entities/${entityId}/status`, {
-        method: 'PATCH',
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status })
+        body: JSON.stringify({ status: enabled ? 'active' : 'inactive' })
       });
 
       if (response.ok) {
-        message.success('状态更新成功');
+        message.success(`虚拟对象${enabled ? '激活' : '停用'}成功`);
         loadEntities();
       } else {
         throw new Error('状态更新失败');
@@ -295,67 +288,15 @@ export default function VirtualObjectManager() {
     }
   };
 
-  const openComposer = (entity?: EntityDefinition) => {
-    setSelectedEntity(entity || null);
-    setComposerVisible(true);
-  };
-
-  const renderEntityTree = (entity: EntityDefinition) => {
-    const treeData = [
-      {
-        title: entity.name,
-        key: 'entity',
-        icon: <ApartmentOutlined />,
-        children: [
-          {
-            title: `操作 (${Object.keys(entity.operations).length})`,
-            key: 'operations',
-            icon: <FunctionOutlined />,
-            children: Object.entries(entity.operations).map(([key, op]) => ({
-              title: `${key} → ${op.function}`,
-              key: `op-${key}`,
-              icon: <ApiOutlined />,
-              isLeaf: true
-            }))
-          },
-          {
-            title: `资源 (${Object.keys(entity.resources || {}).length})`,
-            key: 'resources',
-            icon: <SettingOutlined />,
-            children: Object.entries(entity.resources || {}).map(([key, res]) => ({
-              title: `${res.title} (${res.functions.length}个函数)`,
-              key: `res-${key}`,
-              icon: <LinkOutlined />,
-              isLeaf: true
-            }))
-          },
-          {
-            title: `关系 (${Object.keys(entity.relationships || {}).length})`,
-            key: 'relationships',
-            icon: <LinkOutlined />,
-            children: Object.entries(entity.relationships || {}).map(([key, rel]) => ({
-              title: `${key} → ${rel.target} (${rel.type})`,
-              key: `rel-${key}`,
-              icon: <LinkOutlined />,
-              isLeaf: true
-            }))
-          }
-        ]
-      }
-    ];
-    return <Tree treeData={treeData} defaultExpandAll />;
-  };
-
-  const entityColumns = [
+  const columns = [
     {
-      title: '实体名称',
+      title: '名称',
+      dataIndex: 'name',
       key: 'name',
-      render: (text: any, record: EntityDefinition) => (
+      render: (name: string, record: EntityDefinition) => (
         <Space direction="vertical" size={0}>
-          <strong>{record.name}</strong>
-          <Text type="secondary" style={{ fontSize: '12px' }}>
-            {record.id} v{record.version}
-          </Text>
+          <strong>{name}</strong>
+          <span style={{ color: '#666', fontSize: '12px' }}>v{record.version}</span>
         </Space>
       )
     },
@@ -367,109 +308,93 @@ export default function VirtualObjectManager() {
     },
     {
       title: '操作数量',
-      key: 'operationCount',
-      render: (text: any, record: EntityDefinition) => (
-        <Tag color="blue">{Object.keys(record.operations).length} 个操作</Tag>
+      dataIndex: 'operations',
+      key: 'operations',
+      render: (operations: any) => (
+        <Tag color="blue">{Object.keys(operations || {}).length} 个操作</Tag>
       )
     },
     {
-      title: '资源数量',
-      key: 'resourceCount',
-      render: (text: any, record: EntityDefinition) => (
-        <Tag color="green">{Object.keys(record.resources || {}).length} 个资源</Tag>
+      title: '资源组',
+      dataIndex: 'resources',
+      key: 'resources',
+      render: (resources: any) => (
+        <Tag color="green">{Object.keys(resources || {}).length} 个资源组</Tag>
       )
-    },
-    {
-      title: '关系数量',
-      key: 'relationshipCount',
-      render: (text: any, record: EntityDefinition) => (
-        <Tag color="orange">{Object.keys(record.relationships || {}).length} 个关系</Tag>
-      )
-    },
-    {
-      title: '使用次数',
-      dataIndex: 'usageCount',
-      key: 'usageCount',
-      render: (count: number) => <Text code>{count.toLocaleString()}</Text>
     },
     {
       title: '状态',
       dataIndex: 'status',
       key: 'status',
-      render: (status: string, record: EntityDefinition) => {
+      render: (status: string) => {
         const statusConfig = {
           active: { color: 'success', text: '活跃' },
           inactive: { color: 'default', text: '停用' },
           draft: { color: 'warning', text: '草稿' }
         };
-        const config = statusConfig[status as keyof typeof statusConfig];
-        return (
-          <div>
-            <Tag color={config.color}>{config.text}</Tag>
-            <Switch
-              size="small"
-              checked={status === 'active'}
-              onChange={(checked) =>
-                handleToggleStatus(record.id, checked ? 'active' : 'inactive')
-              }
-            />
-          </div>
-        );
+        const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.draft;
+        return <Tag color={config.color}>{config.text}</Tag>;
       }
     },
     {
-      title: '更新时间',
-      dataIndex: 'updatedAt',
-      key: 'updatedAt',
-      render: (time: string) => new Date(time).toLocaleDateString()
+      title: '使用次数',
+      dataIndex: 'usageCount',
+      key: 'usageCount',
+      render: (count: number) => (
+        <Badge count={count} showZero style={{ backgroundColor: '#52c41a' }} />
+      )
+    },
+    {
+      title: '启用/停用',
+      key: 'toggle',
+      render: (text: any, record: EntityDefinition) => (
+        <Switch
+          checked={record.status === 'active'}
+          onChange={(checked) => handleToggleStatus(record.id, checked)}
+          checkedChildren="启用"
+          unCheckedChildren="停用"
+        />
+      )
     },
     {
       title: '操作',
       key: 'actions',
       render: (text: any, record: EntityDefinition) => (
         <Space>
-          <Button
-            size="small"
-            icon={<EyeOutlined />}
-            onClick={() => {
-              setModalType('view');
-              setSelectedEntity(record);
-              setModalVisible(true);
-            }}
-          >
-            查看
-          </Button>
-          <Button
-            size="small"
-            icon={<EditOutlined />}
-            onClick={() => openComposer(record)}
-          >
-            编辑
-          </Button>
-          <Button
-            size="small"
-            icon={<CopyOutlined />}
-            onClick={() => {
-              // 复制实体逻辑
-              message.success('实体已复制到剪贴板');
-            }}
-          >
-            复制
-          </Button>
+          <Tooltip title="查看详情">
+            <Button
+              size="small"
+              icon={<EyeOutlined />}
+              onClick={() => {
+                setSelectedEntity(record);
+                setDetailVisible(true);
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="编辑">
+            <Button
+              size="small"
+              icon={<EditOutlined />}
+              onClick={() => {
+                setSelectedEntity(record);
+                setComposerVisible(true);
+              }}
+            />
+          </Tooltip>
           <Popconfirm
             title="确定要删除此虚拟对象吗？"
-            description="删除后相关的操作和资源将不可用"
+            description="删除后将无法恢复，所有相关操作将失效"
             onConfirm={() => handleDeleteEntity(record.id)}
             okText="确定"
             cancelText="取消"
           >
-            <Button
-              size="small"
-              danger
-              icon={<DeleteOutlined />}
-            >
-              删除
-            </Button>
+            <Tooltip title="删除">
+              <Button
+                size="small"
+                danger
+                icon={<DeleteOutlined />}
+              />
+            </Tooltip>
           </Popconfirm>
         </Space>
       )
@@ -491,190 +416,193 @@ export default function VirtualObjectManager() {
               type="primary"
               icon={<PlusOutlined />}
               onClick={() => {
-                setModalType('create');
                 setSelectedEntity(null);
-                setModalVisible(true);
+                form.resetFields();
+                setComposerVisible(true);
               }}
             >
               创建虚拟对象
             </Button>
-            <Button
-              icon={<SettingOutlined />}
-              onClick={() => openComposer()}
-            >
-              对象编排器
-            </Button>
-            <Button
-              icon={<ExportOutlined />}
-              onClick={() => message.info('导出功能开发中')}
-            >
-              导出配置
+            <Button onClick={loadEntities}>
+              刷新
             </Button>
           </Space>
         }
       >
-        <Tabs activeKey={activeTab} onChange={setActiveTab}>
-          <TabPane tab="虚拟对象列表" key="entities">
-            <Table
-              columns={entityColumns}
-              dataSource={entities}
-              rowKey="id"
-              loading={loading}
-              pagination={{
-                pageSize: 10,
-                showSizeChanger: true,
-                showQuickJumper: true,
-                showTotal: (total) => `共 ${total} 个虚拟对象`
-              }}
-              expandable={{
-                expandedRowRender: (record) => (
-                  <Card size="small" title="结构视图">
-                    {renderEntityTree(record)}
-                  </Card>
-                ),
-                rowExpandable: () => true
-              }}
-            />
-          </TabPane>
+        <Alert
+          message="虚拟对象说明"
+          description="虚拟对象是业务抽象实体，通过组合多个函数来实现复杂的业务逻辑。每个虚拟对象包含操作、资源组和关系定义。"
+          type="info"
+          showIcon
+          style={{ marginBottom: 16 }}
+        />
 
-          <TabPane tab="关系图谱" key="relationships">
-            <Card>
-              <div style={{ textAlign: 'center', padding: '40px 0' }}>
-                <ApartmentOutlined style={{ fontSize: 48, color: '#ccc' }} />
-                <div style={{ marginTop: 16, color: '#666' }}>
-                  关系图谱功能开发中...
-                </div>
-              </div>
-            </Card>
-          </TabPane>
-
-          <TabPane tab="使用统计" key="statistics">
-            <Card>
-              <div style={{ textAlign: 'center', padding: '40px 0' }}>
-                <Text type="secondary">使用统计面板开发中...</Text>
-              </div>
-            </Card>
-          </TabPane>
-        </Tabs>
+        <Table
+          columns={columns}
+          dataSource={entities}
+          rowKey="id"
+          loading={loading}
+          pagination={{
+            pageSize: 10,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal: (total) => `共 ${total} 个虚拟对象`
+          }}
+        />
       </Card>
 
-      {/* 创建/查看Modal */}
+      {/* 虚拟对象详情弹窗 */}
       <Modal
-        title={modalType === 'create' ? '创建虚拟对象' :
-               modalType === 'edit' ? '编辑虚拟对象' : '查看虚拟对象'}
-        open={modalVisible}
-        onCancel={() => {
-          setModalVisible(false);
-          form.resetFields();
-        }}
-        footer={modalType === 'view' ? null : undefined}
+        title={`虚拟对象详情 - ${selectedEntity?.name}`}
+        open={detailVisible}
+        onCancel={() => setDetailVisible(false)}
         width={800}
+        footer={null}
       >
-        {modalType === 'view' && selectedEntity ? (
+        {selectedEntity && (
           <Tabs defaultActiveKey="basic">
             <TabPane tab="基本信息" key="basic">
-              <Descriptions column={2} bordered size="small">
-                <Descriptions.Item label="实体ID">{selectedEntity.id}</Descriptions.Item>
-                <Descriptions.Item label="名称">{selectedEntity.name}</Descriptions.Item>
+              <Descriptions column={2} bordered>
+                <Descriptions.Item label="对象ID">{selectedEntity.id}</Descriptions.Item>
+                <Descriptions.Item label="对象名称">{selectedEntity.name}</Descriptions.Item>
                 <Descriptions.Item label="版本">{selectedEntity.version}</Descriptions.Item>
-                <Descriptions.Item label="状态">{selectedEntity.status}</Descriptions.Item>
+                <Descriptions.Item label="状态">
+                  <Tag color={selectedEntity.status === 'active' ? 'green' : 'red'}>
+                    {selectedEntity.status === 'active' ? '活跃' : '停用'}
+                  </Tag>
+                </Descriptions.Item>
                 <Descriptions.Item label="使用次数" span={2}>
-                  {selectedEntity.usageCount.toLocaleString()}
+                  <Badge count={selectedEntity.usageCount} showZero />
                 </Descriptions.Item>
                 <Descriptions.Item label="描述" span={2}>
                   {selectedEntity.description}
                 </Descriptions.Item>
+                <Descriptions.Item label="创建时间">
+                  {new Date(selectedEntity.createdAt).toLocaleString()}
+                </Descriptions.Item>
+                <Descriptions.Item label="更新时间">
+                  {new Date(selectedEntity.updatedAt).toLocaleString()}
+                </Descriptions.Item>
               </Descriptions>
             </TabPane>
-            <TabPane tab="结构信息" key="structure">
-              {renderEntityTree(selectedEntity)}
+
+            <TabPane tab="操作列表" key="operations">
+              <Table
+                dataSource={Object.entries(selectedEntity.operations || {}).map(([key, op]) => ({
+                  key,
+                  operation: key,
+                  function: op.function,
+                  description: op.description
+                }))}
+                columns={[
+                  { title: '操作名', dataIndex: 'operation', key: 'operation' },
+                  { title: '函数', dataIndex: 'function', key: 'function' },
+                  { title: '描述', dataIndex: 'description', key: 'description' }
+                ]}
+                pagination={false}
+                size="small"
+              />
             </TabPane>
-            <TabPane tab="Schema定义" key="schema">
-              <pre style={{ background: '#f5f5f5', padding: 16, borderRadius: 4 }}>
-                {JSON.stringify(selectedEntity.schema, null, 2)}
-              </pre>
+
+            <TabPane tab="资源组" key="resources">
+              <Table
+                dataSource={Object.entries(selectedEntity.resources || {}).map(([key, res]) => ({
+                  key,
+                  name: key,
+                  title: res.title,
+                  functions: res.functions
+                }))}
+                columns={[
+                  { title: '资源组名', dataIndex: 'name', key: 'name' },
+                  { title: '标题', dataIndex: 'title', key: 'title' },
+                  {
+                    title: '包含函数',
+                    dataIndex: 'functions',
+                    key: 'functions',
+                    render: (funcs: string[]) => (
+                      <Space wrap>
+                        {funcs.map(f => <Tag key={f}>{f}</Tag>)}
+                      </Space>
+                    )
+                  }
+                ]}
+                pagination={false}
+                size="small"
+              />
+            </TabPane>
+
+            <TabPane tab="关系" key="relationships">
+              <Table
+                dataSource={Object.entries(selectedEntity.relationships || {}).map(([key, rel]) => ({
+                  key,
+                  name: key,
+                  type: rel.type,
+                  target: rel.target,
+                  cardinality: rel.cardinality
+                }))}
+                columns={[
+                  { title: '关系名', dataIndex: 'name', key: 'name' },
+                  { title: '关系类型', dataIndex: 'type', key: 'type' },
+                  { title: '目标实体', dataIndex: 'target', key: 'target' },
+                  { title: '基数', dataIndex: 'cardinality', key: 'cardinality' }
+                ]}
+                pagination={false}
+                size="small"
+              />
             </TabPane>
           </Tabs>
-        ) : (
-          <Form
-            form={form}
-            layout="vertical"
-            onFinish={handleCreateEntity}
-            initialValues={selectedEntity || {}}
-          >
-            <Form.Item
-              name="id"
-              label="实体ID"
-              rules={[{ required: true, message: '请输入实体ID' }]}
-            >
-              <Input placeholder="例如: player-entity" />
-            </Form.Item>
-
-            <Form.Item
-              name="name"
-              label="实体名称"
-              rules={[{ required: true, message: '请输入实体名称' }]}
-            >
-              <Input placeholder="例如: 玩家实体" />
-            </Form.Item>
-
-            <Form.Item
-              name="description"
-              label="描述"
-              rules={[{ required: true, message: '请输入描述' }]}
-            >
-              <TextArea rows={3} placeholder="描述这个虚拟对象的用途和功能" />
-            </Form.Item>
-
-            <Form.Item
-              name="schema"
-              label="Schema定义"
-              rules={[{ required: true, message: '请输入Schema定义' }]}
-            >
-              <TextArea
-                rows={6}
-                placeholder="输入JSON Schema定义"
-                defaultValue={JSON.stringify({
-                  type: 'object',
-                  properties: {
-                    id: { type: 'string', title: 'ID' },
-                    name: { type: 'string', title: '名称' }
-                  }
-                }, null, 2)}
-              />
-            </Form.Item>
-
-            <Form.Item>
-              <Space>
-                <Button type="primary" htmlType="submit">
-                  {modalType === 'create' ? '创建' : '保存'}
-                </Button>
-                <Button onClick={() => {
-                  setModalVisible(false);
-                  form.resetFields();
-                }}>
-                  取消
-                </Button>
-              </Space>
-            </Form.Item>
-          </Form>
         )}
       </Modal>
 
-      {/* 对象编排器Drawer */}
+      {/* 创建/编辑虚拟对象弹窗 */}
       <Drawer
-        title="虚拟对象编排器"
-        placement="right"
-        size="large"
+        title={selectedEntity ? '编辑虚拟对象' : '创建虚拟对象'}
         open={composerVisible}
         onClose={() => setComposerVisible(false)}
+        width={720}
+        footer={
+          <Space style={{ float: 'right' }}>
+            <Button onClick={() => setComposerVisible(false)}>取消</Button>
+            <Button type="primary" onClick={() => form.submit()}>
+              {selectedEntity ? '保存' : '创建'}
+            </Button>
+          </Space>
+        }
       >
-        <div style={{ textAlign: 'center', padding: '60px 0' }}>
-          <SettingOutlined style={{ fontSize: 48, color: '#ccc' }} />
-          <div style={{ marginTop: 16, color: '#666' }}>
-            对象编排器开发中...
-          </div>
-        </div>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleCreateEntity}
+          initialValues={selectedEntity || { status: 'active' }}
+        >
+          <Form.Item
+            name="name"
+            label="对象名称"
+            rules={[{ required: true, message: '请输入对象名称' }]}
+          >
+            <Input placeholder="请输入虚拟对象名称" />
+          </Form.Item>
+
+          <Form.Item
+            name="description"
+            label="对象描述"
+            rules={[{ required: true, message: '请输入对象描述' }]}
+          >
+            <TextArea rows={3} placeholder="请描述虚拟对象的用途和功能" />
+          </Form.Item>
+
+          <Form.Item
+            name="status"
+            label="初始状态"
+            rules={[{ required: true, message: '请选择初始状态' }]}
+          >
+            <Select>
+              <Option value="active">激活</Option>
+              <Option value="inactive">停用</Option>
+              <Option value="draft">草稿</Option>
+            </Select>
+          </Form.Item>
+        </Form>
       </Drawer>
     </div>
   );
