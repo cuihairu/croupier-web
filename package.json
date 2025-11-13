@@ -60,7 +60,9 @@
     "omit.js": "^2.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-helmet-async": "^1.3.0"
+    "react-helmet-async": "^1.3.0",
+    "table-render": "^2.1.4",
+    "chart-render": "^0.1.9"
   },
   "devDependencies": {
     "@ant-design/pro-cli": "^3.3.0",
