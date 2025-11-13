@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+﻿import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Card, Select, Form, Input, InputNumber, Switch, Button, Space, Typography, Divider, Row, Col, Tabs, DatePicker, TimePicker } from 'antd';
 import FormRender from 'form-render';
 import { getMessage } from '@/utils/antdApp';
@@ -322,7 +322,7 @@ export default function GmFunctionsPage() {
 
   // Form-render state
   const [formData, setFormData] = useState<any>({});
-  const [renderMode, setRenderMode] = useState<'form-render' | 'enhanced' | 'legacy'>('enhanced');
+  const [renderMode, setRenderMode] = useState<'form-render' | 'enhanced' | 'legacy'>('form-render');
 
   const currentDesc = useMemo(() => descs.find((d) => d.id === currentId), [descs, currentId]);
 
@@ -635,3 +635,4 @@ export default function GmFunctionsPage() {
     </Card>
   );
 }
+
